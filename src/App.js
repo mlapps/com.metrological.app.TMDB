@@ -29,16 +29,12 @@ export default class App extends Lightning.Component {
             Background: {
                 type: Background
             },
-            Logo: {
-                src: Utils.asset("images/logo.png"),
-                x: 68, y: 68
-            },
             Pages: {
                 forceZIndexContext: true
             },
             Widgets: {
                 Menu:{
-                    type: Menu, x: 68, y: 140, zIndex: 99, visible: false
+                    type: Menu, x: 68, y: 68, zIndex: 99, visible: false
                 }
             },
             Loading: {

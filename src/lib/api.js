@@ -36,7 +36,7 @@ export const getDetails = (type, id)=> {
     });
 };
 
-export const getGenres = async()=> {
+const _getGenres = async()=> {
     const movie = await _get(`/genre/movie/list`).then(response => {
         return response.genres;
     });
@@ -52,7 +52,11 @@ export const setGenres = (data)=> {
     genres = data;
 };
 
-const _getPopular = (type)=> {
+const _getPopular = async(type)=> {
+    if (!genres) {
+        genres = await _getGenres();
+    }
+
     return _get(`/${type}/popular`).then(response => {
         return new Container(response, type, genres);
     });

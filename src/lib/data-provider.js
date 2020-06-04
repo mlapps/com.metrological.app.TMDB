@@ -9,8 +9,8 @@ import {getMovies, getTv, getDetails, getGenres, setGenres} from './Api';
 export default () => {
 
     Router.boot(async()=> {
-        const genres = await getGenres();
-        setGenres(genres);
+        // const genres = await getGenres();
+        // setGenres(genres);
     });
 
     Router.before("movies", async ({page})=>{

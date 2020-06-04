@@ -1,11 +1,11 @@
 import {Router} from "wpe-lightning-sdk";
 
 import {
-    NotFound, Main, Details
+    NotFound, Main, Details, Splash
 } from '../pages';
 
 export default () =>{
-    Router.root('movies', Main);
+    Router.root('splash', Splash);
 
     Router.route('movies', Main);
     Router.route('tv', Main);

@@ -1,10 +1,14 @@
-import {Lightning, Router} from 'wpe-lightning-sdk';
+import {Lightning, Router, Utils} from 'wpe-lightning-sdk';
 
 export default class Menu extends Lightning.Component {
 
     static _template() {
         return {
+            Logo: {
+                src: Utils.asset("images/logo.png")
+            },
             Items: {
+                y: 68,
                 flex: {},
                 Movies: {
                     type: MenuItem,
@@ -21,7 +25,7 @@ export default class Menu extends Lightning.Component {
             },
             Focus: {
                 rect: true, colorLeft: 0xff8ecea2, colorRight: 0xff03b3e4,
-                h: 6, y: 60,
+                h: 6, y: 128,
                 transitions: {
                     alpha: {duration: .3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
                     w: {duration: .3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
