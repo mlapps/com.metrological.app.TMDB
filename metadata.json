@@ -1,0 +1,6 @@
+{
+  "name": "The Movie Database",
+  "identifier": "com.metrological.app.TheMovieDb",
+  "version": "0.0.1",
+  "icon": "./static/icon.png"
+}
