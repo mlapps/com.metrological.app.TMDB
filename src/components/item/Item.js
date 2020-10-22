@@ -1,4 +1,4 @@
-import {Img, Lightning} from "wpe-lightning-sdk";
+import {Img, Lightning} from "@lightningjs/sdk";
 import CircleProgressShader from "../../shader/CircleProgressShader";
 import {getImgUrl} from "../../lib/tools";
 

@@ -1,12 +1,10 @@
-import { Lightning, Utils, Router } from 'wpe-lightning-sdk';
-import provider from "./lib/data-provider";
+import { Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
-import {init as initApi} from "./lib/Api"
+import {init as initApi} from "./lib/api"
 import {Menu} from "./widgets"
 import Background from "./Background";
 
-export default class App extends Lightning.Component {
-
+export default class App extends Router.App {
     static getFonts() {
         return [
             {family: 'SourceSansPro-Regular', url: Utils.asset('fonts/SourceSansPro-Regular.ttf'), descriptors: {}},
@@ -19,9 +17,7 @@ export default class App extends Lightning.Component {
     // this will setup all pages and attach them to there route
     _setup() {
         initApi(this.stage);
-        Router.startRouter({
-            appInstance: this, provider, routes
-        });
+        Router.startRouter(routes, this);
     }
 
     static _template() {
@@ -29,64 +25,23 @@ export default class App extends Lightning.Component {
             Background: {
                 type: Background
             },
-            Pages: {
-                forceZIndexContext: true
-            },
+            // we MUST spread the base-class template
+            // if we want to provide Widgets.
+            ...super._template(),
             Widgets: {
                 Menu:{
                     type: Menu, x: 68, y: 68, zIndex: 99, visible: false
                 }
             },
-            Loading: {
-
-            }
+            Loading: {}
         };
     }
 
-    // global app statemachine
-    static _states() {
-        return [
-            class Loading extends this {
-                $enter() {
-                    this.tag("Loading").visible = true;
-                }
-
-                $exit() {
-                    this.tag("Loading").visible = false;
-                }
-            },
-            class Widgets extends this {
-                $enter(args, widget) {
-                    // store widget reference
-                    this._widget = widget;
-
-                    // since it's possible that this behaviour
-                    // is non-remote driven we force a recalculation
-                    // of the focuspath
-                    this._refocus();
-                }
-
-                _getFocused() {
-                    // we delegate focus to selected widget
-                    // so it can consume remotecontrol presses
-                    return this._widget;
-                }
-            }
-        ];
+    /**
+     * Show app close dialogue
+     * @private
+     */
+    _handleAppClose(){
+        console.log("Close app")
     }
-
-    // tell page router where to store the pages
-    get pages() {
-        return this.tag("Pages");
-    }
-
-    get widgets(){
-        return this.tag("Widgets");
-    }
-
-    _getFocused() {
-        const page = Router.getActivePage();
-        return page;
-    }
-
 }

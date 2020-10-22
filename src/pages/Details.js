@@ -1,4 +1,4 @@
-import {Img, Lightning, Router} from 'wpe-lightning-sdk';
+import {Img, Lightning, Router} from '@lightningjs/sdk';
 import {getImgUrl} from "../lib/tools";
 import Button from "../components/Button";
 

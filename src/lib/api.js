@@ -86,7 +86,6 @@ const _lists = (models = []) => {
     if(!Array.isArray(models)){
         models = [models];
     }
-
     return models.map(list => {
         return stage.c({
             type: listComponents.get(list.type),

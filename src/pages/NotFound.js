@@ -1,4 +1,4 @@
-import { Lightning } from 'wpe-lightning-sdk';
+import { Lightning } from '@lightningjs/sdk';
 
 export default class NotFound extends Lightning.Component{
     static _template() {

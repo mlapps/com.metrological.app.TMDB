@@ -1,4 +1,4 @@
-import {Lightning, Router} from 'wpe-lightning-sdk';
+import {Lightning, Router} from '@lightningjs/sdk';
 
 export default class Main extends Lightning.Component{
 

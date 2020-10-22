@@ -1,4 +1,4 @@
-import {Img, Lightning} from "wpe-lightning-sdk";
+import {Img, Lightning} from "@lightningjs/sdk";
 import {getImgUrl} from "./lib/tools";
 
 export default class Background extends Lightning.Component{

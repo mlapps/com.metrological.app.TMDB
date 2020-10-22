@@ -1,4 +1,4 @@
-import { Lightning, Router } from 'wpe-lightning-sdk';
+import { Lightning, Router } from '@lightningjs/sdk';
 import { ItemWrapper } from "../";
 
 export default class List extends Lightning.Component {
