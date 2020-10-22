@@ -42,3 +42,6 @@ jspm_packages
 .DS_Store
 
 dist
+releases
+.tmp
+build
