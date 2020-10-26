@@ -2,8 +2,6 @@
   "name": "com.metrological.app.DisneyPlus",
   "description": "LiveTile",
   "dependencies": {
-    "@lightningjs/sdk": "^3.0.0",
-    "localCookie": "github:WebPlatformForEmbedded/localCookie",
-    "wpe-lightning-sdk": "github:rdkcentral/Lightning-SDK#feature/router"
+    "@lightningjs/sdk": "^3.0.0"
   }
 }
