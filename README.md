@@ -6,6 +6,12 @@ parts of Lightning while following along the development of this app.
 You can find the other app (game) that we've build during the online session [here](https://github.com/mlapps/com.metrological.app.Platformer).
 _Router example app_ can be found [here](https://github.com/mlapps/router-example-app)
 
+
+##### questions?
+
+Feel free to ask them at: https://forum.lightningjs.io/
+
+
 ### Getting started
 
 > Before you follow the steps below, make sure you have the
