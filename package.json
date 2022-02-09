@@ -1,7 +1,7 @@
 {
-  "name": "com.metrological.app.DisneyPlus",
+  "name": "com.metrological.app.Tmdb",
   "description": "LiveTile",
   "dependencies": {
-    "@lightningjs/sdk": "^3.0.0"
+    "@lightningjs/sdk": "^4.8.1"
   }
 }
