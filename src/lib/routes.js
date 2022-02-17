@@ -57,10 +57,6 @@ export default {
             widgets: ["menu"]
         },
         {
-            path: 'details/:itemType/:itemId',
-            component: Details
-        },
-        {
             path: '*',
             component: NotFound,
         }
