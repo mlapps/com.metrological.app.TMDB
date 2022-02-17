@@ -15,6 +15,10 @@ export default class ItemWrapper extends Lightning.Component {
         return this._index;
     }
 
+    set configIndex(v) {
+        this._configIndex = v;
+    }
+
     set construct(v){
         this._construct = v;
     }
@@ -45,7 +49,8 @@ export default class ItemWrapper extends Lightning.Component {
 
     create() {
         const item = this._item;
-        this.children = [{type: this._construct, item, index: this._index}];
+        const configIndex = this._configIndex;
+        this.children = [{type: this._construct, item, index: this._index, configIndex}];
 
         // if item is flagged and has focus, notify parent
         // that focuspath can be recalculated

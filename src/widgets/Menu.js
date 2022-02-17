@@ -1,101 +1,71 @@
-import {Lightning, Router, Utils} from '@lightningjs/sdk';
+import {Lightning} from '@lightningjs/sdk';
 
 export default class Menu extends Lightning.Component {
 
     static _template() {
         return {
-            Logo: {
-                src: Utils.asset("images/logo.png")
-            },
-            Items: {
-                y: 68,
-                flex: {},
-                Movies: {
-                    type: MenuItem,
-                    label: "Movies", id: "movies"
+            Lines: {
+                Top: {
+                    x: -12, w: 2, rect: true, color: 0x50ffffff
                 },
-                Series: {
-                    type: MenuItem,
-                    label: "Series", id: "tv"
-                },
-                Exit: {
-                    type: MenuItem,
-                    label: "Exit", id: "exit"
+                Bottom: {
+                    y: 790, mountY: 1, x: -12, w: 2, rect: true, color: 0x50ffffff
                 }
             },
-            Focus: {
-                rect: true, colorLeft: 0xff8ecea2, colorRight: 0xff03b3e4,
-                h: 6, y: 128,
-                transitions: {
-                    alpha: {duration: .3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
-                    w: {duration: .3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
+            Items: {
+                Movies: {
+                    type: MenuItem,
+                    label: "Movies", id: "movie", selected: true
+                },
+                Tv: {
+                    type: MenuItem,
+                    label: "TV", id: "tv", selected: false
+                },
+                Search: {
+                    type: MenuItem,
+                    label: "Search", id: "search", selected: false
                 }
             }
         };
     }
 
     _init() {
-        this._index = 0;
+        this._id = null;
+        this.application.on("contentHeight", (h)=> {
+            this.tag("Top").setSmooth("h", 420-(h/2)-(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+            this.tag("Bottom").setSmooth("h", 330-(h/2)+(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+        })
     }
 
-    get activeItem() {
-        return this.tag("Items").children[this._index];
-    }
+    select(id, fastForward) {
+        if (id === this._id) return;
 
-    _handleDown() {
-        Router.restoreFocus();
-    }
+        this._id = id;
+        let y = 0;
 
-    _handleLeft() {
-        if (this._index > 0) {
-            this._select(-1);
-        }
-    }
-
-    _handleRight() {
-        if (this._index < this.tag("Items").children.length) {
-            this._select(1);
-        }
-    }
-
-    _focus() {
-        this.tag("Focus").w = 0;
-        this.tag("Focus").setSmooth("alpha", 1);
-        this._animateToSelected();
-    }
-
-    _unfocus() {
-        this.tag("Focus").setSmooth("alpha", 0);
-    }
-
-    _select(direction) {
-        this._index += direction;
-        this._animateToSelected();
-    }
-
-    _animateToSelected() {
-        this.tag("Focus").patch({
-            smooth: {x: this.activeItem.finalX, w: this.activeItem.finalW}
+        this.tag("Items").children.forEach((item, index) => {
+            item.setSmooth("y", y, {duration: fastForward?0:0.3});
+            if (id === item.id) {
+                this._currentIndex = index;
+                this.tag("Lines").setSmooth("y", (index+1)*48, {duration: fastForward?0:0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+                y += 810;
+            }
+            y += 48;
+            item.selected = item.id === id;
         });
-    }
 
-    _handleEnter() {
-        Router.navigate(`${this.activeItem.id}`, false);
-        Router.restoreFocus();
-    }
-
-    _getFocused(){
-        return this.activeItem;
+        this.tag("Top").setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
+        this.tag("Bottom").setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
     }
 
 }
 
 class MenuItem extends Lightning.Component {
-
     static _template() {
         return {
-            flexItem: {marginRight: 40},
-            text: {text: "Movies", fontSize: 48, fontFace: "SourceSansPro-Regular"}
+            Label: {
+                text: {fontSize: 28, fontFace: "Regular"}
+            }
         };
     }
 
@@ -103,8 +73,14 @@ class MenuItem extends Lightning.Component {
         this._label = v;
 
         this.patch({
-            text: {text: this._label}
+            Label: {
+                text: {text: this._label}
+            }
         });
+    }
+
+    set selected(v) {
+        this.tag("Label").color = v?0xffffffff:0xff767676;
     }
 
     set id(v) {
@@ -114,5 +90,4 @@ class MenuItem extends Lightning.Component {
     get id() {
         return this._id;
     }
-
 }

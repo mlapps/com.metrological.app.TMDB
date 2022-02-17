@@ -68,12 +68,8 @@ export default class Splash extends Lightning.Component{
         ]});
 
         setTimeout(()=> {
-            Router.navigate("movies", false);
+            Router.navigate("movie", false);
         }, 3000);
-    }
-
-    _active() {
-        this.widgets.menu.visible = false;
     }
 
     _inactive() {

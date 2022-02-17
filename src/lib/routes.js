@@ -1,21 +1,9 @@
-import {Router} from "@lightningjs/sdk";
+import {getPopularUrls} from "./endpoints";
 
 import {
-    NotFound,Error, Main, Details, Splash
+    NotFound, Error, Splash, Movie, Tv
 } from '../pages';
-import {getDetails, getMovies, getTv} from "./api";
-
-
-
-// export default () =>{
-//     Router.root('splash', Splash);
-//
-//     Router.route('movies', Main);
-//     Router.route('tv', Main);
-//     Router.route('details/:itemType/:itemId', Details);
-//
-//     Router.start();
-// }
+import {list} from "./factory";
 
 export default {
     root: "splash",
@@ -25,39 +13,56 @@ export default {
             component: Splash
         },
         {
-            path: 'movies',
-            component: Main,
-            before: async(page)=>{
-                const main = await getMovies();
-                page.main = main;
+            path: 'movie',
+            component: Movie,
+            before: async(page)=> {
+                const type = "movie";
+
+                return getPopularUrls(type).then((response)=>{
+                    return Promise.all(response).then(function (responses) {
+                        return Promise.all(responses.map(function (response) {
+                            return response.json();
+                        }));
+                    }).then(function (response) {
+                        const genres = response[0].genres;
+                        const data = response[1];
+                        page.content = list(type, data, genres);
+                    }).catch(function (error) {
+                        console.log("error", error);
+                    });
+                })
             },
-            widgets:["Menu"],
+            widgets: ["menu"]
         },
         {
             path: 'tv',
-            component: Main,
-            before: async (page) =>{
-                const main = await getTv();
-                page.main = main;
+            component: Tv,
+            before: async(page)=> {
+                const type = "tv";
+
+                return getPopularUrls(type).then((response)=>{
+                    return Promise.all(response).then(function (responses) {
+                        return Promise.all(responses.map(function (response) {
+                            return response.json();
+                        }));
+                    }).then(function (response) {
+                        const genres = response[0].genres;
+                        const data = response[1];
+                        page.content = list(type, data, genres);
+                    }).catch(function (error) {
+                        console.log("error", error);
+                    });
+                })
             },
-            widgets:["Menu"],
+            widgets: ["menu"]
         },
         {
             path: 'details/:itemType/:itemId',
-            component: Details,
-            before: async (page, {itemType, itemId}) =>{
-                const details = await getDetails(itemType, itemId);
-                page.details = details;
-            },
-            widgets:["Menu"],
+            component: Details
         },
         {
             path: '*',
             component: NotFound,
-        },
-        {
-            path: '!',
-            component: Error
         }
     ],
 }
