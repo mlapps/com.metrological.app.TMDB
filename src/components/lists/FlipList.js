@@ -55,11 +55,6 @@ export default class FlipList extends Lightning.Component {
         return this.activeItem.child;
     }
 
-    get realWidth() {
-        let construct = this._itemConstruct;
-        return this._items.length * (construct.width + construct.offset)
-    }
-
     set items(v) {
         let construct = this._itemConstruct;
         this._items = v;
@@ -103,24 +98,27 @@ export default class FlipList extends Lightning.Component {
     }
 
     _animateToSelected(index = this._index) {
-        this.tag("Items").children.forEach((child, idx) => {
-            const realChild = child.child;
-
-            if (realChild) {
-                if (idx === index - 1) {
-                    realChild.configIndex = 0;
-                } else if (idx === index) {
-                    realChild.configIndex = 1;
-                } else if (idx === index + 1) {
-                    realChild.configIndex = 2;
-                } else if (idx === index + 2) {
-                    realChild.configIndex = 3;
-                } else if (idx > index + 2) {
-                    realChild.configIndex = 4;
-                }
-                realChild.animatePosition();
-            }
-        });
+        const children = this.tag("Items").children;
+        if (children[index-1] && children[index-1].child) {
+            children[index-1].child.configIndex = 0;
+            children[index-1].child.animatePosition();
+        }
+        if (children[index] && children[index].child) {
+            children[index].child.configIndex = 1;
+            children[index].child.animatePosition();
+        }
+        if (children[index+1] && children[index+1].child) {
+            children[index+1].child.configIndex = 2;
+            children[index+1].child.animatePosition();
+        }
+        if (children[index+2] && children[index+2].child) {
+            children[index+2].child.configIndex = 3;
+            children[index+2].child.animatePosition();
+        }
+        if (children[index+3] && children[index+3].child) {
+            children[index+3].child.configIndex = 4;
+            children[index+3].child.animatePosition();
+        }
 
         if (index === this.tag("Items").children.length - 1) {
             this.tag("Items").setSmooth("x", 1490)

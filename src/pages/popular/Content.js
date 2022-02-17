@@ -66,6 +66,7 @@ export default class Content extends Lightning.Component {
 
     _init() {
         this._voteAverage = 0;
+        this._titleLoaded = false;
 
         this._detailAnimation = this.animation({duration: 0.8, actions: [
             {t: '', p: 'alpha', rv: 0, v: {0: {v: 0}, 1: {v: 1}}},
@@ -84,9 +85,12 @@ export default class Content extends Lightning.Component {
         });
 
         this.tag("Title").on("txLoaded", ()=> {
-            this._detailAnimation.start();
-            this._ratingAnimation.start();
-            this.application.emit("contentHeight", this.tag("Title").renderHeight + 200);
+            if (!this._titleLoaded) {
+                this._detailAnimation.start();
+                this._ratingAnimation.start();
+                this.application.emit("contentHeight", this.tag("Title").renderHeight + 200);
+                this._titleLoaded = true;
+            }
         });
 
         this.application.on("setItem", ({item})=> {
@@ -100,6 +104,7 @@ export default class Content extends Lightning.Component {
     _setDetails(item) {
         this._voteAverage = item.voteAverage;
         this.alpha = 0.001;
+        this._titleLoaded = false;
 
         this._setupTitle(item);
         this._setThemeColor();
