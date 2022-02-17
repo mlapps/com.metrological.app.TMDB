@@ -7,7 +7,7 @@ export default class FlipList extends Lightning.Component {
         return {
             Items: {
                 alpha: 0, x: 1320, y: 300,
-                forceZIndexContext: true, boundsMargin: [500, 100, 500, 100],
+                forceZIndexContext: true, boundsMargin: [0, 0, 200, 0],
                 transitions: {
                     alpha: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
                     x: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
@@ -87,7 +87,7 @@ export default class FlipList extends Lightning.Component {
                 index: idx,
                 configIndex,
                 item: item,
-                x: idx>=3?0:200/configIndex,
+                x: idx>=3?700:200/configIndex,
                 transitions: {
                     x: {duration: configIndex*0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                 },
@@ -111,13 +111,19 @@ export default class FlipList extends Lightning.Component {
             children[index+1].child.configIndex = 2;
             children[index+1].child.animatePosition();
         }
-        if (children[index+2] && children[index+2].child) {
-            children[index+2].child.configIndex = 3;
-            children[index+2].child.animatePosition();
+        if (children[index+2]) {
+            children[index+2].x = 0;
+            if (children[index+2].child) {
+                children[index+2].child.configIndex = 3;
+                children[index+2].child.animatePosition();
+            }
         }
-        if (children[index+3] && children[index+3].child) {
-            children[index+3].child.configIndex = 4;
-            children[index+3].child.animatePosition();
+        if (children[index+3]) {
+            children[index+3].x = 0;
+            if (children[index+3].child) {
+                children[index+3].child.configIndex = 4;
+                children[index+3].child.animatePosition();
+            }
         }
 
         if (index === this.tag("Items").children.length - 1) {

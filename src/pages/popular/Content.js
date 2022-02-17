@@ -25,9 +25,9 @@ export default class Content extends Lightning.Component {
                         }
                     },
                     RatingCircle: {
-                        rect:true, color: 0x00ffffff, rtt:true, mount: .5, x: 51, y: 51, w: 90, h: 90, rotation: Math.PI * .5,
+                        rect:true, rtt: true, color: 0x00ffffff, mount: .5, x: 51, y: 51, w: 90, h: 90, rotation: Math.PI * .5,
                         shader: {
-                            type: CircleProgressShader, radius: 45, width: 5, angle: 0.0001, smooth: 0.01, color: 0xffd1215c, backgroundColor: 0xff204529
+                            type: CircleProgressShader, radius: 45, width: 5, angle: 0, smooth: 0.007, color: 0xffd1215c, backgroundColor: 0xff204529
                         }
                     }
                 },
@@ -97,7 +97,7 @@ export default class Content extends Lightning.Component {
             clearTimeout(this._timeout);
             this._timeout = setTimeout(()=> {
                 this._setDetails(item);
-            }, 300);
+            }, 400);
         });
     }
 

@@ -161,7 +161,7 @@ const ITEM_CONFIGS = [
         color: 0xff757575
     },
     {
-        amount: 2,
+        amount: 1.5,
         rx: {s: 1, e: 0.8},
         scale: 0.45,
         zIndex: 2,
@@ -171,12 +171,12 @@ const ITEM_CONFIGS = [
         color: 0xff757575
     },
     {
-        amount: 3,
+        amount: 2,
         rx: {s: 1, e: 1},
         scale: 0.45,
         zIndex: 1,
         alpha: 0,
-        x: 450,
+        x: 400,
         y: 0,
         color: 0xff757575
     }

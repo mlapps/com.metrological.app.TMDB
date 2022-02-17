@@ -6,7 +6,7 @@ export default class Background extends Lightning.Component {
     static _template() {
         return {
             Backgrounds: {
-                w: 1920, h: 1080, rtt: true,
+                w: 1920, h: 1080,
                 BackgroundA: {
                     colorLeft: 0x50ffffff, colorRight: 0x0090cea1,
                     transitions: {
@@ -30,7 +30,7 @@ export default class Background extends Lightning.Component {
             clearTimeout(this._timeout);
             this._timeout = setTimeout(()=> {
                 this._setBackground(item);
-            }, 300);
+            }, 400);
         });
     }
 
