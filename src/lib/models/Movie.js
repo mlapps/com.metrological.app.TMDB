@@ -32,6 +32,18 @@ export default class Movie {
         return this._genres;
     }
 
+    get genresAsString(){
+        let genres = ``;
+        this._genres.forEach((genre, index) => {
+            if (index > 0) {
+                genres += ` | ${genre.name}`
+            } else {
+                genres += `${genre.name}`
+            }
+        });
+        return genres;
+    }
+
     get id() {
         return this._id;
     }
@@ -54,6 +66,11 @@ export default class Movie {
 
     get releaseDate() {
         return this._release_date;
+    }
+
+    get formattedReleaseDate() {
+        const date = new Date(this._release_date);
+        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
     }
 
     get title() {

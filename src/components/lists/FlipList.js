@@ -179,17 +179,13 @@ export default class FlipList extends Lightning.Component {
 
     _handleEnter() {
         const item = this.activeItem.item;
-        Router.navigate(`details/${item.type}/${item.id}`, true);
+        this.fireAncestors("$navigateToDetails", {item});
     }
 
     select({direction}) {
         this._direction = direction;
         this._index += direction;
         this._animateToSelected();
-    }
-
-    $itemCreatedForFocus(){
-        this.application.updateFocusPath();
     }
 
     _getFocused(){

@@ -13,6 +13,7 @@
   "platformSettings": {
     "path": "./static",
     "showVersion": false,
+    "showFps": false,
     "inspector": false,
     "gcOnUnload": true,
     "lazyCreate": true,

@@ -1,5 +1,5 @@
 import {Item, Carousel, FlipList} from "../components";
-import {Container} from "./models";
+import {Container, Details} from "./models";
 
 let stage;
 const listComponents = new Map();
@@ -38,4 +38,8 @@ export const carousel = (type, data, genres) => {
         index: half,
         items: container.items
     });
+};
+
+export const details = (data) => {
+    return new Details(data);
 };

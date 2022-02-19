@@ -2,6 +2,7 @@ import { Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
 import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
+import Background from "./pages/popular/Background";
 
 export default class App extends Router.App {
     static getFonts() {
@@ -25,10 +26,26 @@ export default class App extends Router.App {
         return {
             // we MUST spread the base-class template
             // if we want to provide Widgets.
+            Background: {
+                type: Background
+            },
             ...super._template(),
             Widgets: {
                 Menu:{
-                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
+                    items: [
+                        {label: "Movies", id: "movie", selected: true},
+                        {label: "TV", id: "tv", selected: false},
+                        {label: "Search", id: "search", selected: false}
+                    ]
+                },
+                DetailsMenu:{
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
+                    items: [
+                        {label: "Details", id: "details", selected: true},
+                        {label: "Actors", id: "actors", selected: false},
+                        {label: "Related", id: "related", selected: false}
+                    ]
                 }
             },
             Loading: {}

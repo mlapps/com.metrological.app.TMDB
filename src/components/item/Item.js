@@ -34,6 +34,11 @@ export default class Item extends Lightning.Component {
                                 transitions: {
                                     color: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                                 }
+                            },
+                            Border: {
+                                x: -4, y: -4,
+                                colorBottom: 0xff121212, colorTop: 0xff434343,
+                                texture: Lightning.Tools.getRoundRect(Item.width,Item.height,18,3,0xffffffff,false,0xffffffff)
                             }
                         }
                     }

@@ -1,9 +1,9 @@
-import {getPopularUrls} from "./endpoints";
+import {getDetailUrl, getPopularUrls} from "./endpoints";
 
 import {
-    NotFound, Error, Splash, Movie, Tv
+    NotFound, Error, Splash, Movie, Tv, Details
 } from '../pages';
-import {list} from "./factory";
+import {details, list} from "./factory";
 
 export default {
     root: "splash",
@@ -55,6 +55,20 @@ export default {
                 })
             },
             widgets: ["menu"]
+        },
+        {
+            path: 'details/:type/:id',
+            component: Details,
+            before: async (page, {type, id}) =>{
+                return getDetailUrl(type, id).then(response => {
+                    return response.json();
+                }).then(function (data) {
+                    page.content = details(data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            widgets: ["detailsmenu"]
         },
         {
             path: '*',

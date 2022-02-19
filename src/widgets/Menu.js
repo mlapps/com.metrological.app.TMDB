@@ -12,29 +12,29 @@ export default class Menu extends Lightning.Component {
                     y: 790, mountY: 1, x: -12, w: 2, rect: true, color: 0x50ffffff
                 }
             },
-            Items: {
-                Movies: {
-                    type: MenuItem,
-                    label: "Movies", id: "movie", selected: true
-                },
-                Tv: {
-                    type: MenuItem,
-                    label: "TV", id: "tv", selected: false
-                },
-                Search: {
-                    type: MenuItem,
-                    label: "Search", id: "search", selected: false
-                }
-            }
+            Items: {}
         };
     }
 
     _init() {
         this._id = null;
         this.application.on("contentHeight", (h)=> {
-            this.tag("Top").setSmooth("h", 420-(h/2)-(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
-            this.tag("Bottom").setSmooth("h", 330-(h/2)+(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+            if (h === 0) {
+                this.tag("Top").setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+                this.tag("Bottom").setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+            } else {
+                this.tag("Top").setSmooth("h", 440-(h/2)-(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+                this.tag("Bottom").setSmooth("h", 330-(h/2)+(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+            }
         })
+    }
+
+    set items(v) {
+        this.tag("Items").children = v.map(({label, id, selected})=>{
+            return {
+                type: MenuItem, label, id, selected
+            }
+        });
     }
 
     select(id, fastForward) {
@@ -56,6 +56,18 @@ export default class Menu extends Lightning.Component {
 
         this.tag("Top").setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
         this.tag("Bottom").setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
+    }
+
+    show() {
+        this.patch({
+            smooth: {alpha: 1, x: 90}
+        });
+    }
+
+    hide() {
+        this.patch({
+            smooth: {alpha: 0, x: 60}
+        });
     }
 
 }
