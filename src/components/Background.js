@@ -36,16 +36,36 @@ export default class Background extends Lightning.Component {
 
             clearTimeout(this._timeout);
             this._timeout = setTimeout(()=> {
-                this._setBackground(item);
-            }, 600);
+                const src = getImgUrl(this._item.background, 1280);
+                this._setBackground(src);
+            }, 500);
+        });
+
+        this.application.on("setBackground", ({src})=> {
+            this._item = null;
+            clearTimeout(this._timeout);
+            this._timeout = setTimeout(()=> {
+                this._setBackgroundBySrc(src);
+            }, 300);
         });
     }
 
-    _setBackground(item) {
-        const src = getImgUrl(item.background, 1280);
-
+    _setBackground(src) {
         this.tag("Backgrounds").children[this._index].patch({
             texture: Img(src).contain(1920, 1080),
+            alpha: 0.001
+        });
+        this._index ^= 1;
+        this.tag("Backgrounds").children[this._index].patch({
+            smooth: {
+                alpha: [0, {duration: 0.4, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}]
+            }
+        });
+    }
+
+    _setBackgroundBySrc(src) {
+        this.tag("Backgrounds").children[this._index].patch({
+            src,
             alpha: 0.001
         });
         this._index ^= 1;

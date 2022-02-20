@@ -99,7 +99,7 @@ export default class Details extends Lightning.Component {
 
         let logoIndex = 0;
         this._item.productionCompanies.forEach(company => {
-            if (company.logo_path !== null) {
+            if (company.logo_path !== null && logoIndex < 6) {
                 this.tag("Logos").childList.a(this.stage.c({
                     type: Logo, logo: company.logo_path, y: logoIndex * 140,
                     x: 30, alpha: 0.001,

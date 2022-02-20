@@ -1,7 +1,7 @@
-import {getCreditsUrl, getDetailUrl, getPopularUrls} from "./endpoints";
+import {getCreditsUrl, getDetailUrl, getPopularUrls, getSimilarUrls} from "./endpoints";
 
 import {
-    NotFound, Error, Splash, Movie, Tv, Details, Cast
+    NotFound, Error, Splash, Movie, Tv, Details, Cast, Similar
 } from '../pages';
 import {details, list} from "./factory";
 
@@ -82,6 +82,28 @@ export default {
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            widgets: ["detailsmenu"]
+        },
+        {
+            path: 'similar/:type/:id',
+            component: Similar,
+            before: async (page, {type, id}) =>{
+                return getSimilarUrls(type, id).then((response)=>{
+                    return Promise.all(response).then(function (responses) {
+                        return Promise.all(responses.map(function (response) {
+                            return response.json();
+                        }));
+                    }).then(function (response) {
+                        const genres = response[0].genres;
+                        const data = response[1];
+                        page.detailsType = type;
+                        page.detailsId = id;
+                        page.content = list(type, data, genres);
+                    }).catch(function (error) {
+                        console.log("error", error);
+                    });
+                })
             },
             widgets: ["detailsmenu"]
         },

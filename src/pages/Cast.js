@@ -1,4 +1,4 @@
-import {Lightning, Router} from "@lightningjs/sdk";
+import {Lightning, Router, Utils} from "@lightningjs/sdk";
 
 export default class Cast extends Lightning.Component {
 
@@ -18,6 +18,8 @@ export default class Cast extends Lightning.Component {
     _active() {
         this.widgets.detailsmenu.select("cast", true);
         this.application.emit("contentHeight", 640);
+        const src = Utils.asset("images/background.png");
+        this.application.emit("setBackground", {src});
         this.tag("Grid").patch({
             smooth: {alpha: 1, x: 110}
         });
@@ -38,6 +40,11 @@ export default class Cast extends Lightning.Component {
     _handleUp() {
         this.widgets.detailsmenu.select("details");
         Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
+    }
+
+    _handleDown() {
+        this.widgets.detailsmenu.select("similar");
+        Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
     }
 
     _getFocused() {

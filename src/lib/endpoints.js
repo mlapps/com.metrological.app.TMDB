@@ -17,3 +17,12 @@ export const getDetailUrl = async (type, id)=> {
 export const getCreditsUrl = async (type, id)=> {
     return fetch(`${base}/${type}/${id}/credits?api_key=${apiKey}`);
 };
+
+export const getSimilarUrls = async (type,id)=> {
+    return [
+        `genre/${type}/list`,
+        `${type}/${id}/similar`,
+    ].map((url)=>{
+        return fetch(`${base}/${url}?api_key=${apiKey}`)
+    });
+};

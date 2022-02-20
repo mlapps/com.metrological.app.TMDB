@@ -44,7 +44,7 @@ export default class App extends Router.App {
                     items: [
                         {label: "Details", id: "details", selected: true},
                         {label: "Cast", id: "cast", selected: false},
-                        {label: "Related", id: "related", selected: false}
+                        {label: "Similar", id: "similar", selected: false}
                     ]
                 }
             },
