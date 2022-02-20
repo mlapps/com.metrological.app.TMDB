@@ -13,3 +13,7 @@ export const getPopularUrls = async (type)=>{
 export const getDetailUrl = async (type, id)=> {
     return fetch(`${base}/${type}/${id}?api_key=${apiKey}`);
 };
+
+export const getCreditsUrl = async (type, id)=> {
+    return fetch(`${base}/${type}/${id}/credits?api_key=${apiKey}`);
+};

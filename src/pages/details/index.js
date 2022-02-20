@@ -1,4 +1,4 @@
-import {Lightning} from "@lightningjs/sdk";
+import {Lightning, Router} from "@lightningjs/sdk";
 import {MovieInfo, Rating, Title} from "../../components";
 import Logo from "./Logo";
 
@@ -89,20 +89,16 @@ export default class Details extends Lightning.Component {
     }
 
     set content(v) {
-        const item = v;
+        this._item = v;
 
-        console.log(item);
-
-        this.tag("Title").label = item.title;
-        this.tag("MovieInfo").info = {date: item.formattedReleaseDate, genres: item.genresAsString};
-        this.tag("Overview").text = item.overview;
-        this.tag("Rating").voteAverage = item.voteAverage;
+        this.tag("Title").label = this._item.title;
+        this.tag("MovieInfo").info = {date: this._item.formattedReleaseDate, genres: this._item.genresAsString};
+        this.tag("Overview").text = this._item.overview;
+        this.tag("Rating").voteAverage = this._item.voteAverage;
         this.tag("Rating").startAnimation(true);
 
-        this.application.emit("setItem", {item});
-
         let logoIndex = 0;
-        item.productionCompanies.forEach(company => {
+        this._item.productionCompanies.forEach(company => {
             if (company.logo_path !== null) {
                 this.tag("Logos").childList.a(this.stage.c({
                     type: Logo, logo: company.logo_path, y: logoIndex * 140,
@@ -115,5 +111,16 @@ export default class Details extends Lightning.Component {
                 logoIndex++;
             }
         });
+
+        this.application.emit("setItem", {item: this._item});
+    }
+
+    set detailsType(v) {
+        this._detailsType = v;
+    }
+
+    _handleDown() {
+        this.widgets.detailsmenu.select("cast");
+        Router.navigate(`cast/${this._detailsType}/${this._item.id}`, true);
     }
 }

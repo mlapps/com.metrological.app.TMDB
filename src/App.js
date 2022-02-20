@@ -2,7 +2,7 @@ import { Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
 import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
-import Background from "./pages/popular/Background";
+import {Background} from "./components";
 
 export default class App extends Router.App {
     static getFonts() {
@@ -43,7 +43,7 @@ export default class App extends Router.App {
                     type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
                     items: [
                         {label: "Details", id: "details", selected: true},
-                        {label: "Actors", id: "actors", selected: false},
+                        {label: "Cast", id: "cast", selected: false},
                         {label: "Related", id: "related", selected: false}
                     ]
                 }

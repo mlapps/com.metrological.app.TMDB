@@ -1,7 +1,7 @@
-import {getDetailUrl, getPopularUrls} from "./endpoints";
+import {getCreditsUrl, getDetailUrl, getPopularUrls} from "./endpoints";
 
 import {
-    NotFound, Error, Splash, Movie, Tv, Details
+    NotFound, Error, Splash, Movie, Tv, Details, Cast
 } from '../pages';
 import {details, list} from "./factory";
 
@@ -17,7 +17,6 @@ export default {
             component: Movie,
             before: async(page)=> {
                 const type = "movie";
-
                 return getPopularUrls(type).then((response)=>{
                     return Promise.all(response).then(function (responses) {
                         return Promise.all(responses.map(function (response) {
@@ -39,7 +38,6 @@ export default {
             component: Tv,
             before: async(page)=> {
                 const type = "tv";
-
                 return getPopularUrls(type).then((response)=>{
                     return Promise.all(response).then(function (responses) {
                         return Promise.all(responses.map(function (response) {
@@ -63,7 +61,24 @@ export default {
                 return getDetailUrl(type, id).then(response => {
                     return response.json();
                 }).then(function (data) {
+                    page.detailsType = type;
                     page.content = details(data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            widgets: ["detailsmenu"]
+        },
+        {
+            path: 'cast/:type/:id',
+            component: Cast,
+            before: async (page, {type, id}) =>{
+                return getCreditsUrl(type, id).then(response => {
+                    return response.json();
+                }).then(function (data) {
+                    page.detailsType = type;
+                    page.detailsId = id;
+                    page.content = list("cast", data);
                 }).catch(function (error) {
                     console.log(error);
                 });

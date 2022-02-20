@@ -1,42 +1,35 @@
-import {Item, Carousel, FlipList} from "../components";
-import {Container, Details} from "./models";
+import {Item, FlipList, Actor, List} from "../components";
+import {Container, Details, Cast} from "./models";
 
 let stage;
+const models = new Map();
 const listComponents = new Map();
 const itemComponents = new Map();
 
+models.set("movie", Container);
+models.set("tv", Container);
+models.set("cast", Cast);
+
 listComponents.set("movie", FlipList);
 listComponents.set("tv", FlipList);
+listComponents.set("cast", List);
+
 itemComponents.set("movie", Item);
 itemComponents.set("tv", Item);
+itemComponents.set("cast", Actor);
 
 export const init = (stageInstance) =>{
     stage = stageInstance;
 };
 
 export const list = (type, data, genres) => {
-    const container = new Container(data, type, genres);
+    const container = models.get(type);
+    const model = new container(data, type, genres);
 
     return stage.c({
-        type: listComponents.get(container.type),
-        itemConstruct: itemComponents.get(container.type),
-        items: container.items
-    });
-};
-
-export const carousel = (type, data, genres) => {
-    const container = new Container(data, type, genres);
-
-    const len = container.items.length;
-    const half = ~~(len / 2);
-    const dividedSet = container.items.splice(half, len);
-    container.items.unshift(...dividedSet);
-
-    return stage.c({
-        type: listComponents.get(container.type),
-        itemConstruct: itemComponents.get(container.type),
-        index: half,
-        items: container.items
+        type: listComponents.get(type),
+        itemConstruct: itemComponents.get(type),
+        items: model.items
     });
 };
 
