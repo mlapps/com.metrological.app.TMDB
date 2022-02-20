@@ -107,11 +107,6 @@ export default class List extends Lightning.Component {
         }
     }
 
-    _handleEnter() {
-        const item = this.activeItem.item;
-        Router.navigate(`details/${item.type}/${item.id}`, true);
-    }
-
     setIndex(index){
         this._index = index;
         this._animateToSelected();

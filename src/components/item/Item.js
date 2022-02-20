@@ -1,4 +1,4 @@
-import {Img, Lightning} from "@lightningjs/sdk";
+import {Img, Lightning, Router} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 
@@ -118,6 +118,10 @@ export default class Item extends Lightning.Component {
                 }
             }
         });
+    }
+
+    _handleEnter() {
+        Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
     }
 
     static get width() {

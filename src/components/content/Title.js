@@ -8,11 +8,15 @@ export default class Title extends Lightning.Component {
 
     _init() {
         this.on("txLoaded", ()=> {
-            if (!this._titleLoaded) {
+            if (!this._titleLoaded && !this._skip) {
                 this.application.emit("titleLoaded");
                 this._titleLoaded = true;
             }
         });
+    }
+
+    set skip(v) {
+        this._skip = v;
     }
 
     set label(v) {

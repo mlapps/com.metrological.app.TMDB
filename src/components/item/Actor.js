@@ -99,6 +99,10 @@ export default class Actor extends Lightning.Component {
         });
     }
 
+    _handleEnter() {
+        console.log("cast");
+    }
+
     static get width() {
         return 300;
     }

@@ -17,7 +17,8 @@ export default class Details extends Lightning.Component {
                     x: {duration: 0.6, delay: 0.4, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                 },
                 Title: {
-                    type: Title
+                    type: Title,
+                    skip: true
                 },
                 Details: {
                     flex: {}, rtt: true,
