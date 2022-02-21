@@ -41,7 +41,7 @@ export default class Movie {
                 genres += `${genre.name}`
             }
         });
-        return genres;
+        return genres === '' ? "-" : genres;
     }
 
     get id() {
@@ -69,8 +69,12 @@ export default class Movie {
     }
 
     get formattedReleaseDate() {
-        const date = new Date(this._release_date);
-        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
+        if (!this._release_date) {
+            return `Date not available`;
+        } else {
+            const date = new Date(this._release_date);
+            return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
+        }
     }
 
     get title() {

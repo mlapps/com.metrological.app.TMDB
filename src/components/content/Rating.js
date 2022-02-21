@@ -47,9 +47,10 @@ export default class Rating extends Lightning.Component {
     }
 
     startAnimation(skipAnimation) {
-        if (skipAnimation) {
+        if (skipAnimation || this._voteAverage === 0) {
             this.tag("RatingCircle").shader.angle = (this._voteAverage/10);
-            this.tag("Number").text = `${Math.floor(this._voteAverage*10)}`;
+            this.tag("Number").text = `${this._voteAverage===0?`-`:Math.floor(this._voteAverage*10)}`;
+            this.tag("Percentage").visible = this._voteAverage !== 0;
         } else {
             this._ratingAnimation.start();
         }
@@ -59,7 +60,10 @@ export default class Rating extends Lightning.Component {
         let color = 0xff21d07a;
         let backgroundColor = 0xff204529;
 
-        if (this._voteAverage/10 < 0.4) {
+        if (this._voteAverage === 0) {
+            color = 0xff21d07a;
+            backgroundColor = 0xff204529;
+        } else if (this._voteAverage/10 < 0.4) {
             color = 0xffd1215c;
             backgroundColor = 0xff571435;
         } else if (this._voteAverage/10 >= 0.4 && this._voteAverage/10 <= 0.7) {

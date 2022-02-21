@@ -30,8 +30,13 @@ export default class Tv {
     }
 
     get formattedReleaseDate() {
-        const date = new Date(this._first_air_date);
-        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
+        if (!this._first_air_date) {
+            return `Date not available`;
+        } else {
+            const date = new Date(this._first_air_date);
+            return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
     }
 
     get genres(){
@@ -47,7 +52,7 @@ export default class Tv {
                 genres += `${genre.name}`
             }
         });
-        return genres;
+        return genres === '' ? "-" : genres;
     }
 
     get id() {

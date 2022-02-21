@@ -15,7 +15,7 @@ export default class Details {
         this._poster_path = obj.poster_path;
         this._production_companies = obj.production_companies;
         this._production_countries = obj.production_countries;
-        this._release_date = new Date(obj.release_date || obj.first_air_date);
+        this._release_date = obj.release_date || obj.first_air_date;
         this._revenue = obj.revenue;
         this._runtime = obj.runtime;
         this._spoken_languages = obj.spoken_languages;
@@ -56,7 +56,7 @@ export default class Details {
                 genres += `${genre.name}`
             }
         });
-        return genres;
+        return genres === '' ? "-" : genres;
     }
 
     get homepage() {
@@ -104,8 +104,12 @@ export default class Details {
     }
 
     get formattedReleaseDate() {
-        const date = new Date(this._release_date);
-        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
+        if (!this._release_date) {
+            return `Date not available`;
+        } else {
+            const date = new Date(this._release_date);
+            return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
+        }
     }
 
     get revenue() {

@@ -42,7 +42,7 @@ export default class App extends Router.App {
                 DetailsMenu:{
                     type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
                     items: [
-                        {label: "Details", id: "details", selected: true},
+                        {label: "About", id: "details", selected: true},
                         {label: "Cast", id: "cast", selected: false},
                         {label: "Similar", id: "similar", selected: false}
                     ]
@@ -50,7 +50,7 @@ export default class App extends Router.App {
                 PeopleMenu:{
                     type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
                     items: [
-                        {label: "Details", id: "details", selected: true},
+                        {label: "Biography", id: "details", selected: true},
                         {label: "Movie credits", id: "moviecredits", selected: false},
                         {label: "TV credits", id: "tvcredits", selected: false}
                     ]
