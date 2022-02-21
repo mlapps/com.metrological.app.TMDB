@@ -1,5 +1,5 @@
 import {Item, FlipList, Actor, List} from "../components";
-import {Container, Details, Cast} from "./models";
+import {Container, Details, Cast, People} from "./models";
 
 let stage;
 const models = new Map();
@@ -35,4 +35,8 @@ export const list = (type, data, genres) => {
 
 export const details = (data) => {
     return new Details(data);
+};
+
+export const people = (data) => {
+    return new People(data);
 };

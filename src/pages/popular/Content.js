@@ -11,7 +11,7 @@ export default class Content extends Lightning.Component {
                 type: Title
             },
             Details: {
-                flex: {}, rtt: true,
+                flex: {},
                 flexItem: {marginTop: -20},
                 Rating: {
                     type: Rating
@@ -22,7 +22,8 @@ export default class Content extends Lightning.Component {
                 }
             },
             Button: {
-                type: Button
+                flexItem: {marginTop: 30},
+                type: Button, label: "Details"
             }
         };
     };

@@ -31,7 +31,7 @@ export default class Tv {
 
     get formattedReleaseDate() {
         const date = new Date(this._first_air_date);
-        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
+        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
     }
 
     get genres(){

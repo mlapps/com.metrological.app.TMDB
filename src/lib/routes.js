@@ -1,9 +1,10 @@
-import {getCreditsUrl, getDetailUrl, getPopularUrls, getSimilarUrls} from "./endpoints";
+import {getCreditsUrl, getCreditsUrls, getDetailUrl, getPeopleUrl, getPopularUrls, getSimilarUrls} from "./endpoints";
 
 import {
-    NotFound, Error, Splash, Movie, Tv, Details, Cast, Similar
+    NotFound, Error, Splash, Movie, Tv, Details, Cast, Similar, People, MovieCredits
 } from '../pages';
-import {details, list} from "./factory";
+import {details, list, people} from "./factory";
+import TvCredits from "../pages/TvCredits";
 
 export default {
     root: "splash",
@@ -110,6 +111,64 @@ export default {
         {
             path: '*',
             component: NotFound,
+        },
+        {
+            path: 'people/:id',
+            component: People,
+            before: async (page, {id}) =>{
+                return getPeopleUrl(id).then(response => {
+                    return response.json();
+                }).then(function (data) {
+                    page.content = people(data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            widgets: ["peoplemenu"]
+        },
+        {
+            path: 'movie_credits/:type/:id',
+            component: MovieCredits,
+            before: async (page, {type, id}) =>{
+                console.log(type, id)
+                return getCreditsUrls(type, id).then((response)=>{
+                    return Promise.all(response).then(function (responses) {
+                        return Promise.all(responses.map(function (response) {
+                            return response.json();
+                        }));
+                    }).then(function (response) {
+                        const genres = response[0].genres;
+                        const data = {results: response[1].cast};
+                        page.peopleId = id;
+                        page.content = list(type, data, genres);
+                    }).catch(function (error) {
+                        console.log("error", error);
+                    });
+                })
+            },
+            widgets: ["peoplemenu"]
+        },
+        {
+            path: 'tv_credits/:type/:id',
+            component: TvCredits,
+            before: async (page, {type, id}) =>{
+                console.log(type, id)
+                return getCreditsUrls(type, id).then((response)=>{
+                    return Promise.all(response).then(function (responses) {
+                        return Promise.all(responses.map(function (response) {
+                            return response.json();
+                        }));
+                    }).then(function (response) {
+                        const genres = response[0].genres;
+                        const data = {results: response[1].cast};
+                        page.peopleId = id;
+                        page.content = list(type, data, genres);
+                    }).catch(function (error) {
+                        console.log("error", error);
+                    });
+                })
+            },
+            widgets: ["peoplemenu"]
         }
     ],
 }

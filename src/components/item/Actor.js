@@ -1,4 +1,4 @@
-import {Img, Lightning} from "@lightningjs/sdk";
+import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 
 export default class Actor extends Lightning.Component {
@@ -45,6 +45,8 @@ export default class Actor extends Lightning.Component {
         if (this._item.profile_path !== null) {
             const image = getImgUrl(this._item.profile_path, 300)
             this.tag("Image").texture = Img(image).landscape(Actor.width);
+        } else {
+            this.tag("Image").src = Utils.asset("images/placeholder.png");
         }
 
         this.tag("Name").text = this._item.name;
@@ -100,7 +102,7 @@ export default class Actor extends Lightning.Component {
     }
 
     _handleEnter() {
-        console.log("cast");
+        Router.navigate(`people/${this._item.id}`, true);
     }
 
     static get width() {

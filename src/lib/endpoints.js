@@ -26,3 +26,16 @@ export const getSimilarUrls = async (type,id)=> {
         return fetch(`${base}/${url}?api_key=${apiKey}`)
     });
 };
+
+export const getPeopleUrl = async (id)=> {
+    return fetch(`${base}/person/${id}?api_key=${apiKey}`);
+};
+
+export const getCreditsUrls = async (type,id)=> {
+    return [
+        `genre/${type}/list`,
+        `person/${id}/${type}_credits`,
+    ].map((url)=>{
+        return fetch(`${base}/${url}?api_key=${apiKey}`)
+    });
+};

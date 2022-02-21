@@ -70,7 +70,7 @@ export default class Movie {
 
     get formattedReleaseDate() {
         const date = new Date(this._release_date);
-        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()} ${date.getFullYear()}`;
+        return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
     }
 
     get title() {

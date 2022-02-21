@@ -4,7 +4,6 @@ export default class Button extends Lightning.Component {
 
     static _template() {
         return {
-            flexItem: {marginTop: 30},
             color: 0xff21d07a, rtt: true,
             texture: Lightning.Tools.getRoundRect(180, 60, 30, 0, 0xff21d07a, true, 0xffffffff),
             transitions: {
@@ -20,7 +19,7 @@ export default class Button extends Lightning.Component {
                 }
             },
             Label: {
-                mountY: 0.5, x: 74, y: 32,
+                mount: 0.5, x: 114, y: 33,
                 text: {text: "Details", fontFace: "Regular", fontSize: 24, textColor: 0xff081C22}
             }
         };
@@ -32,6 +31,10 @@ export default class Button extends Lightning.Component {
                 this.color = color;
             }
         }
+    }
+
+    set label(v) {
+        this.tag("Label").text = v;
     }
 
     _active() {

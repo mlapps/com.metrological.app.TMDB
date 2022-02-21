@@ -1,4 +1,4 @@
-import {Img, Lightning, Router} from "@lightningjs/sdk";
+import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 
@@ -63,9 +63,13 @@ export default class Item extends Lightning.Component {
     set item(v) {
         this._item = v;
 
-        const image = getImgUrl(this._item.poster, 500);
         const content = this.tag("Blur").content;
-        content.tag("Image").texture = Img(image).contain(342, 513);
+        if (this._item.poster !== null) {
+            const image = getImgUrl(this._item.poster, 500);
+            content.tag("Image").texture = Img(image).contain(342, 513);
+        } else {
+            content.tag("Image").src = Utils.asset("images/placeholder.png");
+        }
     }
 
     set index(v) {

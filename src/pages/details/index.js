@@ -21,7 +21,7 @@ export default class Details extends Lightning.Component {
                     skip: true
                 },
                 Details: {
-                    flex: {}, rtt: true,
+                    flex: {},
                     flexItem: {marginTop: -20},
                     Rating: {
                         type: Rating

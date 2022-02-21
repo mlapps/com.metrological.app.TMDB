@@ -1,4 +1,4 @@
-import {Img, Lightning} from "@lightningjs/sdk";
+import {Img, Lightning, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../lib/tools";
 
 export default class Background extends Lightning.Component {
@@ -36,7 +36,10 @@ export default class Background extends Lightning.Component {
 
             clearTimeout(this._timeout);
             this._timeout = setTimeout(()=> {
-                const src = getImgUrl(this._item.background, 1280);
+                let src = Utils.asset("images/background.png");
+                if (this._item.background) {
+                    src = getImgUrl(this._item.background, 1280);
+                }
                 this._setBackground(src);
             }, 500);
         });
