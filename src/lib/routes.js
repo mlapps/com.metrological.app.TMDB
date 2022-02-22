@@ -37,6 +37,10 @@ export default {
         {
             path: 'tv',
             component: Tv,
+            options: {
+                preventStorage: true,
+                clearHistory: true
+            },
             before: async(page)=> {
                 const type = "tv";
                 return getPopularUrls(type).then((response)=>{
@@ -73,6 +77,9 @@ export default {
         {
             path: 'cast/:type/:id',
             component: Cast,
+            options: {
+                preventStorage: true,
+            },
             before: async (page, {type, id}) =>{
                 return getCreditsUrl(type, id).then(response => {
                     return response.json();
@@ -109,10 +116,6 @@ export default {
             widgets: ["detailsmenu"]
         },
         {
-            path: '*',
-            component: NotFound,
-        },
-        {
             path: 'people/:id',
             component: People,
             before: async (page, {id}) =>{
@@ -130,7 +133,6 @@ export default {
             path: 'movie_credits/:type/:id',
             component: MovieCredits,
             before: async (page, {type, id}) =>{
-                console.log(type, id)
                 return getCreditsUrls(type, id).then((response)=>{
                     return Promise.all(response).then(function (responses) {
                         return Promise.all(responses.map(function (response) {
@@ -152,7 +154,6 @@ export default {
             path: 'tv_credits/:type/:id',
             component: TvCredits,
             before: async (page, {type, id}) =>{
-                console.log(type, id)
                 return getCreditsUrls(type, id).then((response)=>{
                     return Promise.all(response).then(function (responses) {
                         return Promise.all(responses.map(function (response) {
@@ -169,6 +170,10 @@ export default {
                 })
             },
             widgets: ["peoplemenu"]
+        },
+        {
+            path: '*',
+            component: NotFound,
         }
     ],
 }

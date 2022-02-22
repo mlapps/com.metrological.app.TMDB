@@ -1,6 +1,6 @@
 {
   "name": "com.metrological.app.Tmdb",
-  "description": "LiveTile",
+  "description": "TMDB Showcase",
   "dependencies": {
     "@lightningjs/sdk": "^4.8.1"
   }
