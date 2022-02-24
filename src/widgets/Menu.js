@@ -23,8 +23,8 @@ export default class Menu extends Lightning.Component {
                 this.tag("Top").setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
                 this.tag("Bottom").setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
             } else {
-                this.tag("Top").setSmooth("h", 440-(h/2)-(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
-                this.tag("Bottom").setSmooth("h", 330-(h/2)+(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+                this.tag("Top").setSmooth("h", 440-this._lineOffset-(h/2)-(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
+                this.tag("Bottom").setSmooth("h", 330+this._lineOffset-(h/2)+(this._currentIndex*48), {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
             }
         })
     }
@@ -56,6 +56,10 @@ export default class Menu extends Lightning.Component {
 
         this.tag("Top").setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
         this.tag("Bottom").setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.94,.42,.49,.99)'});
+    }
+
+    set lineOffset(v) {
+        this._lineOffset = v;
     }
 
     show() {

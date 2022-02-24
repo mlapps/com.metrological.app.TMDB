@@ -10,9 +10,4 @@ export default class Tv extends Popular {
         this.widgets.menu.select("movie");
         Router.navigate(`movie`);
     }
-
-    _handleDown() {
-        this.widgets.menu.select("search");
-        Router.navigate(`search`);
-    }
 }

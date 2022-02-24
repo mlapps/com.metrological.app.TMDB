@@ -32,15 +32,14 @@ export default class App extends Router.App {
             ...super._template(),
             Widgets: {
                 Menu:{
-                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
+                    type: Menu, x: 90, y: 90, zIndex: 99, visible: false, lineOffset: 24,
                     items: [
                         {label: "Movies", id: "movie", selected: true},
-                        {label: "TV", id: "tv", selected: false},
-                        {label: "Search", id: "search", selected: false}
+                        {label: "TV", id: "tv", selected: false}
                     ]
                 },
                 DetailsMenu:{
-                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
                     items: [
                         {label: "About", id: "details", selected: true},
                         {label: "Cast", id: "cast", selected: false},
@@ -48,7 +47,7 @@ export default class App extends Router.App {
                     ]
                 },
                 PeopleMenu:{
-                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false,
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
                     items: [
                         {label: "Biography", id: "details", selected: true},
                         {label: "Movie credits", id: "moviecredits", selected: false},
