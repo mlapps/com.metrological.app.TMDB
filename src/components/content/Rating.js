@@ -66,7 +66,7 @@ export default class Rating extends Lightning.Component {
         } else if (this._voteAverage/10 < 0.4) {
             color = 0xffd1215c;
             backgroundColor = 0xff571435;
-        } else if (this._voteAverage/10 >= 0.4 && this._voteAverage/10 <= 0.7) {
+        } else if (this._voteAverage/10 >= 0.4 && this._voteAverage/10 < 0.7) {
             color = 0xffd2d531;
             backgroundColor = 0xff423d0f;
         }

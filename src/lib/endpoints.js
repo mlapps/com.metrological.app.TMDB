@@ -4,9 +4,9 @@ const base = 'https://api.themoviedb.org/3';
 export const getPopularUrls = async (type)=>{
     return [
         `genre/${type}/list`,
-        `${type}/popular`,
+        `discover/${type}`,
     ].map((url)=>{
-        return fetch(`${base}/${url}?api_key=${apiKey}`)
+        return fetch(`${base}/${url}?api_key=${apiKey}&with_companies=7|33&vote_average.gte=7`)
     });
 }
 
