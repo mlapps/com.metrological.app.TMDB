@@ -17,6 +17,10 @@ export default class Popular extends Lightning.Component{
         this._index = 0;
     }
 
+    _active() {
+        this.widgets.menu.show();
+    }
+
     set content(v) {
         this.tag("List").childList.add(v);
     }
@@ -26,7 +30,10 @@ export default class Popular extends Lightning.Component{
     }
 
     _getFocused() {
-        this.widgets.menu.show(); // @todo: move
+        return this.selectedList;
+    }
+
+    get selectedList() {
         return this.tag("List").children[this._index];
     }
 
@@ -34,6 +41,18 @@ export default class Popular extends Lightning.Component{
         this.tag("Content").hide();
         this.widgets.menu.hide();
         Router.navigate(`details/${item.type}/${item.id}`, true);
+    }
+
+    historyState(params) {
+        if (params) {
+            this.selectedList.index = params.listIndex;
+            // this.selectedList._animateToSelected();
+            this.selectedList.resetConfigIndex();
+        } else {
+            return {
+                listIndex: this.tag("List").children[this._index].index
+            }
+        }
     }
 
 }

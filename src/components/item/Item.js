@@ -52,7 +52,7 @@ export default class Item extends Lightning.Component {
         this._perspectiveAnimation = this.tag("Blur").content.animation({
             duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', actions:[
                 {t: 'Perspective', p: 'shader.rx', v: (e)=> {
-                    const {rx} = ITEM_CONFIGS[this._configIndex];
+                    const {rx} = ITEM_CONFIGS[this.configIndex];
                     return e * (rx.e-rx.s)+rx.s;
                 }}
             ]
@@ -77,12 +77,12 @@ export default class Item extends Lightning.Component {
         this._index = v;
     }
 
-    set configIndex(v) {
-        this._configIndex = v;
+    get configIndex() {
+        return this.parent.configIndex;
     }
 
     animatePosition() {
-        const {alpha, scale, x, y, color, amount, zIndex} = ITEM_CONFIGS[this._configIndex];
+        const {alpha, scale, x, y, color, amount, zIndex} = ITEM_CONFIGS[this.configIndex];
 
         this.patch({
             smooth: {alpha},
@@ -105,7 +105,7 @@ export default class Item extends Lightning.Component {
     }
 
     _resetPosition() {
-        const {alpha, scale, x, y, color, amount, zIndex, rx} = ITEM_CONFIGS[this._configIndex];
+        const {alpha, scale, x, y, color, amount, zIndex, rx} = ITEM_CONFIGS[this.configIndex];
         this.patch({
             alpha,
             Blur: {

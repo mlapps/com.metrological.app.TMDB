@@ -35,6 +35,14 @@ export default class FlipList extends Lightning.Component {
         return this.tag("Items").children[this._index];
     }
 
+    get index() {
+        return this._index;
+    }
+
+    set index(v) {
+        this._index = v;
+    }
+
     set container(v){
         this._container = v;
     }
@@ -75,53 +83,95 @@ export default class FlipList extends Lightning.Component {
 
     _createItems({items, construct}) {
         return items.map((item, idx) => {
-
-            let configIndex = idx+1;
-            if (idx > 3) {
-                configIndex = 4;
-            }
+            const configIndex = idx > 3 ? 4 : idx+1;
 
             return {
                 type: ItemWrapper,
                 construct,
                 index: idx,
-                configIndex,
                 item: item,
-                x: idx>=3?700:200/configIndex,
-                transitions: {
-                    x: {duration: configIndex*0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
-                },
+                configIndex,
                 w: construct.width,
-                h: construct.height
+                h: construct.height,
+                visible: idx <= 3
             }
         })
     }
 
-    _animateToSelected(index = this._index) {
+    resetConfigIndex() {
         const children = this.tag("Items").children;
-        if (children[index-1] && children[index-1].child) {
-            children[index-1].child.configIndex = 0;
-            children[index-1].child.animatePosition();
+        children.forEach((child, idx)=> {
+            child.visible = false;
+            if (idx === this._index-1) {
+                child.configIndex = 0;
+                if (child.child) {
+                    child.child.animatePosition();
+                }
+            } else if (idx === this._index) {
+                child.visible = true;
+                child.configIndex = 1;
+                if (child.child) {
+                    child.child.animatePosition();
+                }
+            } else if (idx === this._index+1) {
+                child.visible = true;
+                child.configIndex = 2;
+                if (child.child) {
+                    child.child.animatePosition();
+                }
+            } else if (idx === this._index+2) {
+                child.visible = true;
+                child.configIndex = 3;
+                if (child.child) {
+                    child.child.animatePosition();
+                }
+            } else if (idx === this._index+3) {
+                child.configIndex = 4;
+                if (child.child) {
+                    child.child.animatePosition();
+                }
+            }
+        });
+    }
+
+    _animateToSelected() {
+        const index = this._index;
+        const children = this.tag("Items").children;
+
+        if (children[index-1]) {
+            children[index-1].configIndex = 0;
+            if (children[index-1].child) {
+                children[index-1].child.animatePosition();
+            }
         }
-        if (children[index] && children[index].child) {
-            children[index].child.configIndex = 1;
-            children[index].child.animatePosition();
+
+        if (children[index]) {
+            children[index].visible = true;
+            children[index].configIndex = 1;
+            if (children[index].child) {
+                children[index].child.animatePosition();
+            }
         }
-        if (children[index+1] && children[index+1].child) {
-            children[index+1].child.configIndex = 2;
-            children[index+1].child.animatePosition();
+
+        if (children[index+1]) {
+            children[index+1].visible = true;
+            children[index+1].configIndex = 2;
+            if (children[index+1].child) {
+                children[index+1].child.animatePosition();
+            }
         }
+
         if (children[index+2]) {
-            children[index+2].x = 0;
+            children[index+2].visible = true;
+            children[index+2].configIndex = 3;
             if (children[index+2].child) {
-                children[index+2].child.configIndex = 3;
                 children[index+2].child.animatePosition();
             }
         }
+
         if (children[index+3]) {
-            children[index+3].x = 0;
+            children[index+3].configIndex = 4;
             if (children[index+3].child) {
-                children[index+3].child.configIndex = 4;
                 children[index+3].child.animatePosition();
             }
         }

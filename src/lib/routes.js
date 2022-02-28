@@ -37,10 +37,6 @@ export default {
         {
             path: 'tv',
             component: Tv,
-            options: {
-                preventStorage: true,
-                clearHistory: true
-            },
             before: async(page)=> {
                 const type = "tv";
                 return getPopularUrls(type).then((response)=>{
@@ -77,9 +73,6 @@ export default {
         {
             path: 'cast/:type/:id',
             component: Cast,
-            options: {
-                preventStorage: true,
-            },
             before: async (page, {type, id}) =>{
                 return getCreditsUrl(type, id).then(response => {
                     return response.json();

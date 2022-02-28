@@ -44,6 +44,16 @@ export const ITEM_CONFIGS = [
         rx: {s: 1, e: 1},
         scale: 0.45,
         zIndex: 1,
+        alpha: 0.001,
+        x: 400,
+        y: 0,
+        color: 0xff757575
+    },
+    {
+        amount: 2,
+        rx: {s: 1, e: 1},
+        scale: 0.45,
+        zIndex: 1,
         alpha: 0,
         x: 400,
         y: 0,
