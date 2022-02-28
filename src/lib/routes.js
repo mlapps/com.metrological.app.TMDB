@@ -6,6 +6,19 @@ import {
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
 
+const getPopularContent = async (type)=>{
+    try {
+        const urls = await getPopularUrls(type);
+        const response = await Promise.all(urls);
+        const [g, data] = await Promise.all(
+            response.map((d)=>d.json())
+        );
+        return list(type, data, g.genres);
+    } catch (e){
+        console.log(e)
+    }
+}
+
 export default {
     root: "splash",
     routes: [
@@ -17,20 +30,7 @@ export default {
             path: 'movie',
             component: Movie,
             before: async(page)=> {
-                const type = "movie";
-                return getPopularUrls(type).then((response)=>{
-                    return Promise.all(response).then(function (responses) {
-                        return Promise.all(responses.map(function (response) {
-                            return response.json();
-                        }));
-                    }).then(function (response) {
-                        const genres = response[0].genres;
-                        const data = response[1];
-                        page.content = list(type, data, genres);
-                    }).catch(function (error) {
-                        console.log("error", error);
-                    });
-                })
+                page.content = await getPopularContent("movie");
             },
             widgets: ["menu"]
         },
@@ -38,20 +38,7 @@ export default {
             path: 'tv',
             component: Tv,
             before: async(page)=> {
-                const type = "tv";
-                return getPopularUrls(type).then((response)=>{
-                    return Promise.all(response).then(function (responses) {
-                        return Promise.all(responses.map(function (response) {
-                            return response.json();
-                        }));
-                    }).then(function (response) {
-                        const genres = response[0].genres;
-                        const data = response[1];
-                        page.content = list(type, data, genres);
-                    }).catch(function (error) {
-                        console.log("error", error);
-                    });
-                })
+                page.content = await getPopularContent("tv");
             },
             widgets: ["menu"]
         },
