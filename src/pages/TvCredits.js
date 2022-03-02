@@ -6,17 +6,19 @@ export default class TvCredits extends Popular {
         this.widgets.peoplemenu.select("tvcredits", true);
     }
 
-    $navigateToDetails({item}) {
-        this.tag("Content").hide();
-        Router.navigate(`details/${item.type}/${item.id}`, true);
-    }
-
     set peopleId(v) {
         this._peopleId = v;
     }
 
     _handleUp() {
         this.widgets.peoplemenu.select("moviecredits");
+
+        this.patch({
+            smooth: {alpha: 0}
+        });
+    }
+
+    _readyToNavigate() {
         Router.navigate(`movie_credits/movie/${this._peopleId}`, true);
     }
 

@@ -22,6 +22,26 @@ export default class App extends Router.App {
         Router.startRouter(routes, this);
     }
 
+    _init() {
+        const times = [];
+        let fps;
+        const el = document.getElementById("fps");
+        const refreshLoop = ()=> {
+            window.requestAnimationFrame(() => {
+                const now = performance.now();
+                while (times.length > 0 && times[0] <= now - 1000) {
+                    times.shift();
+                }
+                times.push(now);
+                fps = times.length;
+                this.tag("Fps").text= `${fps} FPS`
+                refreshLoop();
+            });
+        }
+
+        refreshLoop();
+    }
+
     static _template() {
         return {
             // we MUST spread the base-class template
@@ -30,6 +50,15 @@ export default class App extends Router.App {
                 type: Background
             },
             ...super._template(),
+            Holder:{ zIndex:9999,
+                Fps:{
+                    mountX: 1, x: 1900, y: 20,
+                    text:{
+                        text:'', fontFace: "regular", fontSize: 24
+                    }
+                }
+
+            },
             Widgets: {
                 Menu:{
                     type: Menu, x: 90, y: 90, zIndex: 99, visible: false, lineOffset: 24,

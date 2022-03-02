@@ -1,4 +1,4 @@
-import {Img, Lightning, Utils} from "@lightningjs/sdk";
+import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../lib/tools";
 
 export default class Background extends Lightning.Component {
@@ -28,28 +28,55 @@ export default class Background extends Lightning.Component {
             this.tag("BackgroundB").setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
         });
 
-        this.application.on("setItem", ({item})=> {
-            if (this._item && item.background === this._item.background) {
-                return;
+        this.tag("BackgroundA").transition("alpha").on("finish", ()=> {
+            if (this._index === 0) {
+                this.application.emit("backgroundLoaded");
             }
-            this._item = item;
+        });
 
-            clearTimeout(this._timeout);
-            this._timeout = setTimeout(()=> {
+        this.tag("BackgroundB").transition("alpha").on("finish", ()=> {
+            if (this._index === 1) {
+                this.application.emit("backgroundLoaded");
+            }
+        });
+
+        this.listeners = {
+            setBackground: ({src})=> {
+                this._item = null;
+                this._skip = false;
+                this._src = src;
+            },
+            readyForBackground: ()=> {
+                if (!this._skip) {
+                    this._setBackground(this._src);
+                }
+            },
+            setItem: ({item})=> {
+                if (this._item && item.background === this._item.background) {
+                    this._skip = true;
+                    return;
+                }
+                this._skip = false;
+                this._item = item;
+
                 let src = Utils.asset("images/background.png");
                 if (this._item.background) {
                     src = getImgUrl(this._item.background, 1280);
                 }
-                this._setBackground(src);
-            }, 500);
-        });
+                this._src = src;
+            }
+        }
+    }
 
-        this.application.on("setBackground", ({src})=> {
-            this._item = null;
-            clearTimeout(this._timeout);
-            this._timeout = setTimeout(()=> {
-                this._setBackgroundBySrc(src);
-            }, 300);
+    _attach() {
+        ["setBackground", "setItem", "readyForBackground"].forEach((event)=>{
+            this.application.on(event, this.listeners[event])
+        });
+    }
+
+    _detach() {
+        ["setBackground", "setItem", "readyForBackground"].forEach((event)=>{
+            this.application.off(event, this.listeners[event])
         });
     }
 
@@ -65,18 +92,4 @@ export default class Background extends Lightning.Component {
             }
         });
     }
-
-    _setBackgroundBySrc(src) {
-        this.tag("Backgrounds").children[this._index].patch({
-            src,
-            alpha: 0.001
-        });
-        this._index ^= 1;
-        this.tag("Backgrounds").children[this._index].patch({
-            smooth: {
-                alpha: [0, {duration: 0.4, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}]
-            }
-        });
-    }
-
 }

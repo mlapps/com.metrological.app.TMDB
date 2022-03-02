@@ -52,6 +52,11 @@ export default class People extends Lightning.Component {
                 }
             });
         });
+
+        this.transition("alpha").on("finish", ()=> {
+            this.widgets.peoplemenu.select("moviecredits");
+            Router.navigate(`movie_credits/movie/${this._item.id}`, true);
+        });
     }
 
     _active() {
@@ -61,6 +66,10 @@ export default class People extends Lightning.Component {
             Item: {
                 smooth: {y: 110, x: 110, mountY: 0}
             }
+        });
+
+        this.transition("y").on("finish", ()=> {
+            this.application.emit("readyForBackground");
         });
 
         this.widgets.peoplemenu.select("details", true);
@@ -92,8 +101,9 @@ export default class People extends Lightning.Component {
     }
 
     _handleDown() {
-        this.widgets.peoplemenu.select("moviecredits");
-        Router.navigate(`movie_credits/movie/${this._item.id}`, true);
+        this.patch({
+           smooth: {alpha: 0}
+        });
     }
 
     _truncateString(s, n) {

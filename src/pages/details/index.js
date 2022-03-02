@@ -7,7 +7,6 @@ export default class Details extends Lightning.Component {
     static _template() {
         return {
             Item: {
-                flex: {direction: "column"},
                 x: 90,
                 mountY: 0.5, y: 514,
                 transitions: {
@@ -17,23 +16,19 @@ export default class Details extends Lightning.Component {
                     x: {duration: 0.6, delay: 0.4, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                 },
                 Title: {
-                    type: Title,
-                    skip: true
+                    type: Title
                 },
                 Details: {
-                    flex: {},
-                    flexItem: {marginTop: -20},
                     Rating: {
                         type: Rating
                     },
                     MovieInfo: {
-                        flexItem: {marginLeft: 20},
+                        x: 120, y: 4,
                         type: MovieInfo
                     }
                 },
                 Holder: {
-                    flexItem: {marginTop: 40},
-                    alpha: 0, mountY: 0.5,
+                    alpha: 0,
                     transitions: {
                         alpha: {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
                         y: {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
@@ -44,7 +39,6 @@ export default class Details extends Lightning.Component {
                 }
             },
             LogosHolder: {
-                flexItem: false,
                 y: 120,
                 Logos: {
                     mountX: 1, x: 1830
@@ -55,23 +49,53 @@ export default class Details extends Lightning.Component {
 
     _init() {
         this.tag("Item").transition("y").on("finish", ()=> {
-            this.tag("Holder").y = 30;
+            this.tag("Holder").y = this.tag("Holder").y + 30;
             this.tag("Holder").patch({
                 smooth: {
-                    alpha: 1, y: 0
+                    alpha: 1, y: this.tag("Holder").y - 30
                 }
             });
+        });
 
-            this.tag("Logos").children.forEach(logo => {
-                logo.setSmooth("x", 0);
-                logo.setSmooth("alpha", 1);
-            });
+        this.tag("Holder").transition("y").on("finish", ()=> {
+            this.application.emit("readyForBackground");
+        });
+
+        this.transition("alpha").on("finish", ()=> {
+            this.widgets.detailsmenu.select("cast");
+            Router.navigate(`cast/${this._detailsType}/${this._item.id}`, true);
+        });
+
+        this.listeners = {
+            titleLoaded: ()=> {
+                this.tag("Rating").startAnimation(true);
+                this.h = this.tag("Title").renderHeight + 160;
+                this.tag("Details").y = this.tag("Title").renderHeight - 20;
+                this.tag("Holder").y = this.tag("Title").renderHeight + 100;
+                this.application.emit("contentHeight", 0);
+            },
+            backgroundLoaded: ()=> {
+                this.tag("Logos").children.forEach(logo => {
+                    logo.setSmooth("x", 0);
+                    logo.setSmooth("alpha", 1);
+                });
+            }
+        }
+    }
+
+    _attach() {
+        ["titleLoaded", "backgroundLoaded"].forEach((event)=>{
+            this.application.on(event, this.listeners[event])
+        });
+    }
+
+    _detach() {
+        ["titleLoaded", "backgroundLoaded"].forEach((event)=>{
+            this.application.off(event, this.listeners[event])
         });
     }
 
     _active() {
-        this.application.emit("contentHeight", 0);
-
         this.patch({
             Item: {
                 smooth: {y: 110, x: 110, mountY: 0}
@@ -96,7 +120,6 @@ export default class Details extends Lightning.Component {
         this.tag("MovieInfo").info = {date: this._item.formattedReleaseDate, genres: this._item.genresAsString};
         this.tag("Overview").text = this._item.overview;
         this.tag("Rating").voteAverage = this._item.voteAverage;
-        this.tag("Rating").startAnimation(true);
 
         let logoIndex = 0;
         this._item.productionCompanies.forEach(company => {
@@ -121,7 +144,8 @@ export default class Details extends Lightning.Component {
     }
 
     _handleDown() {
-        this.widgets.detailsmenu.select("cast");
-        Router.navigate(`cast/${this._detailsType}/${this._item.id}`, true);
+        this.patch({
+            smooth: {alpha: 0}
+        });
     }
 }

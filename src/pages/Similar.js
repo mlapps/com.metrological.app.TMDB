@@ -6,11 +6,6 @@ export default class Similar extends Popular {
         this.widgets.detailsmenu.select("similar", true);
     }
 
-    $navigateToDetails({item}) {
-        this.tag("Content").hide();
-        Router.navigate(`details/${item.type}/${item.id}`, true);
-    }
-
     set detailsType(v) {
         this._detailsType = v;
     }

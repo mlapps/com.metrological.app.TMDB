@@ -15,6 +15,29 @@ export default class Popular extends Lightning.Component{
 
     _init() {
         this._index = 0;
+
+        this.listeners = {
+            contentHidden: ()=> {
+                this.widgets.menu.hide();
+                Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
+            }
+        }
+
+        this.transition("alpha").on("finish", ()=> {
+            this._readyToNavigate();
+        });
+    }
+
+    _attach() {
+        ["contentHidden", "readyForNavigate"].forEach((event)=>{
+            this.application.on(event, this.listeners[event])
+        });
+    }
+
+    _detach() {
+        ["contentHidden", "readyForNavigate"].forEach((event)=>{
+            this.application.off(event, this.listeners[event])
+        });
     }
 
     _active() {
@@ -37,16 +60,21 @@ export default class Popular extends Lightning.Component{
         return this.tag("List").children[this._index];
     }
 
-    $navigateToDetails({item}) {
-        this.tag("Content").hide();
-        this.widgets.menu.hide();
-        Router.navigate(`details/${item.type}/${item.id}`, true);
+    $selectItem({item}) {
+        this._item = item;
+
+        this.patch({
+            smooth: {alpha: 0}
+        });
+    }
+
+    _readyToNavigate() {
+        Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
     }
 
     historyState(params) {
         if (params) {
             this.selectedList.index = params.listIndex;
-            // this.selectedList._animateToSelected();
             this.selectedList.resetConfigIndex();
         } else {
             return {

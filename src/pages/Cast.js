@@ -4,9 +4,9 @@ export default class Cast extends Lightning.Component {
 
     static  _template() {
         return {
-            Grid: {
+            List: {
                 alpha: 0.001,
-                x: 90, mountY: 0.5, y: 520, h: 451,
+                x: 110, mountY: 0.5, y: 520, h: 451,
                 transitions: {
                     x: {duration: 0.6, delay: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
                     alpha: {duration: 0.6, delay: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
@@ -15,18 +15,30 @@ export default class Cast extends Lightning.Component {
         };
     };
 
+    _init() {
+        this.transition("alpha").on("finish", ()=> {
+            this._readyToNavigate();
+        });
+    }
+
     _active() {
         this.widgets.detailsmenu.select("cast", true);
-        this.application.emit("contentHeight", 640);
+
         const src = Utils.asset("images/background.png");
         this.application.emit("setBackground", {src});
-        this.tag("Grid").patch({
-            smooth: {alpha: 1, x: 110}
+        this.application.emit("contentHeight", 640);
+
+        this.tag("List").transition("alpha").on("finish", ()=> {
+            this.application.emit("readyForBackground");
+        });
+
+        this.tag("List").patch({
+            smooth: {alpha: 1, x: 90}
         });
     }
 
     set content(v) {
-        this.tag("Grid").childList.add(v);
+        this.tag("List").childList.add(v);
     }
 
     set detailsType(v) {
@@ -38,17 +50,33 @@ export default class Cast extends Lightning.Component {
     }
 
     _handleUp() {
+        this._hide(-1);
         this.widgets.detailsmenu.select("details");
-        Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
     }
 
     _handleDown() {
+        this._hide(1);
         this.widgets.detailsmenu.select("similar");
-        Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
+    }
+
+    _hide(direction) {
+        this._direction = direction;
+
+        this.patch({
+            smooth: {alpha: 0}
+        });
+    }
+
+    _readyToNavigate() {
+        if (this._direction === 1) {
+            Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
+        } else {
+            Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
+        }
     }
 
     _getFocused() {
-        return this.tag("Grid").children[0];
+        return this.tag("List").children[0];
     }
 
 }

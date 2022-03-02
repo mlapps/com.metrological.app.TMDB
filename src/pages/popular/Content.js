@@ -5,24 +5,20 @@ export default class Content extends Lightning.Component {
 
     static _template() {
         return {
-            flex: {direction: "column"},
             alpha: 0.001,
             Title: {
                 type: Title
             },
             Details: {
-                flex: {},
-                flexItem: {marginTop: -20},
                 Rating: {
                     type: Rating
                 },
                 MovieInfo: {
-                    flexItem: {marginLeft: 20},
+                    x: 120, y: 4,
                     type: MovieInfo
                 }
             },
             Button: {
-                flexItem: {marginTop: 30},
                 type: Button, label: "Details"
             }
         };
@@ -34,34 +30,49 @@ export default class Content extends Lightning.Component {
             {t: '', p: 'x', rv: 90, v: {0: {v: 130}, 1: {v: 90}}},
         ]});
 
+        this._detailAnimation.on("finish", ()=> {
+            this.application.emit("readyForBackground");
+        });
+
         this.listeners = {
             titleLoaded: ()=> {
                 this._detailAnimation.start();
                 this.application.emit("contentHeight", this.tag("Title").renderHeight + 200);
                 this.tag("Rating").startAnimation();
+                this.h = this.tag("Title").renderHeight + 160;
+                this.tag("Details").y = this.tag("Title").renderHeight - 20;
+                this.tag("Button").y = this.tag("Title").renderHeight + 120;
+                this._refocus();
             },
             setItem: ({item})=> {
-                clearTimeout(this._timeout);
-                this._timeout = setTimeout(()=> {
-                    this._setDetails(item);
-                }, 400);
+                this._item = item;
+            },
+            itemAnimationEnded: ()=> {
+                this._setDetails(this._item);
             }
         }
+
+        this.transition("alpha").on("finish", ()=> {
+           this.application.emit("contentHidden");
+        });
     }
 
     _attach() {
-        ["titleLoaded", "setItem"].forEach((event)=>{
+        ["titleLoaded", "setItem", "itemAnimationEnded"].forEach((event)=>{
             this.application.on(event, this.listeners[event])
         });
     }
 
     _detach() {
-        ["titleLoaded", "setItem"].forEach((event)=>{
+        ["titleLoaded", "setItem", "itemAnimationEnded"].forEach((event)=>{
             this.application.off(event, this.listeners[event])
         });
     }
 
     _setDetails(item) {
+        if (this._details === item) return;
+        this._details = item;
+        this._item =  item;
         this.alpha = 0.001;
         this.tag("Rating").voteAverage = item.voteAverage;
         this.tag("Title").label = item.title;
@@ -70,6 +81,7 @@ export default class Content extends Lightning.Component {
 
     hide() {
         this.patch({
+            smooth: {alpha: 0, x: 40},
             Button: {
                 smooth: {alpha: 0, y: 60}
             }

@@ -6,19 +6,19 @@ export default class Rating extends Lightning.Component {
     static _template() {
         return {
             texture: Lightning.Tools.getRoundRect(100, 100, 50, 0, 0x00ffffff, true, 0xff081C22),
+            rtt: true,
             RatingNumber: {
-                mount: .5, x: w=>w / 2 + 2, y: h=>h / 2 + 4,
-                flex: {},
+                mount: .5, x: w=>w / 2 - 2, y: h=>h / 2 + 4,
                 Number: {
-                    text: {text: '0', fontSize: 38, fontFace: "SemiBold"}
+                    text: {text: '0', fontSize: 34, fontFace: "SemiBold"}
                 },
                 Percentage: {
-                    flexItem: {marginTop: 10},
+                    y: 6,
                     text: {text: '%', fontSize: 12, fontFace: "SemiBold"}
                 }
             },
             RatingCircle: {
-                rect:true, rtt: true, color: 0x00ffffff, mount: .5, x: 51, y: 51, w: 90, h: 90, rotation: Math.PI * .5,
+                rect: true, rtt: true, color: 0x00ffffff, mount: .5, x: 51, y: 51, w: 90, h: 90, rotation: Math.PI * .5,
                 shader: {
                     type: CircleProgressShader, radius: 45, width: 5, angle: 0, smooth: 0.007, color: 0xffd1215c, backgroundColor: 0xff204529
                 }
@@ -28,6 +28,12 @@ export default class Rating extends Lightning.Component {
 
     _init() {
         this._voteAverage = 0;
+
+        this.tag("Number").on("txLoaded", ()=> {
+            this.tag("RatingNumber").w = this.tag("Number").renderWidth;
+            this.tag("RatingNumber").h = this.tag("Number").renderHeight;
+            this.tag("Percentage").x = this.tag("Number").renderWidth;
+        });
 
         this._ratingAnimation = this.animation({
             duration: 0.6, timingFunction: 'cubic-bezier(.94,.42,.49,.99)', actions:[

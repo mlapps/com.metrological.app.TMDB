@@ -31,13 +31,13 @@ export default class Item extends Lightning.Component {
                             },
                             shader: {type: Lightning.shaders.RoundedRectangle, radius: 18},
                             Image: {
-                                w: w=>w, h: h=>h,
+                                w: w=>w, h: h=>h, alpha: 0.001,
                                 transitions: {
-                                    color: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
+                                    alpha: {duration: 0.3}
                                 }
                             },
                             Border: {
-                                x: -4, y: -4,
+                                x: -4, y: -4, visible: false,
                                 colorBottom: 0xff121212, colorTop: 0xff434343,
                                 texture: Lightning.Tools.getRoundRect(Item.width,Item.height,18,3,0xffffffff,false,0xffffffff)
                             }
@@ -58,7 +58,22 @@ export default class Item extends Lightning.Component {
             ]
         });
 
+        this.tag("Blur").transition("zIndex").on("finish", ()=> {
+            if (this._focusedItem) {
+                this.application.emit("itemAnimationEnded");
+            }
+        });
+
+        this.tag("Blur").content.tag("Image").on("txLoaded", ()=> {
+            this.tag("Blur").content.tag("Image").setSmooth("alpha", 1);
+            this.tag("Blur").content.tag("Border").visible = true;
+        });
+
         this._resetPosition();
+    }
+
+    set focusedItem(v) {
+        this._focusedItem = v;
     }
 
     set item(v) {
@@ -87,13 +102,14 @@ export default class Item extends Lightning.Component {
         this.patch({
             smooth: {alpha},
             Blur: {
-                smooth: {amount, zIndex, x, y},
+                amount,
+                smooth: {zIndex, x, y},
                 content: {
                     Perspective: {
                         Poster: {
                             smooth: {scale},
                             Image: {
-                                smooth: {color}
+                                color
                             }
                         }
                     }
@@ -123,10 +139,11 @@ export default class Item extends Lightning.Component {
                 }
             }
         });
+        this.application.emit("itemAnimationEnded");
     }
 
     _handleEnter() {
-        Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
+        this.fireAncestors("$selectItem", {item: this._item});
     }
 
     static get width() {

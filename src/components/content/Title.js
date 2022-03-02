@@ -8,9 +8,8 @@ export default class Title extends Lightning.Component {
 
     _init() {
         this.on("txLoaded", ()=> {
-            if (!this._titleLoaded && !this._skip) {
+            if (!this._skip) {
                 this.application.emit("titleLoaded");
-                this._titleLoaded = true;
             }
         });
     }
@@ -20,7 +19,6 @@ export default class Title extends Lightning.Component {
     }
 
     set label(v) {
-        this._titleLoaded = false;
         let fontSize = 128;
         let lineHeight = 128;
         if (v.length > 12 && v.length < 24) {
@@ -32,7 +30,7 @@ export default class Title extends Lightning.Component {
         }
 
         this.patch({
-            text: {fontFace: "Black", text: v, fontSize, lineHeight, wordWrapWidth: 1000}
+            text: {fontFace: "Black", fontSize, lineHeight, wordWrapWidth: 1000, text: v}
         });
     }
 

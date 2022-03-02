@@ -95,7 +95,7 @@ export default class FlipList extends Lightning.Component {
                 h: construct.height,
                 visible: idx <= 3
             }
-        })
+        });
     }
 
     resetConfigIndex() {
@@ -105,18 +105,21 @@ export default class FlipList extends Lightning.Component {
             if (idx === this._index-1) {
                 child.configIndex = 0;
                 if (child.child) {
+                    child.child.focusedItem = false;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index) {
                 child.visible = true;
                 child.configIndex = 1;
                 if (child.child) {
+                    child.child.focusedItem = true;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+1) {
                 child.visible = true;
                 child.configIndex = 2;
                 if (child.child) {
+                    child.child.focusedItem = false;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+2) {
@@ -141,6 +144,7 @@ export default class FlipList extends Lightning.Component {
         if (children[index-1]) {
             children[index-1].configIndex = 0;
             if (children[index-1].child) {
+                children[index-1].child.focusedItem = false;
                 children[index-1].child.animatePosition();
             }
         }
@@ -149,6 +153,7 @@ export default class FlipList extends Lightning.Component {
             children[index].visible = true;
             children[index].configIndex = 1;
             if (children[index].child) {
+                children[index].child.focusedItem = true;
                 children[index].child.animatePosition();
             }
         }
@@ -157,6 +162,7 @@ export default class FlipList extends Lightning.Component {
             children[index+1].visible = true;
             children[index+1].configIndex = 2;
             if (children[index+1].child) {
+                children[index+1].child.focusedItem = false;
                 children[index+1].child.animatePosition();
             }
         }
@@ -205,9 +211,6 @@ export default class FlipList extends Lightning.Component {
     }
 
     _unfocus() {
-        this.tag("Items").patch({
-            smooth: {alpha: 0}
-        });
         this.stage.gc();
     }
 
@@ -225,11 +228,6 @@ export default class FlipList extends Lightning.Component {
         } else {
             return false;
         }
-    }
-
-    _handleEnter() {
-        const item = this.activeItem.item;
-        this.fireAncestors("$navigateToDetails", {item});
     }
 
     select({direction}) {

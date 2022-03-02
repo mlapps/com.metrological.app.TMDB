@@ -2,13 +2,9 @@ import Popular from "./popular";
 import {Router} from "@lightningjs/sdk";
 
 export default class MovieCredits extends Popular {
+
     _active() {
         this.widgets.peoplemenu.select("moviecredits", true);
-    }
-
-    $navigateToDetails({item}) {
-        this.tag("Content").hide();
-        Router.navigate(`details/${item.type}/${item.id}`, true);
     }
 
     set peopleId(v) {
@@ -16,13 +12,29 @@ export default class MovieCredits extends Popular {
     }
 
     _handleUp() {
+        this._hide(-1);
         this.widgets.peoplemenu.select("details");
-        Router.navigate(`people/${this._peopleId}`, true);
     }
 
     _handleDown() {
+        this._hide(1);
         this.widgets.peoplemenu.select("tvcredits");
-        Router.navigate(`tv_credits/tv/${this._peopleId}`, true);
+    }
+
+    _hide(direction) {
+        this._direction = direction;
+
+        this.patch({
+            smooth: {alpha: 0}
+        });
+    }
+
+    _readyToNavigate() {
+        if (this._direction === 1) {
+            Router.navigate(`tv_credits/tv/${this._peopleId}`, true);
+        } else {
+            Router.navigate(`people/${this._peopleId}`, true);
+        }
     }
 
     _getFocused() {
