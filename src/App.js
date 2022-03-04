@@ -24,8 +24,11 @@ export default class App extends Router.App {
 
     _init() {
         const times = [];
+        let total = 0;
+        let runTotal = [];
         let fps;
-        const el = document.getElementById("fps");
+        let cf = 0;
+
         const refreshLoop = ()=> {
             window.requestAnimationFrame(() => {
                 const now = performance.now();
@@ -34,7 +37,27 @@ export default class App extends Router.App {
                 }
                 times.push(now);
                 fps = times.length;
-                this.tag("Fps").text= `${fps} FPS`
+
+
+                this.tag("Fps").text= `current: ${fps} FPS`
+
+                if(this.stage.frameCounter > 200){
+                    if(cf < 200){
+                        total += fps;
+                        cf++;
+                    }else{
+                        if(runTotal > 12){
+                            runTotal = runTotal.splice(5, runTotal.length - 1)
+                        }
+                        runTotal.push(total/cf);
+                        const v = runTotal.reduce((a, n)=>a+n);
+                        this.tag("Average").text = `average: ${Math.round(v/runTotal.length)} FPS`
+                        cf = 0;
+                        total = 0;
+                    }
+                }
+
+
                 refreshLoop();
             });
         }
@@ -52,7 +75,13 @@ export default class App extends Router.App {
             ...super._template(),
             Holder:{ zIndex:9999,
                 Fps:{
-                    mountX: 1, x: 1900, y: 20,
+                    mountX: 1, x: 1800, y: 40,
+                    text:{
+                        text:'', fontFace: "regular", fontSize: 24
+                    }
+                },
+                Average:{
+                    mountX: 1, x: 1800, y: 80,
                     text:{
                         text:'', fontFace: "regular", fontSize: 24
                     }
