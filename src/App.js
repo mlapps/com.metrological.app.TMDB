@@ -24,10 +24,9 @@ export default class App extends Router.App {
 
     _init() {
         const times = [];
-        let total = 0;
-        let runTotal = [];
         let fps;
-        let cf = 0;
+        let totalFps = 0;
+        let totalFrames = 0;
 
         const refreshLoop = ()=> {
             window.requestAnimationFrame(() => {
@@ -39,24 +38,10 @@ export default class App extends Router.App {
                 fps = times.length;
 
 
-                this.tag("Fps").text= `current: ${fps} FPS`
-
-                if(this.stage.frameCounter > 200){
-                    if(cf < 200){
-                        total += fps;
-                        cf++;
-                    }else{
-                        if(runTotal > 12){
-                            runTotal = runTotal.splice(5, runTotal.length - 1)
-                        }
-                        runTotal.push(total/cf);
-                        const v = runTotal.reduce((a, n)=>a+n);
-                        this.tag("Average").text = `average: ${Math.round(v/runTotal.length)} FPS`
-                        cf = 0;
-                        total = 0;
-                    }
-                }
-
+                this.tag("Fps").tag("Amount").text= `${fps}`
+                totalFps += fps;
+                totalFrames++;
+                this.tag("Average").tag("Amount").text = `${Math.round(totalFps/totalFrames)}`
 
                 refreshLoop();
             });
@@ -75,15 +60,31 @@ export default class App extends Router.App {
             ...super._template(),
             Holder:{ zIndex:9999,
                 Fps:{
-                    mountX: 1, x: 1800, y: 40,
-                    text:{
-                        text:'', fontFace: "regular", fontSize: 24
+                    mountX: 1, x: 1760, y: 40,
+                    Amount: {
+                        text:{
+                            text:'-', fontFace: "regular", fontSize: 24
+                        }
+                    },
+                    Unit: {
+                        x: 54, y: 6,
+                        text:{
+                            text:'FPS', fontFace: "regular", textColor: 0xffc3c3c3, fontSize: 14
+                        }
                     }
                 },
                 Average:{
-                    mountX: 1, x: 1800, y: 80,
-                    text:{
-                        text:'', fontFace: "regular", fontSize: 24
+                    mountX: 1, x: 1760, y: 74,
+                    Amount: {
+                        text:{
+                            text:'-', fontFace: "regular", fontSize: 24
+                        }
+                    },
+                    Unit: {
+                        x: 54, y: 6,
+                        text:{
+                            text:'Avg. FPS', textColor: 0xffc3c3c3, fontFace: "regular", fontSize: 14
+                        }
                     }
                 }
 
