@@ -21,12 +21,12 @@ export default class Background extends Lightning.Component {
         this._index = 0;
 
         this.tag("BackgroundA").on("txLoaded", ()=> {
-            this.tag("BackgroundA").setSmooth("alpha", 1, {duration: 0.3, delay: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
+            this.tag("BackgroundA").setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
             this.tag("BackgroundB").setSmooth("alpha", 0, {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
         });
 
         this.tag("BackgroundB").on("txLoaded", ()=> {
-            this.tag("BackgroundB").setSmooth("alpha", 1, {duration: 0.3, delay: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
+            this.tag("BackgroundB").setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
             this.tag("BackgroundA").setSmooth("alpha", 0, {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
         });
 
@@ -65,6 +65,7 @@ export default class Background extends Lightning.Component {
                 if (this._item.background) {
                     src = getImgUrl(this._item.background, 1280);
                 }
+
                 this._src = src;
             }
         }
@@ -83,6 +84,9 @@ export default class Background extends Lightning.Component {
     }
 
     _setBackground(src) {
+        if (src === this._lastSrc) return;
+        this._lastSrc = src;
+
         this.tag("Backgrounds").children[this._index].patch({
             texture: Img(src).contain(1920, 1080),
             alpha: 0.001
