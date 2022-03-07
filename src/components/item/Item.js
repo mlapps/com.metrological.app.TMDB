@@ -25,19 +25,19 @@ export default class Item extends Lightning.Component {
                         w: Item.width, h: Item.height, rtt: true,
                         shader: {type: PerspectiveShader, rx: 0, ry: 0},
                         Poster: {
-                            w: Item.width, h: Item.height, rtt: true,
+                            w: Item.width, h: Item.height, rtt: true, alpha: 0.001,
                             transitions: {
                                 scale: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                             },
                             shader: {type: Lightning.shaders.RoundedRectangle, radius: 18},
                             Image: {
-                                w: w=>w, h: h=>h, alpha: 0.001,
+                                w: w=>w, h: h=>h,
                                 transitions: {
                                     alpha: {duration: 0.3}
                                 }
                             },
                             Border: {
-                                x: -4, y: -4, visible: false,
+                                x: -4, y: -4,
                                 colorBottom: 0xff121212, colorTop: 0xff434343,
                                 texture: Lightning.Tools.getRoundRect(Item.width,Item.height,18,3,0xffffffff,false,0xffffffff)
                             }
@@ -65,8 +65,11 @@ export default class Item extends Lightning.Component {
         });
 
         this.tag("Blur").content.tag("Image").on("txLoaded", ()=> {
-            this.tag("Blur").content.tag("Image").setSmooth("alpha", 1);
-            this.tag("Blur").content.tag("Border").visible = true;
+            this.tag("Blur").content.tag("Poster").alpha = 1;
+        });
+
+        this.tag("Blur").content.tag("Image").on("txUnloaded", ()=> {
+            this.tag("Blur").content.tag("Poster").alpha = 0.001;
         });
 
         this._resetPosition();
@@ -100,7 +103,7 @@ export default class Item extends Lightning.Component {
         const {alpha, scale, x, y, color, amount, zIndex} = ITEM_CONFIGS[this.configIndex];
 
         this.patch({
-            smooth: {alpha},
+            alpha,
             Blur: {
                 amount,
                 smooth: {zIndex, x, y},

@@ -4,7 +4,7 @@ export const ITEM_CONFIGS = [
         rx: {s: 0.3, e: 0},
         scale: 0.8,
         zIndex: 3,
-        alpha: 0,
+        alpha: 0.001,
         x: 0,
         y: 200,
         color: 0xff757575

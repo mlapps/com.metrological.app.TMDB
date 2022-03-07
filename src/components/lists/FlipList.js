@@ -103,6 +103,7 @@ export default class FlipList extends Lightning.Component {
         children.forEach((child, idx)=> {
             child.visible = false;
             if (idx === this._index-1) {
+                child.visible = true;
                 child.configIndex = 0;
                 if (child.child) {
                     child.child.focusedItem = false;
@@ -129,6 +130,7 @@ export default class FlipList extends Lightning.Component {
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+3) {
+                child.visible = true;
                 child.configIndex = 4;
                 if (child.child) {
                     child.child.animatePosition();

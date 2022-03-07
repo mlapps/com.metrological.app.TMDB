@@ -22,10 +22,12 @@ export default class Background extends Lightning.Component {
 
         this.tag("BackgroundA").on("txLoaded", ()=> {
             this.tag("BackgroundA").setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
+            this.tag("BackgroundB").setSmooth("alpha", 0, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
         });
 
         this.tag("BackgroundB").on("txLoaded", ()=> {
             this.tag("BackgroundB").setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
+            this.tag("BackgroundA").setSmooth("alpha", 0, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
         });
 
         this.tag("BackgroundA").transition("alpha").on("finish", ()=> {
@@ -86,10 +88,5 @@ export default class Background extends Lightning.Component {
             alpha: 0.001
         });
         this._index ^= 1;
-        this.tag("Backgrounds").children[this._index].patch({
-            smooth: {
-                alpha: [0, {duration: 0.4, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}]
-            }
-        });
     }
 }
