@@ -33,10 +33,6 @@ export default class People extends Lightning.Component {
                     },
                     Biography: {
                         text: {fontFace: "Regular", fontSize: 24, lineHeight: 44, wordWrapWidth: 1480, textColor: 0xffc3c3c3}
-                    },
-                    Button: {
-                        flexItem: {marginTop: 20}, visible: false,
-                        type: Button, label: "Read All"
                     }
                 }
             }
@@ -68,7 +64,7 @@ export default class People extends Lightning.Component {
             }
         });
 
-        this.transition("y").on("finish", ()=> {
+        this.tag("Item").transition("y").on("finish", ()=> {
             this.application.emit("readyForBackground");
         });
 
@@ -89,11 +85,9 @@ export default class People extends Lightning.Component {
         this.tag("Birth").text = `${this._item.birthday} | ${this._item.placeOfBirth}`;
 
         if (this._item._biography.length >= 600) {
-            this.tag("Biography").text = this._truncateString(this._item._biography, 600);
-            this.tag("Button").visible = true;
+            this.tag("Biography").text = this._truncateString(this._item._biography, 700);
         } else {
             this.tag("Biography").text = this._item._biography;
-            this.tag("Button").visible = false;
         }
 
         const src = getImgUrl(this._item.profilePath, 780);
