@@ -15,12 +15,6 @@ export default class Cast extends Lightning.Component {
         };
     };
 
-    _init() {
-        this.transition("alpha").on("finish", ()=> {
-            this._readyToNavigate();
-        });
-    }
-
     _active() {
         this.widgets.detailsmenu.select("cast", true);
 
@@ -50,29 +44,13 @@ export default class Cast extends Lightning.Component {
     }
 
     _handleUp() {
-        this._hide(-1);
+        Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
         this.widgets.detailsmenu.select("details");
     }
 
     _handleDown() {
-        this._hide(1);
+        Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
         this.widgets.detailsmenu.select("similar");
-    }
-
-    _hide(direction) {
-        this._direction = direction;
-
-        this.patch({
-            smooth: {alpha: 0}
-        });
-    }
-
-    _readyToNavigate() {
-        if (this._direction === 1) {
-            Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
-        } else {
-            Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
-        }
     }
 
     _getFocused() {

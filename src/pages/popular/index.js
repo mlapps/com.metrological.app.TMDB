@@ -22,10 +22,6 @@ export default class Popular extends Lightning.Component{
                 Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
             }
         }
-
-        this.transition("alpha").on("finish", ()=> {
-            this._readyToNavigate();
-        });
     }
 
     _attach() {
@@ -62,13 +58,6 @@ export default class Popular extends Lightning.Component{
 
     $selectItem({item}) {
         this._item = item;
-
-        this.patch({
-            smooth: {alpha: 0}
-        });
-    }
-
-    _readyToNavigate() {
         Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
     }
 

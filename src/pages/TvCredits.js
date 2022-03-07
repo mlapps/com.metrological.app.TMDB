@@ -12,13 +12,6 @@ export default class TvCredits extends Popular {
 
     _handleUp() {
         this.widgets.peoplemenu.select("moviecredits");
-
-        this.patch({
-            smooth: {alpha: 0}
-        });
-    }
-
-    _readyToNavigate() {
         Router.navigate(`movie_credits/movie/${this._peopleId}`, true);
     }
 

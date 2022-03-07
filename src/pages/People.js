@@ -48,11 +48,6 @@ export default class People extends Lightning.Component {
                 }
             });
         });
-
-        this.transition("alpha").on("finish", ()=> {
-            this.widgets.peoplemenu.select("moviecredits");
-            Router.navigate(`movie_credits/movie/${this._item.id}`, true);
-        });
     }
 
     _active() {
@@ -95,9 +90,8 @@ export default class People extends Lightning.Component {
     }
 
     _handleDown() {
-        this.patch({
-           smooth: {alpha: 0}
-        });
+        this.widgets.peoplemenu.select("moviecredits");
+        Router.navigate(`movie_credits/movie/${this._item.id}`, true);
     }
 
     _truncateString(s, n) {
