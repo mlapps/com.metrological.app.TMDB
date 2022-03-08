@@ -11,7 +11,6 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         this._smooth = 0.005;
         this._color = 0xffffffff;
         this._backgroundColor = 0xff000000;
-        this._time = Date.now();
     }
 
     set radius(v) {
@@ -53,7 +52,6 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         super.setupUniforms(operation);
         const owner = operation.shaderOwner
 
-        const renderPrecision = this.ctx.stage.getRenderPrecision();
         this._setUniform('radius', this._radius, this.gl.uniform1f);
         this._setUniform('width', this._width, this.gl.uniform1f);
         this._setUniform('period', this._period, this.gl.uniform1f);
@@ -61,8 +59,7 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         this._setUniform('smooth', this._smooth, this.gl.uniform1f);
         this._setUniform('color', new Float32Array(lng.StageUtils.getRgbaComponentsNormalized(this._color)), this.gl.uniform4fv)
         this._setUniform('backgroundColor', new Float32Array(lng.StageUtils.getRgbaComponentsNormalized(this._backgroundColor)), this.gl.uniform4fv)
-
-        this._setUniform('resolution', new Float32Array([owner._w * renderPrecision, owner._h * renderPrecision]), this.gl.uniform2fv)
+        this._setUniform('resolution', new Float32Array([owner._w, owner._h]), this.gl.uniform2fv)
 
         this.redraw()
     }

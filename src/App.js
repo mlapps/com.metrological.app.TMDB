@@ -1,36 +1,117 @@
 import { Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
-import {init as initApi} from "./lib/api"
+import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
-import Background from "./Background";
+import {Background} from "./components";
 
 export default class App extends Router.App {
     static getFonts() {
         return [
-            {family: 'SourceSansPro-Regular', url: Utils.asset('fonts/SourceSansPro-Regular.ttf'), descriptors: {}},
-            {family: 'SourceSansPro-Black', url: Utils.asset('fonts/SourceSansPro-Black.ttf'), descriptors: {}},
-            {family: 'SourceSansPro-Bold', url: Utils.asset('fonts/SourceSansPro-Bold.ttf'), descriptors: {}}
+            {family: 'Light', url: Utils.asset('fonts/Inter-Light.ttf'), descriptors: {}},
+            {family: 'Regular', url: Utils.asset('fonts/Inter-Regular.ttf'), descriptors: {}},
+            {family: 'Black', url: Utils.asset('fonts/Inter-Black.ttf'), descriptors: {}},
+            {family: 'SemiBold', url: Utils.asset('fonts/Inter-SemiBold.ttf'), descriptors: {}},
+            {family: 'Bold', url: Utils.asset('fonts/Inter-Bold.ttf'), descriptors: {}}
         ];
     }
 
     // when App instance is initialized we call the routes
     // this will setup all pages and attach them to there route
     _setup() {
-        initApi(this.stage);
+        initFactory(this.stage);
         Router.startRouter(routes, this);
+    }
+
+    _init() {
+        const times = [];
+        let fps;
+        let totalFps = 0;
+        let totalFrames = 0;
+
+        const refreshLoop = ()=> {
+            window.requestAnimationFrame(() => {
+                const now = performance.now();
+                while (times.length > 0 && times[0] <= now - 1000) {
+                    times.shift();
+                }
+                times.push(now);
+                fps = times.length;
+
+
+                this.tag("Fps").tag("Amount").text= `${fps}`
+                totalFps += fps;
+                totalFrames++;
+                this.tag("Average").tag("Amount").text = `${Math.round(totalFps/totalFrames)}`
+
+                refreshLoop();
+            });
+        }
+
+        refreshLoop();
     }
 
     static _template() {
         return {
+            // we MUST spread the base-class template
+            // if we want to provide Widgets.
             Background: {
                 type: Background
             },
-            // we MUST spread the base-class template
-            // if we want to provide Widgets.
             ...super._template(),
+            Holder:{ zIndex:9999,
+                Fps:{
+                    mountX: 1, x: 1760, y: 40,
+                    Amount: {
+                        text:{
+                            text:'-', fontFace: "regular", fontSize: 24
+                        }
+                    },
+                    Unit: {
+                        x: 54, y: 6,
+                        text:{
+                            text:'FPS', fontFace: "regular", textColor: 0xffc3c3c3, fontSize: 14
+                        }
+                    }
+                },
+                Average:{
+                    mountX: 1, x: 1760, y: 74,
+                    Amount: {
+                        text:{
+                            text:'-', fontFace: "regular", fontSize: 24
+                        }
+                    },
+                    Unit: {
+                        x: 54, y: 6,
+                        text:{
+                            text:'Avg. FPS', textColor: 0xffc3c3c3, fontFace: "regular", fontSize: 14
+                        }
+                    }
+                }
+
+            },
             Widgets: {
                 Menu:{
-                    type: Menu, x: 68, y: 68, zIndex: 99, visible: false
+                    type: Menu, x: 90, y: 90, zIndex: 99, visible: false, lineOffset: 24,
+                    items: [
+                        {label: "Movies", id: "movie", selected: true},
+                        {label: "TV", id: "tv", selected: false}
+                    ]
+                },
+                DetailsMenu:{
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
+                    items: [
+                        {label: "About", id: "details", selected: true},
+                        {label: "Cast", id: "cast", selected: false},
+                        {label: "Similar", id: "similar", selected: false}
+                    ]
+                },
+                PeopleMenu:{
+                    type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
+                    items: [
+                        {label: "Biography", id: "details", selected: true},
+                        {label: "Movie credits", id: "moviecredits", selected: false},
+                        {label: "TV credits", id: "tvcredits", selected: false}
+                    ]
                 }
             },
             Loading: {}

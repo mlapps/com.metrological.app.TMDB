@@ -4,15 +4,12 @@
       "clearColor": "0xff000000",
       "useImageWorker": true
     },
-    "debug": false,
-    "imageQuality": 90,
-    "previewInterval": 3000,
-    "previewDuration": 10000,
-    "animateToFullscreen": true
+    "debug": false
   },
   "platformSettings": {
     "path": "./static",
     "showVersion": false,
+    "showFps": false,
     "inspector": false,
     "gcOnUnload": true,
     "lazyCreate": true,

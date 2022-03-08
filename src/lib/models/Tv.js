@@ -29,8 +29,30 @@ export default class Tv {
         return this._first_air_date;
     }
 
+    get formattedReleaseDate() {
+        if (!this._first_air_date) {
+            return `Date not available`;
+        } else {
+            const date = new Date(this._first_air_date);
+            return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+    }
+
     get genres(){
         return this._genres;
+    }
+
+    get genresAsString(){
+        let genres = ``;
+        this._genres.forEach((genre, index) => {
+            if (index > 0) {
+                genres += ` | ${genre.name}`
+            } else {
+                genres += `${genre.name}`
+            }
+        });
+        return genres === '' ? "-" : genres;
     }
 
     get id() {

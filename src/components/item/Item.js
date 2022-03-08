@@ -1,50 +1,46 @@
-import {Img, Lightning} from "@lightningjs/sdk";
-import CircleProgressShader from "../../shader/CircleProgressShader";
+import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
+import PerspectiveShader from "../../shader/PerspectiveShader";
+import {ITEM_CONFIGS} from "./ItemConfigs";
 
 export default class Item extends Lightning.Component {
 
     static _template() {
         return {
-            w: Item.width, h: Item.height,
-            Poster: {
-                w: w=>w, h: h=>h, pivotY: .7, rtt: true,
-                shader: {type: Lightning.shaders.RoundedRectangle, radius: 10},
+            w: Item.width, h: Item.height, alpha: 0,
+            transitions: {
+                alpha: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
+            },
+            Blur: {
+                w: Item.width, h: Item.height, rtt: true,
+                type: Lightning.components.FastBlurComponent, amount: 0,
                 transitions: {
-                    w: {duration: .6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
-                    h: {duration: .6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
+                    amount: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
+                    zIndex: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
+                    x: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
+                    y: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
                 },
-                Image: {
-                    w: w=>w, h: h=>h, scale: 1.2, color: 0xff2f2f2f,
-                    transitions: {
-                        w: {duration: .6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'},
-                        h: {duration: .6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
-                    }
-                },
-                BorderLeft: {
-                    w: 2, h: h=>h, rect: true, color: 0x40ffffff
-                },
-                Rating: {
-                    mountX: .5, mountY: 1, x: w=>w / 2, y: 360,
-                    transitions: {
-                        y: {duration: .6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
-                    },
-                    texture: Lightning.Tools.getRoundRect(70, 70, 35, 0, 0x00ffffff, true, 0xff081C22),
-                    RatingNumber: {
-                        mount: .5, x: w=>w / 2 + 4, y: h=>h / 2 + 2,
-                        flex: {},
-                        Number: {
-                            text: {text: '0', fontSize: 26, fontFace: "SourceSansPro-Bold"}
-                        },
-                        Percentage: {
-                            flexItem: {marginTop: 6},
-                            text: {text: '%', fontSize: 12, fontFace: "SourceSansPro-Regular"}
-                        }
-                    },
-                    RatingCircle: {
-                        rect:true, color: 0x00ffffff, rtt:true, mount: .5, x: 36, y: 36, w: 60, h: 60, rotation: Math.PI * .5,
-                        shader: {
-                            type: CircleProgressShader, radius: 30, width: 3, angle: 0.0001, smooth: 0.005, color: 0xffd1215c, backgroundColor: 0xff204529
+                content: {
+                    Perspective: {
+                        w: Item.width, h: Item.height, rtt: true,
+                        shader: {type: PerspectiveShader, rx: 0, ry: 0},
+                        Poster: {
+                            w: Item.width, h: Item.height, rtt: true, alpha: 0.001,
+                            transitions: {
+                                scale: {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'}
+                            },
+                            shader: {type: Lightning.shaders.RoundedRectangle, radius: 18},
+                            Image: {
+                                w: w=>w, h: h=>h,
+                                transitions: {
+                                    alpha: {duration: 0.3}
+                                }
+                            },
+                            Border: {
+                                x: -4, y: -4,
+                                colorBottom: 0xff121212, colorTop: 0xff434343,
+                                texture: Lightning.Tools.getRoundRect(Item.width,Item.height,18,3,0xffffffff,false,0xffffffff)
+                            }
                         }
                     }
                 }
@@ -53,104 +49,116 @@ export default class Item extends Lightning.Component {
     }
 
     _init() {
-        this._angle = 0.001;
-        this._ratingNumber = 0;
-
-        this._focusAnimation = this.tag("Rating").animation({
-            duration: 1.2, stopDuration: .2, stopMethod: "immediate", actions:[
-                {t: 'RatingCircle', p:'shader.angle', rv: 0.0001, v: () => {
-                        if (this._angle < this._item.voteAverage / 10) {
-                            this._angle += 0.01;
-                        }
-
-                        if (this._angle < 0.4) {
-                            this.tag("RatingCircle").shader.color = 0xffd1215c;
-                        } else if (this._angle > 0.4 && this._angle < 0.6) {
-                            this.tag("RatingCircle").shader.color = 0xffd2d531;
-                        } else if (this._angle > 0.6) {
-                            this.tag("RatingCircle").shader.color = 0xff21d07a;
-                        }
-
-                        return this._angle;
-                    }},
-                {t: 'Number', p:'text.text', rv: 0, v: () => {
-                        if (this._ratingNumber < this._item.voteAverage * 10) {
-                            this._ratingNumber += 1;
-                        }
-                        return `${Math.floor(this._ratingNumber)}`;
-                    }}
+        this._perspectiveAnimation = this.tag("Blur").content.animation({
+            duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', actions:[
+                {t: 'Perspective', p: 'shader.rx', v: (e)=> {
+                    const {rx} = ITEM_CONFIGS[this.configIndex];
+                    return e * (rx.e-rx.s)+rx.s;
+                }}
             ]
         });
+
+        this.tag("Blur").transition("zIndex").on("finish", ()=> {
+            if (this._focusedItem) {
+                this.application.emit("itemAnimationEnded");
+            }
+        });
+
+        this.tag("Blur").content.tag("Image").on("txLoaded", ()=> {
+            this.tag("Blur").content.tag("Poster").alpha = 1;
+        });
+
+        this.tag("Blur").content.tag("Image").on("txUnloaded", ()=> {
+            this.tag("Blur").content.tag("Poster").alpha = 0.001;
+        });
+
+        this._resetPosition();
+    }
+
+    set focusedItem(v) {
+        this._focusedItem = v;
     }
 
     set item(v) {
         this._item = v;
 
-        const image = getImgUrl(this._item.poster, 500);
-
-        this.patch({
-            Poster: {
-                Image: {
-                    texture: Img(image).contain(180 * 1.2, 270 * 1.2)
-                }
-            }
-        });
+        const content = this.tag("Blur").content;
+        if (this._item.poster !== null) {
+            const image = getImgUrl(this._item.poster, 500);
+            content.tag("Image").texture = Img(image).contain(342, 513);
+        } else {
+            content.tag("Image").src = Utils.asset("images/placeholder.png");
+        }
     }
 
     set index(v) {
         this._index = v;
-
-        if (this._index < 8) {
-            this.tag("Image").color = 0xffffffff;
-        }
     }
 
-    _focus() {
-        this._angle = 0.001;
-        this._ratingNumber = 0;
+    get configIndex() {
+        return this.parent.configIndex;
+    }
+
+    animatePosition() {
+        const {alpha, scale, x, y, color, amount, zIndex} = ITEM_CONFIGS[this.configIndex];
 
         this.patch({
-            Poster: {
-                smooth: {scale: 1.2},
-                Image: {
-                    smooth: {scale: 1}
-                },
-                Rating: {
-                    smooth: {y: 250}
+            alpha,
+            Blur: {
+                amount,
+                smooth: {zIndex, x, y},
+                content: {
+                    Perspective: {
+                        Poster: {
+                            smooth: {scale},
+                            Image: {
+                                color
+                            }
+                        }
+                    }
                 }
             }
         });
 
-        this._focusAnimation.start();
-        this.application.emit("setItem", this._item);
+        this._perspectiveAnimation.start();
     }
 
-    _unfocus() {
+    _resetPosition() {
+        const {alpha, scale, x, y, color, amount, zIndex, rx} = ITEM_CONFIGS[this.configIndex];
         this.patch({
-            Poster: {
-                smooth: {scale: 1},
-                Image: {
-                    smooth: {scale: 1.2}
-                },
-                Rating: {
-                    smooth: {y: 360}
+            alpha,
+            Blur: {
+                amount, zIndex, x, y,
+                content: {
+                    Perspective: {
+                        shader: {type: PerspectiveShader, rx: rx.e, ry: 0.05},
+                        Poster: {
+                            scale,
+                            Image: {
+                                color
+                            }
+                        }
+                    }
                 }
             }
         });
+        this.application.emit("itemAnimationEnded");
+    }
 
-        this._focusAnimation.stop();
+    _handleEnter() {
+        this.fireAncestors("$selectItem", {item: this._item});
     }
 
     static get width() {
-        return 180;
+        return 342;
     }
 
     static get height(){
-        return 270;
+        return 513;
     }
 
     static get offset() {
-        return 40;
+        return 0;
     }
 
 }
