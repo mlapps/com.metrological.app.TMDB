@@ -26,11 +26,15 @@ export const list = (type, data, genres) => {
     const container = models.get(type);
     const model = new container(data, type, genres);
 
-    return stage.c({
-        type: listComponents.get(type),
-        itemConstruct: itemComponents.get(type),
-        items: model.items
-    });
+    if (model.items.length === 0) {
+        return null;
+    } else {
+        return stage.c({
+            type: listComponents.get(type),
+            itemConstruct: itemComponents.get(type),
+            items: model.items
+        });
+    }
 };
 
 export const details = (data) => {
