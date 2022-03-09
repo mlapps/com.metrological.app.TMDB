@@ -1,4 +1,4 @@
-import {Img, Lightning, Router} from "@lightningjs/sdk";
+import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {Button, Title} from "../components";
 import {getImgUrl} from "../lib/tools";
 
@@ -85,7 +85,10 @@ export default class People extends Lightning.Component {
             this.tag("Biography").text = this._item._biography;
         }
 
-        const src = getImgUrl(this._item.profilePath, 780);
+        let src = Utils.asset("images/background.png");
+        if (this._item.profilePath) {
+            src = getImgUrl(this._item.profilePath, 780);
+        }
         this.application.emit("setBackground", {src});
     }
 

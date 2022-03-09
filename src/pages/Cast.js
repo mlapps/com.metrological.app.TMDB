@@ -32,7 +32,9 @@ export default class Cast extends Lightning.Component {
     }
 
     set content(v) {
-        this.tag("List").childList.add(v);
+        if (v) {
+            this.tag("List").childList.add(v);
+        }
     }
 
     set detailsType(v) {

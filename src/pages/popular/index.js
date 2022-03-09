@@ -41,7 +41,9 @@ export default class Popular extends Lightning.Component{
     }
 
     set content(v) {
-        this.tag("List").childList.add(v);
+        if (v) {
+            this.tag("List").childList.add(v);
+        }
     }
 
     $firstItemCreated() {
@@ -66,8 +68,8 @@ export default class Popular extends Lightning.Component{
             this.selectedList.index = params.listIndex;
             this.selectedList.resetConfigIndex();
         } else {
-            return {
-                listIndex: this.tag("List").children[this._index].index
+            if (this.tag("List").children[this._index]) {
+                return {listIndex: this.tag("List").children[this._index].index}
             }
         }
     }
