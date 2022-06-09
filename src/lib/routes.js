@@ -5,6 +5,7 @@ import {
 } from '../pages';
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
+import Accessibility from "../pages/Accessibility";
 
 const getPopularContent = async (type)=>{
     try {
@@ -40,6 +41,11 @@ export default {
             before: async(page)=> {
                 page.content = await getPopularContent("tv");
             },
+            widgets: ["menu"]
+        },
+        {
+            path: 'accessibility',
+            component: Accessibility,
             widgets: ["menu"]
         },
         {
