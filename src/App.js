@@ -3,9 +3,9 @@ import routes from "./lib/routes";
 import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
 import {Background} from "./components";
-import {Protanopia, Deuteranopia, Tritanopia, ColorShift, Monochromacy} from "./shader";
+import {Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia} from "./shader";
 const correction = {
-    Protanopia, Deuteranopia, Tritanopia, ColorShift, Monochromacy
+    Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia
 };
 
 export default class App extends Router.App {

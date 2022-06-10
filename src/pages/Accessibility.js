@@ -25,7 +25,7 @@ export default class Accessibility extends Lightning.Component {
                     type: OptionItem,
                     index: 0,
                     label: "Color correction",
-                    options: ["Trichromacy (normal)", "Protanopia", "Deuteranopia", "Tritanopia", "Monochromacy"],
+                    options: ["Trichromacy (normal)", "Protanopia", "Deuteranopia", "Tritanopia", "Achromatopsia"],
                     onChange: function (selected){
                         settings.s = selected;
                         this.stage.emit('correctColor',{settings})

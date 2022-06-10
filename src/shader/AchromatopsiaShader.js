@@ -19,9 +19,9 @@
 
 import {ColorShift} from "./index";
 
-export default class MonochromacyShader extends ColorShift { }
+export default class AchromatopsiaShader extends ColorShift { }
 
-MonochromacyShader.fragmentShaderSource = `    
+AchromatopsiaShader.fragmentShaderSource = `    
     ${ColorShift.before}
     vec4 filter( vec4 color )
     {   
