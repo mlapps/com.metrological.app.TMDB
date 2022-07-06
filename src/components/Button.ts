@@ -1,8 +1,32 @@
 import {Lightning} from "@lightningjs/sdk";
 
-export default class Button extends Lightning.Component {
+interface ButtonTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    label: string,
+    Button: {
+        Ok: {}
+    },
+    Label: {}
+}
 
-    static _template() {
+type Listeners = {
+    ratingColor: (color: number) => void;
+};
+
+const listenerEvents: Array<keyof Listeners> = ["ratingColor"];
+
+export default class Button
+    extends Lightning.Component<ButtonTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ButtonTemplateSpec> {
+
+    Button = this.getByRef('Button')!;
+    Label = this.getByRef('Label')!;
+    listeners: Listeners = {
+        ratingColor: (color: number)=> {
+            this.color = color;
+        }
+    };
+
+    static _template(): Lightning.Component.Template<ButtonTemplateSpec> {
         return {
             color: 0xff21d07a, rtt: true,
             texture: Lightning.Tools.getRoundRect(180, 60, 30, 0, 0xff21d07a, true, 0xffffffff),
@@ -25,27 +49,19 @@ export default class Button extends Lightning.Component {
         };
     };
 
-    _init() {
-        this.listeners = {
-            ratingColor: (color)=> {
-                this.color = color;
-            }
-        }
-    }
-
-    set label(v) {
-        this.tag("Label").text = v;
+    set label(v: string) {
+        this.Label.text = v;
     }
 
     _active() {
-        ["ratingColor"].forEach((event)=>{
-            this.application.on(event, this.listeners[event])
+        listenerEvents.forEach((event)=>{
+            this.application.on(event, this.listeners[event]) // !!! eventemitter
         });
     }
 
     _inactive() {
-        ["ratingColor"].forEach((event)=>{
-            this.application.off(event, this.listeners[event])
+        listenerEvents.forEach((event)=>{
+            this.application.off(event, this.listeners[event]) // !!! eventemitter
         });
     }
 

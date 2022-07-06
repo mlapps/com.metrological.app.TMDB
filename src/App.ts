@@ -1,4 +1,4 @@
-import { Utils, Router } from '@lightningjs/sdk';
+import { Lightning, Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
 import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
@@ -8,7 +8,37 @@ const correction = {
     Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia
 };
 
-export default class App extends Router.App {
+type CorrectColorEvent = { settings: {b: number, c: number, s: keyof typeof correction, i: number } };
+
+interface AppTemplateSpec extends Router.App.TemplateSpecStrong {
+    ColorCorrection: {
+        Background: typeof Background,
+        Holder: {
+            Fps: {
+                Amount: {},
+                Unit: {}
+            },
+            Average: {
+                Amount: {},
+                Unit: {}
+            }
+        },
+        Widgets: {
+            Menu: typeof Menu,
+            DetailsMenu: typeof Menu,
+            PeopleMenu: typeof Menu,
+        },
+        Loading: {}
+    }
+}
+
+export default class App extends Router.App<AppTemplateSpec> implements Lightning.Component.ImplementTemplateSpec<AppTemplateSpec> {
+    ColorCorrection = this.getByRef('ColorCorrection')!;
+    Fps = this.ColorCorrection.getByRef('Holder')!.getByRef('Fps')!;
+    Average = this.ColorCorrection.getByRef('Holder')!.getByRef('Average')!;
+    Fps_Amount = this.Fps.getByRef('Amount')!;
+    Average_Amount = this.Average.getByRef('Amount')!;
+
     static getFonts() {
         return [
             {family: 'Light', url: Utils.asset('fonts/Inter-Light.ttf'), descriptors: {}},
@@ -27,19 +57,19 @@ export default class App extends Router.App {
     }
 
     _init() {
-        this.stage.on('correctColor', ({settings:{b,c,s,i}}) => {
+        this.stage.on('correctColor', ({ settings: {b,c,s,i} }: CorrectColorEvent) => {
             if(correction[s]){
-                this.tag("ColorCorrection").rtt = true;
-                this.tag("ColorCorrection").shader = {
+                this.ColorCorrection.rtt = true;
+                this.ColorCorrection.shader = {
                     type: correction[s], brightness: b, contrast:c
                 };
             }else{
-                this.tag("ColorCorrection").shader = null;
-                this.tag("ColorCorrection").rtt = false;
+                this.ColorCorrection.shader = null;
+                this.ColorCorrection.rtt = false;
             }
         });
 
-        const times = [];
+        const times: number[] = [];
         let fps;
         let totalFps = 0;
         let totalFrames = 0;
@@ -47,17 +77,17 @@ export default class App extends Router.App {
         const refreshLoop = ()=> {
             window.requestAnimationFrame(() => {
                 const now = performance.now();
-                while (times.length > 0 && times[0] <= now - 1000) {
+                while (times.length > 0 && times[0]! <= now - 1000) {
                     times.shift();
                 }
                 times.push(now);
                 fps = times.length;
 
 
-                this.tag("Fps").tag("Amount").text= `${fps}`
+                this.Fps_Amount.text= `${fps}`
                 totalFps += fps;
                 totalFrames++;
-                this.tag("Average").tag("Amount").text = `${Math.round(totalFps/totalFrames)}`
+                this.Average_Amount.text = `${Math.round(totalFps/totalFrames)}`
 
                 refreshLoop();
             });
@@ -66,7 +96,7 @@ export default class App extends Router.App {
         refreshLoop();
     }
 
-    static _template() {
+    static _template(): Lightning.Component.Template<AppTemplateSpec> {
         return {
             // we MUST spread the base-class template
             // if we want to provide Widgets.
@@ -111,25 +141,25 @@ export default class App extends Router.App {
                     Menu:{
                         type: Menu, x: 90, y: 90, zIndex: 99, visible: false, lineOffset: 24,
                         items: [
-                            {label: "Movies", id: "movie", selected: true},
-                            {label: "TV", id: "tv", selected: false},
-                            {label: "Accessibility", id: "accessibility", selected: false}
+                            {label: "Movies", itemId: "movie", selected: true},
+                            {label: "TV", itemId: "tv", selected: false},
+                            {label: "Accessibility", itemId: "accessibility", selected: false}
                         ]
                     },
                     DetailsMenu:{
                         type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
                         items: [
-                            {label: "About", id: "details", selected: true},
-                            {label: "Cast", id: "cast", selected: false},
-                            {label: "Similar", id: "similar", selected: false}
+                            {label: "About", itemId: "details", selected: true},
+                            {label: "Cast", itemId: "cast", selected: false},
+                            {label: "Similar", itemId: "similar", selected: false}
                         ]
                     },
                     PeopleMenu:{
                         type: Menu, x: 90, y: 60, zIndex: 99, visible: false, lineOffset: 0,
                         items: [
-                            {label: "Biography", id: "details", selected: true},
-                            {label: "Movie credits", id: "moviecredits", selected: false},
-                            {label: "TV credits", id: "tvcredits", selected: false}
+                            {label: "Biography", itemId: "details", selected: true},
+                            {label: "Movie credits", itemId: "moviecredits", selected: false},
+                            {label: "TV credits", itemId: "tvcredits", selected: false}
                         ]
                     }
                 },

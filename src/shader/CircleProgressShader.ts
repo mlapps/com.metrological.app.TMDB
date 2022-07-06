@@ -1,49 +1,46 @@
-import {Lightning} from "@lightningjs/sdk"
+import { Lightning } from "@lightningjs/sdk"
 
 export default class CircleProgressShader extends Lightning.shaders.WebGLDefaultShader {
 
-    constructor(ctx) {
-        super(ctx);
-        this._radius = 100;
-        this._width = 50;
-        this._period = 1;
-        this._angle = 0.5;
-        this._smooth = 0.005;
-        this._color = 0xffffffff;
-        this._backgroundColor = 0xff000000;
-    }
+    _radius = 100;
+    _width = 50;
+    _period = 1;
+    _angle = 0.5;
+    _smooth = 0.005;
+    _color = 0xffffffff;
+    _backgroundColor = 0xff000000;
 
-    set radius(v) {
+    set radius(v: number) {
         this._radius = v;
         this.redraw();
     }
 
-    set width(v) {
+    set width(v: number) {
         this._width = v;
         this.redraw();
     }
 
-    set period(v) {
+    set period(v: number) {
         this._period = v;
         this.redraw();
     }
 
-    set angle(v) {
+    set angle(v: number) {
         this._angle = v
         this.redraw();
     }
 
-    set smooth(v) {
+    set smooth(v: number) {
         this._smooth = v;
         this.redraw();
     }
 
-    set color(v) {
+    set color(v: number) {
         this._color = v;
         this.redraw();
     }
 
-    set backgroundColor(v) {
+    set backgroundColor(v: number) {
         this._backgroundColor = v;
         this.redraw();
     }
@@ -103,7 +100,7 @@ CircleProgressShader.fragmentShaderSource = `
         pos = transpose_pos(pos);
         float a = atan(pos.y - 0.5, pos.x - 0.5);
         a = (1.0+a/3.14159)/2.0;
-        
+
         return a;
     }
 
@@ -116,7 +113,7 @@ CircleProgressShader.fragmentShaderSource = `
     {
         vec2 fragCoord = vTextureCoord;
         vec4 fragColor = vColor;
-        
+
         vec2 st = vTextureCoord;
         float pct = dist(st, vec2(0.5));
 

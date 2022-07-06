@@ -1,13 +1,10 @@
 import { Lightning } from '@lightningjs/sdk';
 
 export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultShader {
-    constructor(context) {
-        super(context);
-        this._fudge = 0.2;
-        this._rx = 0;
-        this._ry = 0;
-        this._z = 1.0;
-    }
+    _fudge = 0.2;
+    _rx = 0;
+    _ry = 0;
+    _z = 1.0;
 
     setupUniforms(operation) {
         super.setupUniforms(operation);
@@ -88,40 +85,40 @@ PerspectiveShader.vertexShaderSource = `
 
     void main(void) {
         pos = vec3(aVertexPosition.xy, z);
-        
+
         pos -= pivot;
-        
+
         // Undo XY rotation
-        mat2 iRotXy = mat2( cos(rot.z), sin(rot.z), 
+        mat2 iRotXy = mat2( cos(rot.z), sin(rot.z),
                            -sin(rot.z), cos(rot.z));
         pos.xy = iRotXy * pos.xy;
-        
+
         // Perform 3d rotations
         gl_Position.x = cos(rot.x) * pos.x - sin(rot.x) * pos.z;
         gl_Position.y = pos.y;
         gl_Position.z = sin(rot.x) * pos.x + cos(rot.x) * pos.z;
-        
+
         pos.x = gl_Position.x;
         pos.y = cos(rot.y) * gl_Position.y - sin(rot.y) * gl_Position.z;
         pos.z = sin(rot.y) * gl_Position.y + cos(rot.y) * gl_Position.z;
-        
+
         // Redo XY rotation
         iRotXy[0][1] = -iRotXy[0][1];
         iRotXy[1][0] = -iRotXy[1][0];
-        pos.xy = iRotXy * pos.xy; 
+        pos.xy = iRotXy * pos.xy;
 
         // Undo translate to pivot position
         pos.xyz += pivot;
 
         pos = vec3(pos.x * projection.x - 1.0, pos.y * -abs(projection.y) + 1.0, pos.z * projection.x);
-        
+
         // Map coords to gl coordinate space.
         // Set z to 0 because we don't want to perform z-clipping
         gl_Position = vec4(pos.xy, 0.0, z);
 
         vTextureCoord = aTextureCoord;
         vColor = aColor;
-        
+
         gl_Position.y = -sign(projection.y) * gl_Position.y;
     }
 `;

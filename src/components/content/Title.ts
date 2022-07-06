@@ -1,8 +1,18 @@
+import lng from "@lightningjs/core";
 import {Lightning} from "@lightningjs/sdk";
 
-export default class Title extends Lightning.Component {
+interface TitleTemplateSpec extends lng.Component.TemplateSpecStrong {
+    skip: boolean;
+    label: string;
+}
 
-    static _template() {
+export default class Title
+    extends Lightning.Component<TitleTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<TitleTemplateSpec> {
+
+    private _skip = false;
+
+    static _template(): Lightning.Component.Template<TitleTemplateSpec> {
         return {};
     };
 
@@ -14,11 +24,11 @@ export default class Title extends Lightning.Component {
         });
     }
 
-    set skip(v) {
+    set skip(v: boolean) {
         this._skip = v;
     }
 
-    set label(v) {
+    set label(v: string) {
         let fontSize = 128;
         let lineHeight = 128;
         if (v.length > 12 && v.length < 24) {
