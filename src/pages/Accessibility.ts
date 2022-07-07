@@ -1,14 +1,42 @@
 import {Lightning, Router, Utils} from "@lightningjs/sdk";
 
-const settings = {
+interface CorrectColorEvent {
+    settings: {
+        b: number,
+        c: number,
+        s: 'Protanopia' | 'Deuteranopia' | 'Tritanopia' | 'ColorShift' | 'Achromatopsia' | null,
+        i: number
+    }
+}
+
+const settings: CorrectColorEvent['settings'] = {
     b: 0,
     c: 100,
     s: null,
     i: 1
 }
 
-export default class Accessibility extends Lightning.Component {
-    static _template() {
+declare module "@lightningjs/sdk" {
+    namespace Lightning {
+        namespace Stage {
+            interface EventMap {
+                correctColor: (evt: CorrectColorEvent) => void
+            }
+        }
+    }
+}
+
+interface AccessibilityTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    Example: {},
+    Options: {
+        Filter: typeof OptionItem
+    }
+}
+
+export default class Accessibility
+    extends Lightning.Component<AccessibilityTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<AccessibilityTemplateSpec> {
+    static _template(): Lightning.Component.Template<AccessibilityTemplateSpec> {
         return {
             x: 110, alpha: 0.001,
             transitions: {
@@ -26,19 +54,19 @@ export default class Accessibility extends Lightning.Component {
                     index: 0,
                     label: "Color correction",
                     options: ["Trichromacy (normal)", "Protanopia", "Deuteranopia", "Tritanopia", "Achromatopsia"],
-                    onChange: function (selected){
-                        settings.s = selected;
-                        this.stage.emit('correctColor',{settings})
+                    onChange: function (selected) {
+                        settings.s = selected as CorrectColorEvent['settings']['s'];
+                        this.stage.emit('correctColor', {settings});
                     }
                 }
             }
         };
     }
 
-    _init() {
-        this._index = 0;
-        this._optionsIndex = 0;
-    }
+    Example = this.getByRef('Example')!;
+    Options = this.getByRef('Options')!;
+    private _index = 0;
+    private _optionsIndex = 0;
 
     _active() {
         const state = Router.getHistoryState("accessibility");
@@ -74,8 +102,8 @@ export default class Accessibility extends Lightning.Component {
         this.selectedOption.toggle(1);
     }
 
-    get selectedOption() {
-        return this.tag("Options").children[this._optionsIndex];
+    get selectedOption(): OptionItem {
+        return this.Options.children[this._optionsIndex] as OptionItem;
     }
 
     _getFocused() {
@@ -88,8 +116,25 @@ export default class Accessibility extends Lightning.Component {
 
 }
 
-class OptionItem extends Lightning.Component {
-    static _template() {
+type OptionItemOnChange = ((this: OptionItem, option: string) => void);
+
+interface OptionItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    index: number,
+    label: string,
+    options: string[],
+    onChange: OptionItemOnChange,
+    Label: {},
+    SelectedOption: {
+        Left: {},
+        Option: {},
+        Right: {}
+    }
+}
+
+class OptionItem
+    extends Lightning.Component<OptionItemTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<OptionItemTemplateSpec> {
+    static _template(): Lightning.Component.Template<OptionItemTemplateSpec> {
         return {
             Label: {
                 color: 0xff767676,
@@ -122,13 +167,18 @@ class OptionItem extends Lightning.Component {
         };
     }
 
-    _init() {
-        this._index = 0;
-    }
+    Label = this.getByRef('Label')!;
+    SelectedOption = this.getByRef('SelectedOption')!;
+    Option = this.SelectedOption.getByRef('Option')!;
 
-    set label(v) {
+    private _index = 0;
+    private _label = '';
+    private _options: string[] = [];
+    private _onChange: OptionItemOnChange | undefined;
+
+    set label(v: string) {
         this._label = v;
-        this.tag("Label").text = v;
+        this.Label.text = v;
     }
 
     set index(v) {
@@ -139,20 +189,20 @@ class OptionItem extends Lightning.Component {
         return this._index;
     }
 
-    set options(v) {
+    set options(v: string[]) {
         this._options = v;
-        this.tag("Option").text = v[this._index];
+        this.Option.text = v[this._index] || 'Invalid Option';
     }
 
-    set onChange(f){
+    set onChange(f: OptionItemOnChange){
         this._onChange = f;
     }
 
     update() {
-        this.tag("Option").text = this.selectedOption;
+        this.Option.text = this.selectedOption || 'Invalid Option';
     }
 
-    toggle(direction) {
+    toggle(direction: number) {
         this._index += direction;
 
         if (this._index < 0) {
@@ -161,7 +211,9 @@ class OptionItem extends Lightning.Component {
             this._index = 0;
         }
 
-        this.tag("Option").text = this.selectedOption;
+        if (this.selectedOption === undefined) return;
+
+        this.Option.text = this.selectedOption;
 
         if(typeof this._onChange === "function"){
             this._onChange.call(this, this.selectedOption)
@@ -194,7 +246,7 @@ class OptionItem extends Lightning.Component {
         });
     }
 
-    get selectedOption() {
+    get selectedOption(): string | undefined {
         return this._options[this._index];
     }
 

@@ -8,19 +8,13 @@ interface ButtonTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Label: {}
 }
 
-type Listeners = {
-    ratingColor: (color: number) => void;
-};
-
-const listenerEvents: Array<keyof Listeners> = ["ratingColor"];
-
 export default class Button
     extends Lightning.Component<ButtonTemplateSpec>
     implements Lightning.Component.ImplementTemplateSpec<ButtonTemplateSpec> {
 
     Button = this.getByRef('Button')!;
     Label = this.getByRef('Label')!;
-    listeners: Listeners = {
+    listeners = {
         ratingColor: (color: number)=> {
             this.color = color;
         }
@@ -54,15 +48,11 @@ export default class Button
     }
 
     _active() {
-        listenerEvents.forEach((event)=>{
-            this.application.on(event, this.listeners[event]) // !!! eventemitter
-        });
+        this.application.on('contentHeight', this.listeners['ratingColor']);
     }
 
     _inactive() {
-        listenerEvents.forEach((event)=>{
-            this.application.off(event, this.listeners[event]) // !!! eventemitter
-        });
+        this.application.off('ratingColor', this.listeners['ratingColor']);
     }
 
 }

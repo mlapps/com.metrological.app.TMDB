@@ -8,8 +8,6 @@ const correction = {
     Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia
 };
 
-type CorrectColorEvent = { settings: {b: number, c: number, s: keyof typeof correction, i: number } };
-
 interface AppTemplateSpec extends Router.App.TemplateSpecStrong {
     ColorCorrection: {
         Background: typeof Background,
@@ -57,7 +55,8 @@ export default class App extends Router.App<AppTemplateSpec> implements Lightnin
     }
 
     _init() {
-        this.stage.on('correctColor', ({ settings: {b,c,s,i} }: CorrectColorEvent) => {
+        this.stage.on('correctColor', ({ settings: {b,c,s,i} }) => {
+            if (s === null) return;
             if(correction[s]){
                 this.ColorCorrection.rtt = true;
                 this.ColorCorrection.shader = {

@@ -1,21 +1,12 @@
 import {Lightning} from "@lightningjs/sdk";
 import {Button, MovieInfo, Rating, Title} from "../../components";
 
-interface ContentItem {
+export interface ContentItem {
     voteAverage: number;
     title: string;
     formattedReleaseDate:  string;
     genresAsString: string;
 }
-
-type Listeners = {
-    titleLoaded: () => void;
-    setItem: (e: { item: ContentItem }) => void;
-    itemAnimationEnded: () => void;
-    [s: string]: (...args: any[]) => void;
-};
-
-const listenerEvents: Array<keyof Listeners> = ["ratingColor"];
 
 interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Title: typeof Title,
@@ -25,6 +16,9 @@ interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     },
     Button: typeof Button
 };
+
+const attachDetachEvents: Array<keyof Lightning.Application.EventMap> = ["titleLoaded", "setItem", "itemAnimationEnded"];
+const hideEvents: Array<keyof Lightning.Application.EventMap> = ["titleLoaded", "setItem"];
 
 export default class Content
     extends Lightning.Component<ContentTemplateSpec>
@@ -43,7 +37,7 @@ export default class Content
     private _item: ContentItem | undefined;
     private _details: ContentItem | undefined;
 
-    private listeners: Listeners = {
+    private listeners: Partial<Lightning.Application.EventMap> = {
         titleLoaded: ()=> {
             this._detailAnimation.start();
             this.application.emit("contentHeight", this.Title.renderHeight + 200);
@@ -94,13 +88,13 @@ export default class Content
     }
 
     _attach() {
-        ["titleLoaded", "setItem", "itemAnimationEnded"].forEach((event)=>{
+        attachDetachEvents.forEach((event)=>{
             this.application.on(event, this.listeners[event]!)
         });
     }
 
     _detach() {
-        ["titleLoaded", "setItem", "itemAnimationEnded"].forEach((event)=>{
+        attachDetachEvents.forEach((event)=>{
             this.application.off(event, this.listeners[event]!)
         });
     }
@@ -123,7 +117,7 @@ export default class Content
             }
         });
 
-        ["titleLoaded", "setItem"].forEach((event)=>{
+        hideEvents.forEach((event)=>{
             this.application.off(event, this.listeners[event]!)
         });
     }

@@ -7,11 +7,6 @@ interface PopularItem {
     id: string
 }
 
-type Listeners = {
-    contentHidden: () => void;
-    [s: string]: (...args: any[]) => void;
-};
-
 interface PopularTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Content: typeof Content;
     List: {}
@@ -25,8 +20,8 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
 
     _index = 0;
     _item: PopularItem | undefined;
-    listeners: Listeners = {
-        contentHidden: ()=> {
+    listeners = {
+        contentHidden: () => {
             if (!this._item) return;
             this.widgets.menu.hide(); // Lightning SDK Page
             Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
@@ -44,15 +39,15 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
     }
 
     _attach() {
-        ["contentHidden", "readyForNavigate"].forEach((event)=>{
-            this.application.on(event, this.listeners[event]!)
-        });
+        this.application.on('contentHidden', this.listeners['contentHidden']);
+        // !!! Bug caught by typing, readyForNavigate is not an emitted event
+        // this.application.on('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
     _detach() {
-        ["contentHidden", "readyForNavigate"].forEach((event)=>{
-            this.application.off(event, this.listeners[event]!)
-        });
+        this.application.off('contentHidden', this.listeners['contentHidden']);
+        // !!! Bug caught by typing, readyForNavigate is not an emitted event
+        // this.application.off('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
     _active() {

@@ -1,12 +1,6 @@
 import lightning from "@lightningjs/core/src/lightning.mjs";
 import {Lightning} from "@lightningjs/sdk";
 
-type Listeners = {
-    ratingColor: (color: number) => void;
-};
-
-const listenerEvents: Array<keyof Listeners> = ["ratingColor"];
-
 export interface MovieInfoInfo {
     date: string;
     genres: string;
@@ -24,8 +18,8 @@ export default class MovieInfo
 
     Date = this.getByRef('Date')!;
     Genres = this.getByRef('Genres')!;
-    listeners: Listeners = {
-        ratingColor: (color)=> {
+    listeners = {
+        ratingColor: (color: number)=> {
             this.Genres.text!.textColor = color;
         }
     }
@@ -52,15 +46,12 @@ export default class MovieInfo
     }
 
     _attach() {
-        listenerEvents.forEach((event)=>{
-            this.application.on(event, this.listeners[event]) // !!! eventemitter
-        });
+        this.application.on('ratingColor', this.listeners['ratingColor']);
     }
 
     _detach() {
-        listenerEvents.forEach((event)=>{
-            this.application.off(event, this.listeners[event]) // !!! eventemitter
-        });
+        this.application.on('ratingColor', this.listeners['ratingColor']);
+
     }
 
     set info({date, genres}: MovieInfoInfo) {

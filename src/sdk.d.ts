@@ -25,6 +25,7 @@ declare module '@lightningjs/sdk' {
   class Router {
     static startRouter(...args: any[]): void;
     static navigate(...args: any[]): void;
+    static getHistoryState(arg: string): { optionsIndex: number };
   }
 
   class Utils {
