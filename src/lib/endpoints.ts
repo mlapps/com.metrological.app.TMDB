@@ -6,12 +6,12 @@ const apiKey = '66683917a94e703e14ca150023f4ea7c';
 const base = 'https://api.themoviedb.org/3';
 
 export const getPopularUrls = async (type: string) =>{
-    return [
+    return Promise.all([
         `genre/${type}/list`,
         `discover/${type}`,
     ].map((url)=>{
         return fetch(`${base}/${url}?api_key=${apiKey}&with_companies=7|33&vote_average.gte=7`).then(r => r.json())
-    }) as unknown as [GenresResponse, DiscoverResponse];
+    })) as unknown as [GenresResponse, DiscoverResponse];
 }
 
 export const getDetailUrl = async (type: string, id: string): Promise<DetailsData> => {
@@ -23,12 +23,12 @@ export const getCreditsUrl = async (type: string, id: string): Promise<CreditsRe
 };
 
 export const getSimilarUrls = async (type: string, id: string)=> {
-    return [
+    return Promise.all([
         `genre/${type}/list`,
         `${type}/${id}/similar`,
     ].map((url)=>{
         return fetch(`${base}/${url}?api_key=${apiKey}`).then(r => r.json())
-    }) as unknown as [GenresResponse, SimilarResponse];
+    })) as unknown as [GenresResponse, SimilarResponse];
 };
 
 export const getPeopleUrl = async (id: string): Promise<PeopleData> => {

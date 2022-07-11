@@ -132,7 +132,6 @@ export default {
             before: async (page: TvCredits, {type, id}: Record<'type' | 'id', string>) =>{
                 return getCreditsUrls(type, id).then((response)=>{
                     return Promise.all(response).then(function ([genresRes, creditsRes]: [GenresResponse, CreditsResponse]) {
-                        debugger;
                         const genres = genresRes.genres;
                         const data = {results: creditsRes.cast};
                         page.peopleId = id;
