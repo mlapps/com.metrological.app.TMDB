@@ -1,7 +1,22 @@
-import {Movie, Tv} from "./";
+import {ModelType, Movie, Tv} from ".";
+import { Genre } from "../types";
+
+export interface ContainerData {
+    page: any;
+    total_results: any;
+    type: any;
+    items: any;
+
+    results: any[];
+}
 
 export default class Container {
-    constructor(obj, type, genres){
+    _page: any;
+    _total_results: any;
+    _type: any;
+    _items: any;
+
+    constructor(obj: ContainerData, type: 'movie' | 'tv', genres: Genre[]){
         this._page = obj.page;
         this._total_results = obj.total_results;
         this._type = type;

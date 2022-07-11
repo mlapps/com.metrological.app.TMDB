@@ -1,7 +1,16 @@
 import {Lightning, Router} from "@lightningjs/sdk";
 
-export default class Error extends Lightning.Component{
-    static _template(){
+export interface ErrorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    Label: {}
+}
+
+export default class Error
+    extends Lightning.Component<ErrorTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ErrorTemplateSpec> {
+
+    Label = this.getByRef('Label')!;
+
+    static _template(): Lightning.Component.Template<ErrorTemplateSpec> {
         return {
             rect: true, w: 1920, h: 1080,
             color: 0xffb70606,
@@ -22,7 +31,7 @@ export default class Error extends Lightning.Component{
         console.log("focus error page")
     }
 
-    set error(obj){
+    set error(obj: { page: any, error: Error }){
         const {page, error} = obj;
         console.log(page, error);
 
@@ -35,7 +44,7 @@ resulted in route: ${page[Symbol.for("route")]}
 --
 ${error.toString()}`
 
-        this.tag("Label").text = errorMessage;
+        this.Label.text = errorMessage;
     }
 
     easing(){

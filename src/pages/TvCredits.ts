@@ -1,12 +1,15 @@
 import Popular from "./popular";
 import {Router} from "@lightningjs/sdk";
+import { FlipList } from "../components";
 
 export default class TvCredits extends Popular {
+    private _peopleId = 0;
+
     _active() {
         this.widgets.peoplemenu.select("tvcredits", true);
     }
 
-    set peopleId(v) {
+    set peopleId(v: number) {
         this._peopleId = v;
     }
 
@@ -16,6 +19,6 @@ export default class TvCredits extends Popular {
     }
 
     _getFocused() {
-        return this.tag("List").children[this._index];
+        return this.List.children[this._index] as FlipList;
     }
 }

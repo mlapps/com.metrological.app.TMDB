@@ -1,8 +1,21 @@
 import {Lightning, Router, Utils} from "@lightningjs/sdk";
 
-export default class Cast extends Lightning.Component {
+export interface CastTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    content: any;
+    detailsType: string;
+    detailsId: any;
+    List: {}
+}
 
-    static  _template() {
+export default class Cast
+    extends Lightning.Component<CastTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<CastTemplateSpec> {
+
+    List = this.getByRef('List')!;
+    private _detailsType: string = '';
+    private _detailsId: string = '';
+
+    static  _template(): Lightning.Component.Template<CastTemplateSpec> {
         return {
             List: {
                 alpha: 0.001,
@@ -22,26 +35,26 @@ export default class Cast extends Lightning.Component {
         this.application.emit("setBackground", {src});
         this.application.emit("contentHeight", 640);
 
-        this.tag("List").transition("alpha").on("finish", ()=> {
+        this.List.transition("alpha").on("finish", ()=> {
             this.application.emit("readyForBackground");
         });
 
-        this.tag("List").patch({
+        this.List.patch({
             smooth: {alpha: 1, x: 90}
         });
     }
 
-    set content(v) {
+    set content(v: Lightning.Component) {
         if (v) {
-            this.tag("List").childList.add(v);
+            this.List.childList.add(v);
         }
     }
 
-    set detailsType(v) {
+    set detailsType(v: string) {
         this._detailsType = v;
     }
 
-    set detailsId(v) {
+    set detailsId(v: string) {
         this._detailsId = v;
     }
 
@@ -56,7 +69,7 @@ export default class Cast extends Lightning.Component {
     }
 
     _getFocused() {
-        return this.tag("List").children[0];
+        return this.List.children[0] as Lightning.Component;
     }
 
 }

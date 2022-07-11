@@ -6,15 +6,12 @@ import {
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
 import Accessibility from "../pages/Accessibility";
+import { CreditsResponse, GenresResponse } from "./types";
 
-const getPopularContent = async (type)=>{
+const getPopularContent = async (type: 'movie' | 'tv')=>{
     try {
-        const urls = await getPopularUrls(type);
-        const response = await Promise.all(urls);
-        const [g, data] = await Promise.all(
-            response.map((d)=>d.json())
-        );
-        return list(type, data, g.genres);
+        const [genresRes, discoverRes] = await getPopularUrls(type);
+        return list(type, discoverRes, genresRes.genres);
     } catch (e){
         console.log(e)
     }
@@ -30,16 +27,16 @@ export default {
         {
             path: 'movie',
             component: Movie,
-            before: async(page)=> {
-                page.content = await getPopularContent("movie");
+            before: async(page: Movie)=> {
+                page.content = (await getPopularContent("movie"))!;
             },
             widgets: ["menu"]
         },
         {
             path: 'tv',
             component: Tv,
-            before: async(page)=> {
-                page.content = await getPopularContent("tv");
+            before: async(page: Tv)=> {
+                page.content = (await getPopularContent("tv"))!;
             },
             widgets: ["menu"]
         },
@@ -51,10 +48,8 @@ export default {
         {
             path: 'details/:type/:id',
             component: Details,
-            before: async (page, {type, id}) =>{
-                return getDetailUrl(type, id).then(response => {
-                    return response.json();
-                }).then(function (data) {
+            before: async (page: Details, {type, id}: Record<'type' | 'id', string>) =>{
+                return getDetailUrl(type, id).then(function (data) {
                     page.detailsType = type;
                     page.content = details(data);
                 }).catch(function (error) {
@@ -66,13 +61,15 @@ export default {
         {
             path: 'cast/:type/:id',
             component: Cast,
-            before: async (page, {type, id}) =>{
-                return getCreditsUrl(type, id).then(response => {
-                    return response.json();
-                }).then(function (data) {
+            before: async (page: Cast, {type, id}: Record<'type' | 'id', string>) =>{
+                return getCreditsUrl(type, id).then(function (data) {
                     page.detailsType = type;
                     page.detailsId = id;
-                    page.content = list("cast", data);
+                    const content = list("cast", data);
+                    if (!content) {
+                        throw new Error('Invalid Content');
+                    }
+                    page.content = content;
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -82,32 +79,27 @@ export default {
         {
             path: 'similar/:type/:id',
             component: Similar,
-            before: async (page, {type, id}) =>{
-                return getSimilarUrls(type, id).then((response)=>{
-                    return Promise.all(response).then(function (responses) {
-                        return Promise.all(responses.map(function (response) {
-                            return response.json();
-                        }));
-                    }).then(function (response) {
-                        const genres = response[0].genres;
-                        const data = response[1];
+            before: async (page: Similar, {type, id}: Record<'type' | 'id', string>) =>{
+                return getSimilarUrls(type, id).then(function ([genresRes, similarRes]) {
+                        const genres = genresRes.genres;
                         page.detailsType = type;
                         page.detailsId = id;
-                        page.content = list(type, data, genres);
+                        const content = list(type, similarRes, genres);
+                        if (!content) {
+                            throw new Error('Invalid Content');
+                        }
+                        page.content = content;
                     }).catch(function (error) {
                         console.log("error", error);
                     });
-                })
             },
             widgets: ["detailsmenu"]
         },
         {
             path: 'people/:id',
             component: People,
-            before: async (page, {id}) =>{
-                return getPeopleUrl(id).then(response => {
-                    return response.json();
-                }).then(function (data) {
+            before: async (page: People, {id}: Record<'id', string>) =>{
+                return getPeopleUrl(id).then(function (data) {
                     page.content = people(data);
                 }).catch(function (error) {
                     console.log(error);
@@ -118,38 +110,37 @@ export default {
         {
             path: 'movie_credits/:type/:id',
             component: MovieCredits,
-            before: async (page, {type, id}) =>{
-                return getCreditsUrls(type, id).then((response)=>{
-                    return Promise.all(response).then(function (responses) {
-                        return Promise.all(responses.map(function (response) {
-                            return response.json();
-                        }));
-                    }).then(function (response) {
-                        const genres = response[0].genres;
-                        const data = {results: response[1].cast};
+            before: async (page: MovieCredits, {type, id}: Record<'type' | 'id', string>) =>{
+                return getCreditsUrls(type, id).then(function ([genresRes, creditsRes]) {
+                        const genres = genresRes.genres;
+                        const data = {results: creditsRes.cast};
                         page.peopleId = id;
-                        page.content = list(type, data, genres);
+                        const content = list(type, data, genres);
+                        if (!content) {
+                            throw new Error('Invalid Content');
+                        }
+                        page.content = content;
                     }).catch(function (error) {
                         console.log("error", error);
                     });
-                })
             },
             widgets: ["peoplemenu"]
         },
         {
             path: 'tv_credits/:type/:id',
             component: TvCredits,
-            before: async (page, {type, id}) =>{
+            before: async (page: TvCredits, {type, id}: Record<'type' | 'id', string>) =>{
                 return getCreditsUrls(type, id).then((response)=>{
-                    return Promise.all(response).then(function (responses) {
-                        return Promise.all(responses.map(function (response) {
-                            return response.json();
-                        }));
-                    }).then(function (response) {
-                        const genres = response[0].genres;
-                        const data = {results: response[1].cast};
+                    return Promise.all(response).then(function ([genresRes, creditsRes]: [GenresResponse, CreditsResponse]) {
+                        debugger;
+                        const genres = genresRes.genres;
+                        const data = {results: creditsRes.cast};
                         page.peopleId = id;
-                        page.content = list(type, data, genres);
+                        const content = list(type, data, genres);
+                        if (!content) {
+                            throw new Error('Invalid Content');
+                        }
+                        page.content = content;
                     }).catch(function (error) {
                         console.log("error", error);
                     });

@@ -1,9 +1,31 @@
-import { Lightning, Router } from '@lightningjs/sdk';
+import { Lightning } from '@lightningjs/sdk';
 import {ItemWrapper} from "../index";
 
-export default class List extends Lightning.Component {
+interface ItemConstructorBase {
+    new (...args: any[]): Lightning.Component & {
 
-    static _template() {
+    };
+    get width(): number;
+    get height(): number;
+    get offset(): number;
+}
+
+interface ListTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    container: any;
+    Items: {}
+}
+
+export default class List<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
+    extends Lightning.Component<ListTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ListTemplateSpec> {
+
+    Items = this.getByRef('Items')!;
+    _index = 0;
+    _container: any
+    _itemConstruct!: ItemConstructor;
+    _items: any[] = [];
+
+    static _template(): Lightning.Component.Template<ListTemplateSpec> {
         return {
             h: List.height,
             Items: {
@@ -15,12 +37,9 @@ export default class List extends Lightning.Component {
         };
     }
 
-    _construct() {
-        this._index = 0;
-    }
 
-    get activeItem() {
-        return this.tag("Items").children[this._index];
+    get activeItem(): ItemWrapper<ItemConstructor> {
+        return this.Items.children[this._index] as ItemWrapper<ItemConstructor>;
     }
 
     set container(v){
@@ -31,7 +50,7 @@ export default class List extends Lightning.Component {
         return this._container;
     }
 
-    set itemConstruct(v) {
+    set itemConstruct(v: ItemConstructor) {
         this._itemConstruct = v;
     }
 
@@ -52,7 +71,7 @@ export default class List extends Lightning.Component {
         // so it can notify that the first item is created
         ItemWrapper.FIRST_CREATED = false;
 
-        this.tag("Items").patch({
+        this.Items.patch({
             children: this._createItems({items: this._items, construct})
         });
     }
@@ -61,7 +80,7 @@ export default class List extends Lightning.Component {
         return this._items;
     }
 
-    _createItems({items, construct}) {
+    _createItems({items, construct}: {items: any[], construct: ItemConstructor}) {
         return items.map((item, index) => {
             return {
                 type: ItemWrapper,
@@ -77,9 +96,9 @@ export default class List extends Lightning.Component {
 
     _animateToSelected(index = this._index) {
         if (index > 4) {
-            this.tag("Items").setSmooth("x", -this.activeItem.finalX + (this.activeItem.w * 4));
+            this.Items.setSmooth("x", -this.activeItem.finalX + (this.activeItem.w * 4));
         } else {
-            this.tag("Items").setSmooth("x", 0);
+            this.Items.setSmooth("x", 0);
         }
     }
 
@@ -100,20 +119,20 @@ export default class List extends Lightning.Component {
     }
 
     _handleRight() {
-        if (this._index < this.tag("Items").children.length - 1) {
+        if (this._index < this.Items.children.length - 1) {
             this.select({direction:1});
         } else {
             return false;
         }
     }
 
-    setIndex(index){
+    setIndex(index: number){
         this._index = index;
         this._animateToSelected();
         this._refocus();
     }
 
-    select({direction}) {
+    select({direction}: {direction: -1 | 1}) {
         this._index += direction;
         this._animateToSelected();
     }

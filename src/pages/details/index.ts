@@ -1,10 +1,58 @@
 import {Lightning, Router} from "@lightningjs/sdk";
 import {MovieInfo, Rating, Title} from "../../components";
+import { ContentItem } from "../popular/Content";
 import Logo from "./Logo";
 
-export default class Details extends Lightning.Component {
+export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    content: any;
+    detailsType: string;
+    Item: {
+        Title: typeof Title,
+        Details: {
+            Rating: typeof Rating,
+            MovieInfo: typeof MovieInfo
+        },
+        Holder: {
+            Overview: {}
+        }
+    },
+    LogosHolder: {
+        Logos: {}
+    }
+}
 
-    static _template() {
+export default class Details
+    extends Lightning.Component<DetailsTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<DetailsTemplateSpec> {
+
+    Item = this.getByRef('Item')!;
+    LogosHolder = this.getByRef('LogosHolder')!;
+    Logos = this.LogosHolder.getByRef('Logos')!;
+    Title = this.Item.getByRef('Title')!;
+    Details = this.Item.getByRef('Details')!;
+    Rating = this.Details.getByRef('Rating')!;
+    MovieInfo = this.Details.getByRef('MovieInfo')!;
+    Holder = this.Item.getByRef('Holder')!;
+    Overview = this.Holder.getByRef('Overview')!;
+    listeners = {
+        titleLoaded: ()=> {
+            this.Rating.startAnimation(true);
+            this.h = this.Title.renderHeight + 160;
+            this.Details.y = this.Title.renderHeight - 20;
+            this.Holder.y = this.Title.renderHeight + 100;
+            this.application.emit("contentHeight", 0);
+        },
+        backgroundLoaded: ()=> {
+            this.Logos.children.forEach(logo => {
+                logo.setSmooth("x", 0);
+                logo.setSmooth("alpha", 1);
+            });
+        }
+    };
+    private _item!: ContentItem;
+    private _detailsType: string = '';
+
+    static _template(): Lightning.Component.Template<DetailsTemplateSpec> {
         return {
             Item: {
                 x: 90,
@@ -48,16 +96,16 @@ export default class Details extends Lightning.Component {
     };
 
     _init() {
-        this.tag("Item").transition("y").on("finish", ()=> {
-            this.tag("Holder").y = this.tag("Holder").y + 30;
-            this.tag("Holder").patch({
+        this.Item.transition("y").on("finish", ()=> {
+            this.Holder.y = this.Holder.y + 30;
+            this.Holder.patch({
                 smooth: {
-                    alpha: 1, y: this.tag("Holder").y - 30
+                    alpha: 1, y: this.Holder.y - 30
                 }
             });
         });
 
-        this.tag("Holder").transition("y").on("finish", ()=> {
+        this.Holder.transition("y").on("finish", ()=> {
             this.application.emit("readyForBackground");
         });
 
@@ -65,34 +113,16 @@ export default class Details extends Lightning.Component {
             this.widgets.detailsmenu.select("cast");
             Router.navigate(`cast/${this._detailsType}/${this._item.id}`, true);
         });
-
-        this.listeners = {
-            titleLoaded: ()=> {
-                this.tag("Rating").startAnimation(true);
-                this.h = this.tag("Title").renderHeight + 160;
-                this.tag("Details").y = this.tag("Title").renderHeight - 20;
-                this.tag("Holder").y = this.tag("Title").renderHeight + 100;
-                this.application.emit("contentHeight", 0);
-            },
-            backgroundLoaded: ()=> {
-                this.tag("Logos").children.forEach(logo => {
-                    logo.setSmooth("x", 0);
-                    logo.setSmooth("alpha", 1);
-                });
-            }
-        }
     }
 
     _attach() {
-        ["titleLoaded", "backgroundLoaded"].forEach((event)=>{
-            this.application.on(event, this.listeners[event])
-        });
+        this.application.on('titleLoaded', this.listeners['titleLoaded']);
+        this.application.on('backgroundLoaded', this.listeners['backgroundLoaded']);
     }
 
     _detach() {
-        ["titleLoaded", "backgroundLoaded"].forEach((event)=>{
-            this.application.off(event, this.listeners[event])
-        });
+        this.application.off('titleLoaded', this.listeners['titleLoaded']);
+        this.application.off('backgroundLoaded', this.listeners['backgroundLoaded']);
     }
 
     _active() {
@@ -113,18 +143,18 @@ export default class Details extends Lightning.Component {
         });
     }
 
-    set content(v) {
+    set content(v: ContentItem) {
         this._item = v;
 
-        this.tag("Title").label = this._item.title;
-        this.tag("MovieInfo").info = {date: this._item.formattedReleaseDate, genres: this._item.genresAsString};
-        this.tag("Overview").text = this._item.overview;
-        this.tag("Rating").voteAverage = this._item.voteAverage;
+        this.Title.label = this._item.title;
+        this.MovieInfo.info = {date: this._item.formattedReleaseDate, genres: this._item.genresAsString};
+        this.Overview.text = this._item.overview;
+        this.Rating.voteAverage = this._item.voteAverage;
 
         let logoIndex = 0;
         this._item.productionCompanies.forEach(company => {
             if (company.logo_path !== null && logoIndex < 6) {
-                this.tag("Logos").childList.a(this.stage.c({
+                this.Logos.childList.a(this.stage.c({
                     type: Logo, logo: company.logo_path, y: logoIndex * 140,
                     x: 30, alpha: 0.001,
                     transitions: {
@@ -139,7 +169,7 @@ export default class Details extends Lightning.Component {
         this.application.emit("setItem", {item: this._item});
     }
 
-    set detailsType(v) {
+    set detailsType(v: string) {
         this._detailsType = v;
     }
 

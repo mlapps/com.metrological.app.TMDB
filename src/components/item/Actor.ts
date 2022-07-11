@@ -1,9 +1,29 @@
 import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 
-export default class Actor extends Lightning.Component {
+interface ActorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    item: any;
+    Actor: {
+        Image: {}
+    },
+    ActorInfo: {
+        Name: {},
+        Character: {}
+    }
+}
 
-    static _template() {
+export default class Actor
+    extends Lightning.Component<ActorTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ActorTemplateSpec>
+{
+    Actor = this.getByRef('Actor')!;
+    ActorInfo = this.getByRef('ActorInfo')!;
+    Image = this.Actor.getByRef('Image')!;
+    Name = this.ActorInfo.getByRef('Name')!;
+    Character = this.ActorInfo.getByRef('Character')!;
+    private _item: any;
+
+    static _template(): Lightning.Component.Template<ActorTemplateSpec> {
         return {
             Actor: {
                 w: Actor.width, h: Actor.height, rtt: true, mount: 0.5, x: Actor.width/2, y: Actor.height/2,
@@ -39,18 +59,18 @@ export default class Actor extends Lightning.Component {
         };
     }
 
-    set item(v) {
+    set item(v: any) {
         this._item = v;
 
         if (this._item.profile_path !== null) {
             const image = getImgUrl(this._item.profile_path, 300)
-            this.tag("Image").texture = Img(image).landscape(Actor.width);
+            this.Image.texture = Img(image).landscape(Actor.width);
         } else {
-            this.tag("Image").src = Utils.asset("images/placeholder.png");
+            this.Image.src = Utils.asset("images/placeholder.png");
         }
 
-        this.tag("Name").text = this._item.name;
-        this.tag("Character").text = this._item.character;
+        this.Name.text = this._item.name;
+        this.Character.text = this._item.character;
     }
 
     _focus() {

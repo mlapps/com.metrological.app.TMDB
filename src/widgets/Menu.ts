@@ -30,7 +30,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
     Items = this.getByRef('Items')!;
     Lines_Top = this.Lines.getByRef('Top')!;
     Lines_Bottom = this.Lines.getByRef('Bottom')!;
-    _id: number | null = null;
+    _id: unknown | null = null;
     _currentIndex: number = 0;
     _lineOffset = 0;
 
@@ -54,13 +54,13 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
         });
     }
 
-    select(id, fastForward) {
+    select(id: unknown, fastForward: boolean) {
         if (id === this._id) return;
 
         this._id = id;
         let y = 0;
 
-        this.Items.children.forEach((item: MenuItem, index) => {
+        (this.Items.children as MenuItem[]).forEach((item: MenuItem, index) => { // !!! type children
             item.setSmooth("y", y, {duration: fastForward?0:0.3});
             if (id === item.itemId) {
                 this._currentIndex = index;

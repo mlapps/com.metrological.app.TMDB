@@ -1,16 +1,19 @@
 import Popular from "./popular";
 import {Router} from "@lightningjs/sdk";
+import { FlipList } from "../components";
 
 export default class Similar extends Popular {
+    private _detailsType = '';
+    private _detailsId = 0;
     _active() {
         this.widgets.detailsmenu.select("similar", true);
     }
 
-    set detailsType(v) {
+    set detailsType(v: string) {
         this._detailsType = v;
     }
 
-    set detailsId(v) {
+    set detailsId(v: number) {
         this._detailsId = v;
     }
 
@@ -20,6 +23,6 @@ export default class Similar extends Popular {
     }
 
     _getFocused() {
-        return this.tag("List").children[this._index];
+        return this.List.children[this._index] as FlipList;
     }
 }

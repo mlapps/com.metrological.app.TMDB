@@ -1,7 +1,27 @@
 import { Lightning } from '@lightningjs/sdk'
 
-export default class ItemWrapper extends Lightning.Component {
-    static _template() {
+interface ItemWrapperTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    index: number;
+    construct: Lightning.Component.Constructor;
+    item: any;
+    configIndex: number;
+}
+
+export default class ItemWrapper<ItemConstructor extends Lightning.Component.Constructor>
+    extends Lightning.Component<ItemWrapperTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ItemWrapperTemplateSpec>
+{
+    // !!! Had to rename from `_construct` to `___construct` due to _construct (and __construct) being a
+    // reserved word within Lightning.Component
+    private ___construct!: ItemConstructor;
+    private _index: number = 0;
+    private _configIndex: number = 0;
+    private _item: any;
+    private _notifyOnItemCreation: boolean = false;
+
+    static FIRST_CREATED = false;
+
+    static _template(): Lightning.Component.Template<ItemWrapperTemplateSpec> {
         return {
             clipbox: true
         };
@@ -23,12 +43,12 @@ export default class ItemWrapper extends Lightning.Component {
         this._configIndex = v;
     }
 
-    set construct(v){
-        this._construct = v;
+    set construct(v: ItemConstructor){
+        this.___construct = v;
     }
 
     get construct() {
-        return this._construct;
+        return this.___construct;
     }
 
     set item(obj) {
@@ -39,13 +59,13 @@ export default class ItemWrapper extends Lightning.Component {
         return this._item;
     }
 
-    get child(){
-        return this.children[0];
+    get child(): InstanceType<ItemConstructor> {
+        return this.children[0] as unknown as InstanceType<ItemConstructor>;
     }
 
     create() {
         const item = this._item;
-        this.children = [{type: this._construct, item, index: this._index}];
+        this.children = [{type: this.___construct, item, index: this._index}];
 
         // if item is flagged and has focus, notify parent
         // that focuspath can be recalculated
@@ -76,5 +96,3 @@ export default class ItemWrapper extends Lightning.Component {
 
     }
 }
-
-ItemWrapper.FIRST_CREATED = false;

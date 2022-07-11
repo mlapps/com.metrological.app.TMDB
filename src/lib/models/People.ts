@@ -1,5 +1,38 @@
+export interface PeopleData {
+    adult: any;
+    also_known_as: any;
+    biography: any;
+    birthday: any;
+    deathday: any;
+    gender: any;
+    homepage: any;
+    id: any;
+    imdb_id: any;
+    known_for_department: any;
+    name: any;
+    place_of_birth: any;
+    popularity: any;
+    profile_path: any;
+}
+
+
 export default class People {
-    constructor(obj){
+    _adult: any;
+    _also_known_as: any;
+    _biography: any;
+    _birthday: any;
+    _deathday: any;
+    _gender: any;
+    _homepage: any;
+    _id: any;
+    _imdb_id: any;
+    _known_for_department: any;
+    _name: any;
+    _place_of_birth: any;
+    _popularity: any;
+    _profile_path: any;
+
+    constructor(obj: PeopleData){
         this._adult = obj.adult;
         this._also_known_as = obj.also_known_as;
         this._biography = obj.biography;

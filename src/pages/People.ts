@@ -1,10 +1,32 @@
-import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
-import {Button, Title} from "../components";
+import {Lightning, Router, Utils} from "@lightningjs/sdk";
+import {Title} from "../components";
+import { People as PeopleModel } from "../lib/models";
 import {getImgUrl} from "../lib/tools";
 
-export default class People extends Lightning.Component {
+export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    content: PeopleModel
+    Item: {
+        Title: typeof Title,
+        Birth: {},
+        Holder: {
+            Biography: {}
+        }
+    }
+}
 
-    static _template() {
+export default class People
+    extends Lightning.Component<PeopleTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<PeopleTemplateSpec> {
+
+    Item = this.getByRef('Item')!;
+    Title = this.Item.getByRef('Title')!;
+    Birth = this.Item.getByRef('Birth')!;
+    Holder = this.Item.getByRef('Holder')!;
+    Biography = this.Holder.getByRef('Biography')!
+
+    private _item!: PeopleModel;
+
+    static _template(): Lightning.Component.Template<PeopleTemplateSpec> {
         return {
             Item: {
                 flex: {direction: "column"},
@@ -40,9 +62,9 @@ export default class People extends Lightning.Component {
     };
 
     _init() {
-        this.tag("Item").transition("y").on("finish", ()=> {
-            this.tag("Holder").y = 30;
-            this.tag("Holder").patch({
+        this.Item.transition("y").on("finish", ()=> {
+            this.Holder.y = 30;
+            this.Holder.patch({
                 smooth: {
                     alpha: 1, y: 0
                 }
@@ -59,7 +81,7 @@ export default class People extends Lightning.Component {
             }
         });
 
-        this.tag("Item").transition("y").on("finish", ()=> {
+        this.Item.transition("y").on("finish", ()=> {
             this.application.emit("readyForBackground");
         });
 
@@ -74,15 +96,15 @@ export default class People extends Lightning.Component {
         });
     }
 
-    set content(v) {
+    set content(v: PeopleModel) {
         this._item = v;
-        this.tag("Title").label = this._item.name;
-        this.tag("Birth").text = `${this._item.birthday} | ${this._item.placeOfBirth}`;
+        this.Title.label = this._item.name;
+        this.Birth.text = `${this._item.birthday} | ${this._item.placeOfBirth}`;
 
         if (this._item._biography.length >= 600) {
-            this.tag("Biography").text = this._truncateString(this._item._biography, 700);
+            this.Biography.text = this._truncateString(this._item._biography, 700);
         } else {
-            this.tag("Biography").text = this._item._biography;
+            this.Biography.text = this._item._biography;
         }
 
         let src = Utils.asset("images/background.png");
@@ -97,7 +119,7 @@ export default class People extends Lightning.Component {
         Router.navigate(`movie_credits/movie/${this._item.id}`, true);
     }
 
-    _truncateString(s, n) {
+    _truncateString(s: string, n: number) {
         let cut= s.indexOf(' ', n);
         if(cut === -1) return s;
         return `${s.substring(0, cut)}...`

@@ -18,6 +18,7 @@ export default class Rating
     RatingCircle = this.getByRef('RatingCircle')!;
     Number = this.RatingNumber.getByRef('Number')!;
     Percentage = this.RatingNumber.getByRef('Percentage')!;
+
     private _voteAverage = 0;
     // !!! Below `timingFunction` is not supported by Animations, if I understand everything correctly
     // This had already existed before I moved this code
@@ -56,7 +57,7 @@ export default class Rating
     };
 
     _init() {
-        this.Number.on("txLoaded", ()=> {
+        this.Number.on('txLoaded', ()=> {
             this.RatingNumber.w = this.Number.renderWidth;
             this.RatingNumber.h = this.Number.renderHeight;
             this.Percentage.x = this.Number.renderWidth;

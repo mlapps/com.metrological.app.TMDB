@@ -1,9 +1,42 @@
-import { Lightning, Router } from '@lightningjs/sdk';
-import { ItemWrapper } from "../";
+import { Lightning } from '@lightningjs/sdk';
+import { ItemWrapper } from "..";
+import { ContentItem } from '../../pages/popular/Content';
 
-export default class FlipList extends Lightning.Component {
+interface ItemConstructorBase {
+    new (...args: any[]): Lightning.Component & {
+        animatePosition(): void;
+        focusedItem: boolean;
+    };
+    get width(): number;
+    get height(): number;
+    get offset(): number;
+}
 
-    static _template() {
+interface FlipListTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+
+    Items: {},
+    Pagination: {
+        Current: {},
+        Total: {}
+    }
+}
+
+export default class FlipList<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
+    extends Lightning.Component<FlipListTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<FlipListTemplateSpec>
+ {
+    Items = this.getByRef('Items')!;
+    Pagination = this.getByRef('Pagination')!;
+    Current = this.Pagination.getByRef('Current')!;
+    Total = this.Pagination.getByRef('Total')!;
+
+    private _index = 0;
+    private _container: any;
+    private _itemConstruct!: ItemConstructor;
+    private _items: ContentItem[] = [];
+    private _direction: -1 | 1 = 1;
+
+    static _template(): Lightning.Component.Template<FlipListTemplateSpec> {
         return {
             Items: {
                 alpha: 0, x: 1320, y: 300,
@@ -31,8 +64,8 @@ export default class FlipList extends Lightning.Component {
         this._index = 0;
     }
 
-    get activeItem() {
-        return this.tag("Items").children[this._index];
+    get activeItem(): ItemWrapper<ItemConstructor> {
+        return this.Items.children[this._index] as ItemWrapper<ItemConstructor>;
     }
 
     get index() {
@@ -51,7 +84,7 @@ export default class FlipList extends Lightning.Component {
         return this._container;
     }
 
-    set itemConstruct(v) {
+    set itemConstruct(v: ItemConstructor) {
         this._itemConstruct = v;
     }
 
@@ -72,7 +105,7 @@ export default class FlipList extends Lightning.Component {
         // so it can notify that the first item is created
         ItemWrapper.FIRST_CREATED = false;
 
-        this.tag("Items").patch({
+        this.Items.patch({
             children: this._createItems({items: this._items, construct})
         });
     }
@@ -81,7 +114,7 @@ export default class FlipList extends Lightning.Component {
         return this._items;
     }
 
-    _createItems({items, construct}) {
+    _createItems({items, construct}: {items: unknown[], construct: ItemConstructor}): Lightning.Component.NewPatchTemplate<typeof ItemWrapper>[] {
         return items.map((item, idx) => {
             const configIndex = idx > 3 ? 4 : idx+1;
 
@@ -99,7 +132,7 @@ export default class FlipList extends Lightning.Component {
     }
 
     resetConfigIndex() {
-        const children = this.tag("Items").children;
+        const children = this.Items.children as ItemWrapper<ItemConstructor>[];
         children.forEach((child, idx)=> {
             child.visible = false;
             if (idx === this._index-1) {
@@ -141,69 +174,72 @@ export default class FlipList extends Lightning.Component {
 
     _animateToSelected() {
         const index = this._index;
-        const children = this.tag("Items").children;
-
-        if (children[index-1]) {
-            children[index-1].configIndex = 0;
-            if (children[index-1].child) {
-                children[index-1].child.focusedItem = false;
-                children[index-1].child.animatePosition();
+        const children = this.Items.children  as ItemWrapper<ItemConstructor>[];
+        const lastItem = children[index-1];
+        if (lastItem) {
+            lastItem.configIndex = 0;
+            if (lastItem.child) {
+                lastItem.child.focusedItem = false;
+                lastItem.child.animatePosition();
+            }
+        }
+        const curItem = children[index];
+        if (curItem) {
+            curItem.visible = true;
+            curItem.configIndex = 1;
+            if (curItem.child) {
+                curItem.child.focusedItem = true;
+                curItem.child.animatePosition();
             }
         }
 
-        if (children[index]) {
-            children[index].visible = true;
-            children[index].configIndex = 1;
-            if (children[index].child) {
-                children[index].child.focusedItem = true;
-                children[index].child.animatePosition();
+        const itemPlus1 = children[index+1];
+        if (itemPlus1) {
+            itemPlus1.visible = true;
+            itemPlus1.configIndex = 2;
+            if (itemPlus1.child) {
+                itemPlus1.child.focusedItem = false;
+                itemPlus1.child.animatePosition();
             }
         }
 
-        if (children[index+1]) {
-            children[index+1].visible = true;
-            children[index+1].configIndex = 2;
-            if (children[index+1].child) {
-                children[index+1].child.focusedItem = false;
-                children[index+1].child.animatePosition();
+        const itemPlus2 = children[index+2];
+        if (itemPlus2) {
+            itemPlus2.visible = true;
+            itemPlus2.configIndex = 3;
+            if (itemPlus2.child) {
+                itemPlus2.child.animatePosition();
             }
         }
 
-        if (children[index+2]) {
-            children[index+2].visible = true;
-            children[index+2].configIndex = 3;
-            if (children[index+2].child) {
-                children[index+2].child.animatePosition();
+        const itemPlus3 = children[index+3];
+        if (itemPlus3) {
+            itemPlus3.configIndex = 4;
+            if (itemPlus3.child) {
+                itemPlus3.child.animatePosition();
             }
         }
 
-        if (children[index+3]) {
-            children[index+3].configIndex = 4;
-            if (children[index+3].child) {
-                children[index+3].child.animatePosition();
-            }
+        if (index === this.Items.children.length - 1) {
+            this.Items.setSmooth("x", 1490)
+        } else if (index === this.Items.children.length - 2) {
+            this.Items.setSmooth("x", 1420)
+        } else if (index === this.Items.children.length - 3)  {
+            this.Items.setSmooth("x", 1320)
         }
 
-        if (index === this.tag("Items").children.length - 1) {
-            this.tag("Items").setSmooth("x", 1490)
-        } else if (index === this.tag("Items").children.length - 2) {
-            this.tag("Items").setSmooth("x", 1420)
-        } else if (index === this.tag("Items").children.length - 3)  {
-            this.tag("Items").setSmooth("x", 1320)
-        }
-
-        const item = this._items[this._index];
+        const item = this._items[this._index]!;
         this.application.emit("setItem", {item});
-        this.tag("Current").text = `${index+1}`;
-        this.tag("Total").text = ` / ${this.tag("Items").children.length}`;
+        this.Current.text = `${index+1}`;
+        this.Total.text = ` / ${this.Items.children.length}`;
     }
 
     _focus() {
-        this.tag("Items").patch({
+        this.Items.patch({
             smooth: {alpha: 1}
         });
 
-        this.tag("Items").children.forEach((item, index) => {
+        this.Items.children.forEach((item, index) => {
             if (index < 3) {
                 item.setSmooth("x", 0);
             }
@@ -225,14 +261,14 @@ export default class FlipList extends Lightning.Component {
     }
 
     _handleRight() {
-        if (this._index < this.tag("Items").children.length - 1) {
+        if (this._index < this.Items.children.length - 1) {
             this.select({direction:1});
         } else {
             return false;
         }
     }
 
-    select({direction}) {
+    select({direction}: {direction: -1 | 1}) {
         this._direction = direction;
         this._index += direction;
         this._animateToSelected();

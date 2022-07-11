@@ -11,7 +11,7 @@ declare module "@lightningjs/sdk" {
               backgroundLoaded(): void;
               readyForBackground(): void;
               itemAnimationEnded(): void;
-              setItem(evt: { item: ContentItem }): void;
+              setItem(evt: { item: ContentItem, direction?: -1 | 0 | 1 }): void;
               contentHidden(): void;
           }
       }

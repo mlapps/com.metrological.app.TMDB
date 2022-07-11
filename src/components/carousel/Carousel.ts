@@ -1,9 +1,43 @@
 import { Lightning, Router } from '@lightningjs/sdk';
-import { ItemWrapper } from "../";
+import { ItemWrapper } from "..";
 
-export default class Carousel extends Lightning.Component {
+interface ItemConstructorBase {
+    new (...args: any[]): Lightning.Component & {
+        animatePosition(): void;
+        focusedItem: boolean;
+    };
+    get width(): number;
+    get height(): number;
+    get offset(): number;
+}
 
-    static _template() {
+interface CarouselTemplateSpec<
+    ItemConstructor extends ItemConstructorBase = ItemConstructorBase
+> extends Lightning.Component.TemplateSpecStrong {
+    container: any;
+    itemConstruct: ItemConstructor;
+    index: number;
+    Content: {
+        Items: {}
+    }
+}
+
+export default class Carousel<
+    ItemConstructor extends ItemConstructorBase
+>
+    extends Lightning.Component<CarouselTemplateSpec<ItemConstructor>>
+    implements Lightning.Component.ImplementTemplateSpec<CarouselTemplateSpec<ItemConstructor>>
+    {
+
+    Content = this.getByRef('Content')!;
+    Items = this.Content?.getByRef('Items')!;
+
+    private _index = 0;
+    private _items: any[] = [];
+    private _container: any;
+    private _itemConstruct!: ItemConstructor;
+
+    static _template(): Lightning.Component.Template<CarouselTemplateSpec> {
         return {
             Content: {
                 w: 1920, h: 1080, rtt: true,
@@ -14,11 +48,7 @@ export default class Carousel extends Lightning.Component {
         };
     }
 
-    _construct() {
-        this._index = 0;
-    }
-
-    get activeItem() {
+    get activeItem(): any {
         return this._items[this._index].itemCtr;
     }
 
@@ -42,7 +72,7 @@ export default class Carousel extends Lightning.Component {
         return this.activeItem.child;
     }
 
-    set index(v) {
+    set index(v: number) {
         this._index = v;
     }
 
@@ -54,12 +84,12 @@ export default class Carousel extends Lightning.Component {
     set items(v) {
         let construct = this._itemConstruct;
         this._items = v;
-        this.tag("Items").x = 960 - (construct.width/2);
-        this.tag("Items").y = 500 - (construct.height/2);
+        this.Items.x = 960 - (construct.width/2);
+        this.Items.y = 500 - (construct.height/2);
 
         ItemWrapper.FIRST_CREATED = false;
 
-        this.tag("Items").patch({
+        this.Items.patch({
             children: this._createItems({items: this._items, construct})
         });
     }
@@ -68,9 +98,9 @@ export default class Carousel extends Lightning.Component {
         return this._items;
     }
 
-    _createItems({items, construct}) {
+    _createItems({items, construct}: {items: any[], construct: ItemConstructor}) {
         return items.map((item, index) => {
-            let itemCtr =  this.stage.c({
+            let itemCtr =  this.stage.c<typeof ItemWrapper>({
                 type: ItemWrapper,
                 construct,
                 index: index,
@@ -83,7 +113,7 @@ export default class Carousel extends Lightning.Component {
         })
     }
 
-    _animateToSelected(index = this._index, direction, skip) {
+    _animateToSelected(index = this._index, direction?: -1 | 0 | 1, skip?: boolean) {
         const children = this._items;
 
         for (let i = 0, j = children.length; i < j; i++) {
@@ -129,13 +159,13 @@ export default class Carousel extends Lightning.Component {
         Router.navigate(`details/${item.type}/${item.id}`, true);
     }
 
-    setIndex(index){
+    setIndex(index: number){
         this._index = index;
         this._animateToSelected();
         this._refocus();
     }
 
-    select({direction}) {
+    select({direction}: {direction: -1 | 1}) {
         this._index += direction;
         this._animateToSelected();
     }

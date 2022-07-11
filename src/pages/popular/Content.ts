@@ -2,10 +2,17 @@ import {Lightning} from "@lightningjs/sdk";
 import {Button, MovieInfo, Rating, Title} from "../../components";
 
 export interface ContentItem {
+    id: string;
     voteAverage: number;
     title: string;
     formattedReleaseDate:  string;
     genresAsString: string;
+    background: string;
+    overview: string;
+    productionCompanies: {
+        logo_path: string;
+
+    }[];
 }
 
 interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {

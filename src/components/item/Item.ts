@@ -3,9 +3,35 @@ import {getImgUrl} from "../../lib/tools";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";
 
-export default class Item extends Lightning.Component {
+interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+    focusedItem: boolean;
+    item: any;
+    index: number;
+    Blur: typeof Lightning.components.FastBlurComponent<Lightning.Element<{
+        Perspective: {
+            Poster: {
+                Image: {},
+                Border: {}
+            }
+        }
+    } & Lightning.Element.TemplateSpecStrong>>
+}
 
-    static _template() {
+export default class Item
+    extends Lightning.Component<ItemTemplateSpec>
+    implements Lightning.Component.ImplementTemplateSpec<ItemTemplateSpec> {
+
+    Blur = this.getByRef('Blur')!;
+    Content = this.Blur.content;
+    Poster = this.Content.getByRef('Perspective')!.getByRef('Poster')!;
+    Image = this.Poster?.getByRef('Image')!;
+
+    private _perspectiveAnimation: Lightning.types.Animation | undefined;
+    private _focusedItem: boolean = false;
+    private _index: number = 0;
+    private _item: any;
+
+    static _template(): Lightning.Component.Template<ItemTemplateSpec> {
         return {
             w: Item.width, h: Item.height, alpha: 0,
             transitions: {
@@ -49,49 +75,49 @@ export default class Item extends Lightning.Component {
     }
 
     _init() {
-        this._perspectiveAnimation = this.tag("Blur").content.animation({
-            duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', actions:[
+        this._perspectiveAnimation = this.Blur.content.animation({
+            // !!! Timing function not available on animation()
+            duration: 0.3, /* timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', */ actions:[
                 {t: 'Perspective', p: 'shader.rx', v: (e)=> {
-                    const {rx} = ITEM_CONFIGS[this.configIndex];
+                    const {rx} = ITEM_CONFIGS[this.configIndex]!;
                     return e * (rx.e-rx.s)+rx.s;
                 }}
             ]
         });
 
-        this.tag("Blur").transition("zIndex").on("finish", ()=> {
+        this.Blur.transition("zIndex").on("finish", ()=> {
             if (this._focusedItem) {
                 this.application.emit("itemAnimationEnded");
             }
         });
 
-        this.tag("Blur").content.tag("Image").on("txLoaded", ()=> {
-            this.tag("Blur").content.tag("Poster").alpha = 1;
+        this.Image.on("txLoaded", ()=> {
+            this.Poster.alpha = 1;
         });
 
-        this.tag("Blur").content.tag("Image").on("txUnloaded", ()=> {
-            this.tag("Blur").content.tag("Poster").alpha = 0.001;
+        this.Image.on("txUnloaded", ()=> {
+            this.Poster.alpha = 0.001;
         });
 
         this._resetPosition();
     }
 
-    set focusedItem(v) {
+    set focusedItem(v: boolean) {
         this._focusedItem = v;
     }
 
-    set item(v) {
+    set item(v: any) {
         this._item = v;
 
-        const content = this.tag("Blur").content;
         if (this._item.poster !== null) {
             const image = getImgUrl(this._item.poster, 500);
-            content.tag("Image").texture = Img(image).contain(342, 513);
+            this.Image.texture = Img(image).contain(342, 513);
         } else {
-            content.tag("Image").src = Utils.asset("images/placeholder.png");
+            this.Image.src = Utils.asset("images/placeholder.png");
         }
     }
 
-    set index(v) {
+    set index(v: number) {
         this._index = v;
     }
 
@@ -100,7 +126,9 @@ export default class Item extends Lightning.Component {
     }
 
     animatePosition() {
-        const {alpha, scale, x, y, color, amount, zIndex} = ITEM_CONFIGS[this.configIndex];
+        const config = ITEM_CONFIGS[this.configIndex];
+        if (!config) return;
+        const {alpha, scale, x, y, color, amount, zIndex} = config;
 
         this.patch({
             alpha,
@@ -120,11 +148,13 @@ export default class Item extends Lightning.Component {
             }
         });
 
-        this._perspectiveAnimation.start();
+        this._perspectiveAnimation?.start();
     }
 
     _resetPosition() {
-        const {alpha, scale, x, y, color, amount, zIndex, rx} = ITEM_CONFIGS[this.configIndex];
+        const config = ITEM_CONFIGS[this.configIndex];
+        if (!config) return;
+        const {alpha, scale, x, y, color, amount, zIndex, rx} = config;
         this.patch({
             alpha,
             Blur: {

@@ -1,7 +1,7 @@
 import { Lightning } from '@lightningjs/sdk';
 
 export default class NotFound extends Lightning.Component{
-    static _template() {
+    static _template(): Lightning.Component.Template {
         return {
            Label:{
                x: 960, y: 530,

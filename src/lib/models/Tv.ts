@@ -1,12 +1,49 @@
+import { notEmpty } from "../tools";
+import { Genre } from "../types";
+
+export interface TvData {
+    backdrop_path: any;
+    first_air_date: any;
+    genre_ids: unknown[];
+    id: any;
+    name: string;
+    origin_country: any;
+    original_language: any;
+    original_name: any;
+    overview: any;
+    popularity: any;
+    poster_path: any;
+    // title: string;
+    type: string;
+    vote_average: any;
+    vote_count: any;
+}
+
 export default class Tv {
-    constructor(obj,genres){
+    _backdrop_path: any;
+    _first_air_date: any;
+    _genres: Genre[];
+    _id: any;
+    _name: string;
+    _origin_country: any;
+    _original_language: any;
+    _original_name: any;
+    _overview: any;
+    _popularity: any;
+    _poster_path: any;
+    _title: string;
+    _type: string;
+    _vote_average: any;
+    _vote_count: any;
+
+    constructor(obj: TvData,genres: Genre[]){
         this._backdrop_path = obj.backdrop_path;
         this._first_air_date = obj.first_air_date;
         this._genres = obj.genre_ids.map(id => {
             return genres.find(genre => {
                 return genre.id === id;
             });
-        }).filter(item => item);
+        }).filter(notEmpty);
         this._id = obj.id;
         this._name = obj.name;
         this._origin_country = obj.origin_country;

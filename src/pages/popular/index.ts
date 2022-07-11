@@ -1,5 +1,5 @@
 import {Lightning, Router} from '@lightningjs/sdk';
-import type { FlipList, List } from '../../components';
+import type { FlipList } from '../../components';
 import Content from "./Content";
 
 interface PopularItem {
@@ -54,7 +54,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         this.widgets.menu.show();
     }
 
-    set content(v: List | FlipList) {
+    set content(v: FlipList) {
         if (v) {
             this.List.childList.add(v);
         }
@@ -68,8 +68,8 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         return this.selectedList;
     }
 
-    get selectedList(): List | FlipList {
-        return this.List.children[this._index];
+    get selectedList(): FlipList {
+        return this.List.children[this._index] as FlipList;
     }
 
     $selectItem({item}: { item: PopularItem }) {
@@ -82,7 +82,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
             this.selectedList.index = params.listIndex;
             this.selectedList.resetConfigIndex();
         } else {
-            const list: FlipList | undefined = this.List.children[this._index];
+            const list: FlipList | undefined = this.List.children[this._index] as FlipList | undefined;
             if (list) {
                 return {listIndex: this.List.children[this._index]!.index}
             }
