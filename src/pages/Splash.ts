@@ -76,9 +76,10 @@ export default class Splash
             this._spinnerAnimation.start();
         });
 
-        this.application.on("booted", ()=> {
-             Router.navigate("movies", false)
-        });
+        // !!! This event it never emitted
+        // this.application.on("booted", ()=> {
+        //      Router.navigate("movies", false)
+        // });
 
         setTimeout(()=> {
             Router.navigate("movie", false);

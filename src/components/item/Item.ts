@@ -2,6 +2,7 @@ import {Img, Lightning, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";
+import ItemWrapper from "./ItemWrapper";
 
 interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     focusedItem: boolean;
@@ -122,7 +123,7 @@ export default class Item
     }
 
     get configIndex() {
-        return this.parent.configIndex;
+        return (this.parent as ItemWrapper<typeof Item>).configIndex;
     }
 
     animatePosition() {

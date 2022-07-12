@@ -1,4 +1,4 @@
-export interface Person {
+export interface PersonData {
     adult: boolean;
     cast_id: number;
     character: string;
@@ -26,14 +26,14 @@ export interface Person {
 }
 
 export interface CastData {
-    cast: Person[];
-    crew: Person[];
+    cast: PersonData[];
+    crew: PersonData[];
     id: number;
 }
 
 export default class Cast {
-    _cast: Person[];
-    _crew: Person[];
+    _cast: PersonData[];
+    _crew: PersonData[];
     _id: number;
     _type: 'cast';
     constructor(obj: CastData, type: 'cast'){

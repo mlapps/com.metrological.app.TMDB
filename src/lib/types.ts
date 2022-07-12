@@ -1,3 +1,4 @@
+import { PersonData } from "./models/Cast";
 import { MovieData } from "./models/Movie";
 import { TvData } from "./models/Tv";
 
@@ -18,4 +19,4 @@ export interface Genre {
   name: string;
 }
 
-export type EntityData = TvData | MovieData;
+export type EntityData = TvData | MovieData | PersonData;

@@ -84,7 +84,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
     }
 
-    historyState(params) {
+    historyState(params?: { listIndex: number }): { listIndex: number } | void {
         if (params) {
             this.selectedList.index = params.listIndex;
             this.selectedList.resetConfigIndex();
@@ -95,5 +95,4 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
             }
         }
     }
-
 }
