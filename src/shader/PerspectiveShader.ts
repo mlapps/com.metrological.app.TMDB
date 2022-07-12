@@ -1,3 +1,4 @@
+import { CoreQuadOperation } from '@lightningjs/core/src/types/lng.types.helper';
 import { Lightning } from '@lightningjs/sdk';
 
 export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultShader {
@@ -6,7 +7,7 @@ export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultSha
     _ry = 0;
     _z = 1.0;
 
-    setupUniforms(operation) {
+    override setupUniforms(operation: CoreQuadOperation) {
         super.setupUniforms(operation);
 
         const vr = operation.shaderOwner;
@@ -17,7 +18,7 @@ export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultSha
         const coords = vr.getRenderTextureCoords(pivotX, pivotY);
 
         // Counter normal rotation.
-        const rz = -Math.atan2(vr._renderContext.tc, vr._renderContext.ta);
+        const rz = -Math.atan2(vr.renderContext.tc, vr.renderContext.ta);
 
         const gl = this.gl;
         this._setUniform("pivot", new Float32Array([coords[0], coords[1], 0]), gl.uniform3fv);

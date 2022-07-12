@@ -1,18 +1,28 @@
 export interface Person {
-    adult: boolean
-    cast_id: number
-    character: string
-    credit_id: string
-    gender: number
-    id: number
-    known_for_department: string
-    name: string
-    order: number
-    original_name: string
-    popularity: number
-    profile_path: string | null
-    department?: string
-    job?: string
+    adult: boolean;
+    cast_id: number;
+    character: string;
+    credit_id: string;
+    gender: number;
+    id: number;
+    known_for_department: string;
+    name: string;
+    order: number;
+    original_name: string;
+    popularity: number;
+    profile_path: string | null;
+    department?: string;
+    job?: string;
+    backdrop_path?: string | null;
+    episode_count?: number;
+    first_air_date?: string;
+    genre_ids?: number[];
+    origin_country?: string[];
+    original_language?: string;
+    overview?: string;
+    poster_path?: string;
+    vote_average?: number;
+    vote_count?: number;
 }
 
 export interface CastData {

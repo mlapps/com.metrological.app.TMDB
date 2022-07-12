@@ -10,14 +10,18 @@ interface ItemConstructorBase {
     get offset(): number;
 }
 
-interface ListTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    container: any;
+interface ListTemplateSpec<
+    ItemConstructor extends ItemConstructorBase = ItemConstructorBase
+> extends Lightning.Component.TemplateSpecStrong {
+    items: any[],
+    itemConstruct: ItemConstructor,
+    container: any,
     Items: {}
 }
 
 export default class List<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
-    extends Lightning.Component<ListTemplateSpec>
-    implements Lightning.Component.ImplementTemplateSpec<ListTemplateSpec> {
+    extends Lightning.Component<ListTemplateSpec<ItemConstructor>>
+    implements Lightning.Component.ImplementTemplateSpec<ListTemplateSpec<ItemConstructor>> {
 
     Items = this.getByRef('Items')!;
     _index = 0;
@@ -126,6 +130,14 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
         }
     }
 
+    get index() {
+        return this._index;
+    }
+
+    set index(index: number) {
+        this.setIndex(index);
+    }
+
     setIndex(index: number){
         this._index = index;
         this._animateToSelected();
@@ -143,6 +155,10 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
 
     _getFocused(){
         return this.activeItem;
+    }
+
+    resetConfigIndex() {
+        // Do Nothing, implements ListBaseConstructor
     }
 
     static get height() {

@@ -2,21 +2,21 @@ import { notEmpty } from "../tools";
 import { Genre } from "../types";
 
 export interface TvData {
-    backdrop_path: any;
-    first_air_date: any;
-    genre_ids: unknown[];
-    id: any;
+    backdrop_path: string;
+    first_air_date: string;
+    genre_ids: number[];
+    id: number;
     name: string;
-    origin_country: any;
-    original_language: any;
-    original_name: any;
-    overview: any;
-    popularity: any;
-    poster_path: any;
+    origin_country: string;
+    original_language: string;
+    original_name: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
     // title: string;
     type: string;
-    vote_average: any;
-    vote_count: any;
+    vote_average: number;
+    vote_count: number;
 }
 
 export default class Tv {

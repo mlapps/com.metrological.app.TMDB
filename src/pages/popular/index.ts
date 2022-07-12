@@ -1,6 +1,13 @@
 import {Lightning, Router} from '@lightningjs/sdk';
-import type { FlipList } from '../../components';
 import Content from "./Content";
+
+interface ListBaseConstructor {
+    new (...args: any[]): Lightning.Component & {
+        index: number;
+        resetConfigIndex(): void;
+    };
+    get height(): number;
+}
 
 interface PopularItem {
     type: string,
@@ -54,7 +61,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         this.widgets.menu.show();
     }
 
-    set content(v: FlipList) {
+    set content(v: InstanceType<ListBaseConstructor>) {
         if (v) {
             this.List.childList.add(v);
         }
@@ -68,8 +75,8 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         return this.selectedList;
     }
 
-    get selectedList(): FlipList {
-        return this.List.children[this._index] as FlipList;
+    get selectedList(): InstanceType<ListBaseConstructor> {
+        return this.List.children[this._index] as InstanceType<ListBaseConstructor>;
     }
 
     $selectItem({item}: { item: PopularItem }) {
@@ -82,9 +89,9 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
             this.selectedList.index = params.listIndex;
             this.selectedList.resetConfigIndex();
         } else {
-            const list: FlipList | undefined = this.List.children[this._index] as FlipList | undefined;
+            const list: InstanceType<ListBaseConstructor> | undefined = this.List.children[this._index] as InstanceType<ListBaseConstructor> | undefined;
             if (list) {
-                return {listIndex: this.List.children[this._index]!.index}
+                return {listIndex: list.index}
             }
         }
     }

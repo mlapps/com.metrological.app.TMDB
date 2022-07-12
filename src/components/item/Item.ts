@@ -1,4 +1,4 @@
-import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
+import {Img, Lightning, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";

@@ -2,21 +2,22 @@ import { notEmpty } from "../tools";
 import { Genre } from "../types";
 
 export interface MovieData {
-    adult: any;
-    backdrop_path: any;
-    genre_ids: unknown[];
-    id: unknown;
-    original_language: any;
-    overview: any;
-    popularity: any;
-    poster_path: any;
-    release_date: any;
+    adult: boolean;
+    genre_ids: number[];
+    backdrop_path: string;
+    id: number;
+    original_language: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    release_date: string;
     title: string;
     // type: string;
     video: any;
-    vote_average: any;
-    vote_count: any;
+    vote_average: number;
+    vote_count: number;
 }
+
 
 export default class Movie {
     _adult: any;

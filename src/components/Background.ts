@@ -85,8 +85,6 @@ export default class Background
                 this.application.emit("backgroundLoaded");
             }
         });
-
-        // this.listeners =
     }
 
     _attach() {

@@ -14,7 +14,8 @@ export default class Splash
     Logo = this.getByRef('Logo')!;
     Spinner = this.getByRef('Spinner')!;
     private _spinnerAnimation = this.animation({duration: 1, repeat: -1, actions: [
-        {t: 'Spinner', p: "rotation", sm: 0, v: function (t) {
+        // !!! `sm` is not available at the AnimationActionSettings level
+        {t: 'Spinner', p: "rotation", /*sm: 0,*/ v: function (t) {
                 if (t < .125) {
                     return 45 * (Math.PI/180);
                 } else if (t < .250) {

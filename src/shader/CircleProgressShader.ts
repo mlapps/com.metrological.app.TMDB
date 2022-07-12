@@ -1,3 +1,4 @@
+import { CoreQuadOperation } from "@lightningjs/core/src/types/lng.types.helper";
 import { Lightning } from "@lightningjs/sdk"
 
 export default class CircleProgressShader extends Lightning.shaders.WebGLDefaultShader {
@@ -45,7 +46,7 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         this.redraw();
     }
 
-    setupUniforms(operation) {
+    override setupUniforms(operation: CoreQuadOperation) {
         super.setupUniforms(operation);
         const owner = operation.shaderOwner
 
@@ -54,8 +55,8 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         this._setUniform('period', this._period, this.gl.uniform1f);
         this._setUniform('angle', this._angle, this.gl.uniform1f);
         this._setUniform('smooth', this._smooth, this.gl.uniform1f);
-        this._setUniform('color', new Float32Array(lng.StageUtils.getRgbaComponentsNormalized(this._color)), this.gl.uniform4fv)
-        this._setUniform('backgroundColor', new Float32Array(lng.StageUtils.getRgbaComponentsNormalized(this._backgroundColor)), this.gl.uniform4fv)
+        this._setUniform('color', new Float32Array(Lightning.StageUtils.getRgbaComponentsNormalized(this._color)), this.gl.uniform4fv)
+        this._setUniform('backgroundColor', new Float32Array(Lightning.StageUtils.getRgbaComponentsNormalized(this._backgroundColor)), this.gl.uniform4fv)
         this._setUniform('resolution', new Float32Array([owner._w, owner._h]), this.gl.uniform2fv)
 
         this.redraw()

@@ -12,8 +12,9 @@ interface ItemConstructorBase {
     get offset(): number;
 }
 
-interface FlipListTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-
+interface FlipListTemplateSpec<ItemConstructor extends ItemConstructorBase = ItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
+    items: any[],
+    itemConstruct: ItemConstructor,
     Items: {},
     Pagination: {
         Current: {},
@@ -22,8 +23,8 @@ interface FlipListTemplateSpec extends Lightning.Component.TemplateSpecStrong {
 }
 
 export default class FlipList<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
-    extends Lightning.Component<FlipListTemplateSpec>
-    implements Lightning.Component.ImplementTemplateSpec<FlipListTemplateSpec>
+    extends Lightning.Component<FlipListTemplateSpec<ItemConstructor>>
+    implements Lightning.Component.ImplementTemplateSpec<FlipListTemplateSpec<ItemConstructor>>
  {
     Items = this.getByRef('Items')!;
     Pagination = this.getByRef('Pagination')!;

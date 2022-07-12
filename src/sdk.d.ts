@@ -1,6 +1,5 @@
 declare module '@lightningjs/sdk' {
   import lng from '@lightningjs/core';
-
   export import Lightning = lng;
 
   namespace Router {
@@ -14,6 +13,9 @@ declare module '@lightningjs/sdk' {
         }
     }
 
+    interface Widgets {
+      [s: string]: unknown
+    }
 
     class App<
         TemplateSpec extends App.TemplateSpecLoose
@@ -31,5 +33,4 @@ declare module '@lightningjs/sdk' {
   class Utils {
     static asset(path: string): string;
   }
-
 }

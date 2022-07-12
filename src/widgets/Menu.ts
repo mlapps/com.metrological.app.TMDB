@@ -30,7 +30,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
     Items = this.getByRef('Items')!;
     Lines_Top = this.Lines.getByRef('Top')!;
     Lines_Bottom = this.Lines.getByRef('Bottom')!;
-    _id: unknown | null = null;
+    _id: string | null = null;
     _currentIndex: number = 0;
     _lineOffset = 0;
 
@@ -54,7 +54,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
         });
     }
 
-    select(id: unknown, fastForward: boolean) {
+    select(id: string, fastForward?: boolean) {
         if (id === this._id) return;
 
         this._id = id;

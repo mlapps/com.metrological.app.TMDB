@@ -4,7 +4,7 @@ import { FlipList } from "../components";
 
 export default class Similar extends Popular {
     private _detailsType = '';
-    private _detailsId = 0;
+    private _detailsId = '';
     _active() {
         this.widgets.detailsmenu.select("similar", true);
     }
@@ -13,7 +13,7 @@ export default class Similar extends Popular {
         this._detailsType = v;
     }
 
-    set detailsId(v: number) {
+    set detailsId(v: string) {
         this._detailsId = v;
     }
 

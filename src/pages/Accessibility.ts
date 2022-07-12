@@ -224,7 +224,7 @@ class OptionItem
         this.patch({
             SelectedOption: {
                 Left: {
-                    alpha: 1
+                    alpha: 1,
                 },
                 Right: {
                     alpha: 1

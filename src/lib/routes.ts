@@ -1,12 +1,13 @@
 import {getCreditsUrl, getCreditsUrls, getDetailUrl, getPeopleUrl, getPopularUrls, getSimilarUrls} from "./endpoints";
 
 import {
-    NotFound, Error, Splash, Movie, Tv, Details, Cast, Similar, People, MovieCredits
+    NotFound, Splash, Movie, Tv, Details, Cast, Similar, People, MovieCredits
 } from '../pages';
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
 import Accessibility from "../pages/Accessibility";
-import { CreditsResponse, GenresResponse } from "./types";
+import { GenresResponse } from "./types";
+import { ContainerData } from "./models/Container";
 
 const getPopularContent = async (type: 'movie' | 'tv')=>{
     try {
@@ -113,7 +114,7 @@ export default {
             before: async (page: MovieCredits, {type, id}: Record<'type' | 'id', string>) =>{
                 return getCreditsUrls(type, id).then(function ([genresRes, creditsRes]) {
                         const genres = genresRes.genres;
-                        const data = {results: creditsRes.cast};
+                        const data = {results: creditsRes.cast} as ContainerData;
                         page.peopleId = id;
                         const content = list(type, data, genres);
                         if (!content) {
@@ -131,9 +132,9 @@ export default {
             component: TvCredits,
             before: async (page: TvCredits, {type, id}: Record<'type' | 'id', string>) =>{
                 return getCreditsUrls(type, id).then((response)=>{
-                    return Promise.all(response).then(function ([genresRes, creditsRes]: [GenresResponse, CreditsResponse]) {
+                    return Promise.all(response).then(function ([genresRes, creditsRes]) {
                         const genres = genresRes.genres;
-                        const data = {results: creditsRes.cast};
+                        const data = {results: creditsRes.cast} as ContainerData;
                         page.peopleId = id;
                         const content = list(type, data, genres);
                         if (!content) {

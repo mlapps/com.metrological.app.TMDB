@@ -3,13 +3,13 @@ import {Router} from "@lightningjs/sdk";
 import { FlipList } from "../components";
 
 export default class TvCredits extends Popular {
-    private _peopleId = 0;
+    private _peopleId = '';
 
     _active() {
         this.widgets.peoplemenu.select("tvcredits", true);
     }
 
-    set peopleId(v: number) {
+    set peopleId(v: string) {
         this._peopleId = v;
     }
 
