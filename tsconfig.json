@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2018",
+    "lib": ["ES2015"],
     "moduleResolution": "node",
     "strict": true,
     "noUncheckedIndexedAccess": true

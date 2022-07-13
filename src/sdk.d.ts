@@ -2,6 +2,8 @@ declare module '@lightningjs/sdk' {
   import lng from '@lightningjs/core';
   export import Lightning = lng;
 
+  export const Img: any;
+
   namespace Router {
     namespace App {
         interface TemplateSpecStrong extends lng.Component.TemplateSpecStrong {
