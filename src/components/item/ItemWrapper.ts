@@ -1,9 +1,10 @@
 import { Lightning } from '@lightningjs/sdk'
+import { ContentItem } from '../../pages/popular/Content';
 
 interface ItemWrapperTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     index: number;
     construct: Lightning.Component.Constructor;
-    item: any;
+    item: ContentItem | undefined;
     configIndex: number;
 }
 
@@ -16,7 +17,7 @@ export default class ItemWrapper<ItemConstructor extends Lightning.Component.Con
     private ___construct!: ItemConstructor;
     private _index: number = 0;
     private _configIndex: number = 0;
-    private _item: any;
+    private _item: ContentItem | undefined;
     private _notifyOnItemCreation: boolean = false;
 
     static FIRST_CREATED = false;

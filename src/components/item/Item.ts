@@ -1,12 +1,13 @@
 import {Img, Lightning, Utils} from "@lightningjs/sdk";
 import {getImgUrl} from "../../lib/tools";
+import { ContentItem } from "../../pages/popular/Content";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";
 import ItemWrapper from "./ItemWrapper";
 
 interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     focusedItem: boolean;
-    item: any;
+    item: ContentItem;
     index: number;
     Blur: typeof Lightning.components.FastBlurComponent<Lightning.Element<{
         Perspective: {
@@ -30,7 +31,7 @@ export default class Item
     private _perspectiveAnimation: Lightning.types.Animation | undefined;
     private _focusedItem: boolean = false;
     private _index: number = 0;
-    private _item: any;
+    private _item: ContentItem | undefined;
 
     static _template(): Lightning.Component.Template<ItemTemplateSpec> {
         return {
@@ -110,7 +111,7 @@ export default class Item
     set item(v: any) {
         this._item = v;
 
-        if (this._item.poster !== null) {
+        if (this._item && this._item.poster !== null) {
             const image = getImgUrl(this._item.poster, 500);
             this.Image.texture = Img(image).contain(342, 513);
         } else {
@@ -177,6 +178,7 @@ export default class Item
     }
 
     _handleEnter() {
+        if (!this._item) return;
         this.fireAncestors("$selectItem", {item: this._item});
     }
 

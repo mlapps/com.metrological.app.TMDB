@@ -13,6 +13,7 @@ export interface ContentItem {
         logo_path: string;
 
     }[];
+    poster: string;
 }
 
 interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {

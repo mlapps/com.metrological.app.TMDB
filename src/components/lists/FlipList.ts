@@ -115,7 +115,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         return this._items;
     }
 
-    _createItems({items, construct}: {items: unknown[], construct: ItemConstructor}): Lightning.Component.NewPatchTemplate<typeof ItemWrapper>[] {
+    _createItems({items, construct}: {items: ContentItem[], construct: ItemConstructor}): Lightning.Component.NewPatchTemplate<typeof ItemWrapper>[] {
         return items.map((item, idx) => {
             const configIndex = idx > 3 ? 4 : idx+1;
 

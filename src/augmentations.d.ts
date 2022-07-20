@@ -19,6 +19,14 @@ declare module "@lightningjs/sdk" {
                 contentHidden(): void;
             }
         }
+
+        namespace Component {
+            interface FireAncestorsMap {
+                $itemCreated(): void;
+                $firstItemCreated(): void;
+                $selectItem(arg: {item: ContentItem}): void;
+            }
+        }
     }
     namespace Router {
         /**
