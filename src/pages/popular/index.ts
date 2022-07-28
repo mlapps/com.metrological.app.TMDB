@@ -18,8 +18,15 @@ interface PopularTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Content: typeof Content;
     List: {}
 }
+interface PopularTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+    HistoryStateType: {
+        listIndex: number;
+    }
+}
 
-export default class Popular extends Lightning.Component<PopularTemplateSpec>
+export default class Popular
+    extends Lightning.Component<PopularTemplateSpec, PopularTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<PopularTemplateSpec> {
 
     Content = this.getByRef('Content')!;
@@ -35,7 +42,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         }
     }
 
-    static _template() {
+    static override _template() {
         return {
             Content: {
                 mountY: 0.5, y: 540, x: 90,
@@ -45,19 +52,19 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         };
     }
 
-    _attach() {
+    override _attach() {
         this.application.on('contentHidden', this.listeners['contentHidden']);
         // !!! Bug caught by typing, readyForNavigate is not an emitted event
         // this.application.on('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
-    _detach() {
+    override _detach() {
         this.application.off('contentHidden', this.listeners['contentHidden']);
         // !!! Bug caught by typing, readyForNavigate is not an emitted event
         // this.application.off('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
-    _active() {
+    override _active() {
         this.widgets.menu.show();
     }
 
@@ -71,7 +78,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         this._refocus();
     }
 
-    _getFocused() {
+    override _getFocused() {
         return this.selectedList;
     }
 
@@ -84,7 +91,7 @@ export default class Popular extends Lightning.Component<PopularTemplateSpec>
         Router.navigate(`details/${this._item.type}/${this._item.id}`, true);
     }
 
-    historyState(params?: { listIndex: number }): { listIndex: number } | void {
+    override historyState(params: Router.HistoryState<PopularTypeConfig>): Router.HistoryState<PopularTypeConfig> {
         if (params) {
             this.selectedList.index = params.listIndex;
             this.selectedList.resetConfigIndex();

@@ -33,10 +33,17 @@ interface AccessibilityTemplateSpec extends Lightning.Component.TemplateSpecStro
     }
 }
 
+interface AccessibilityTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+    HistoryStateType: {
+        optionsIndex: number
+    }
+}
+
 export default class Accessibility
-    extends Lightning.Component<AccessibilityTemplateSpec>
+    extends Lightning.Component<AccessibilityTemplateSpec, AccessibilityTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<AccessibilityTemplateSpec> {
-    static _template(): Lightning.Component.Template<AccessibilityTemplateSpec> {
+    static override _template(): Lightning.Component.Template<AccessibilityTemplateSpec> {
         return {
             x: 110, alpha: 0.001,
             transitions: {
@@ -68,8 +75,8 @@ export default class Accessibility
     private _index = 0;
     private _optionsIndex = 0;
 
-    _active() {
-        const state = Router.getHistoryState("accessibility");
+    override _active() {
+        const state = Router.getHistoryState<AccessibilityTypeConfig>("accessibility");
         if (state) {
             this.selectedOption.index = state.optionsIndex || 0;
             this.selectedOption.update();
@@ -89,16 +96,16 @@ export default class Accessibility
         });
     }
 
-    _handleUp() {
+    override _handleUp() {
         this.widgets.menu.select("tv");
         Router.navigate(`tv`);
     }
 
-    _handleLeft() {
+    override _handleLeft() {
         this.selectedOption.toggle(-1);
     }
 
-    _handleRight() {
+    override _handleRight() {
         this.selectedOption.toggle(1);
     }
 
@@ -106,11 +113,11 @@ export default class Accessibility
         return this.Options.children[this._optionsIndex] as OptionItem;
     }
 
-    _getFocused() {
+    override _getFocused() {
         return this.selectedOption;
     }
 
-    historyState() {
+    override historyState(_params: Router.HistoryState<AccessibilityTypeConfig>): Router.HistoryState<AccessibilityTypeConfig> {
         return {optionsIndex: this.selectedOption.index};
     }
 
@@ -134,7 +141,7 @@ interface OptionItemTemplateSpec extends Lightning.Component.TemplateSpecStrong 
 class OptionItem
     extends Lightning.Component<OptionItemTemplateSpec>
     implements Lightning.Component.ImplementTemplateSpec<OptionItemTemplateSpec> {
-    static _template(): Lightning.Component.Template<OptionItemTemplateSpec> {
+    static override _template(): Lightning.Component.Template<OptionItemTemplateSpec> {
         return {
             Label: {
                 color: 0xff767676,
@@ -220,7 +227,7 @@ class OptionItem
         }
     }
 
-    _focus() {
+    override _focus() {
         this.patch({
             SelectedOption: {
                 Left: {
@@ -233,7 +240,7 @@ class OptionItem
         });
     }
 
-    _unfocus() {
+    override _unfocus() {
         this.patch({
             SelectedOption: {
                 Left: {

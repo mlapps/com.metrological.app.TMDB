@@ -64,7 +64,7 @@ export default class Content
         }
     }
 
-    static _template() {
+    static override _template() {
         return {
             alpha: 0.001,
             Title: {
@@ -85,7 +85,7 @@ export default class Content
         };
     };
 
-    _init() {
+    override _init() {
         this._detailAnimation.on("finish", ()=> {
             this.application.emit("readyForBackground");
         });
@@ -95,13 +95,13 @@ export default class Content
         });
     }
 
-    _attach() {
+    override _attach() {
         attachDetachEvents.forEach((event)=>{
             this.application.on(event, this.listeners[event]!)
         });
     }
 
-    _detach() {
+    override _detach() {
         attachDetachEvents.forEach((event)=>{
             this.application.off(event, this.listeners[event]!)
         });

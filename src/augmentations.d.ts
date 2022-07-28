@@ -28,14 +28,20 @@ declare module "@lightningjs/sdk" {
             }
         }
     }
+
+    namespace Application {
+        export interface AppData {
+            // Provided empty for consistent convention and to to allow augmentation
+        }
+    }
     namespace Router {
         /**
          * Definitions of the app specific widgets
          */
-        interface Widgets {
-            menu: Menu;
-            detailsmenu: Menu;
-            peoplemenu: Menu;
+        interface CustomWidgets {
+            Menu: Menu;
+            DetailsMenu: Menu;
+            PeopleMenu: Menu;
         }
-      }
+    }
 }

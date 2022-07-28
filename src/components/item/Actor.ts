@@ -23,7 +23,7 @@ export default class Actor
     Character = this.ActorInfo.getByRef('Character')!;
     private _item: any;
 
-    static _template(): Lightning.Component.Template<ActorTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ActorTemplateSpec> {
         return {
             Actor: {
                 w: Actor.width, h: Actor.height, rtt: true, mount: 0.5, x: Actor.width/2, y: Actor.height/2,
@@ -73,7 +73,7 @@ export default class Actor
         this.Character.text = this._item.character;
     }
 
-    _focus() {
+    override _focus() {
         this.patch({
             Actor: {
                 smooth: {scale: 1},
@@ -97,7 +97,7 @@ export default class Actor
         });
     }
 
-    _unfocus() {
+    override _unfocus() {
         this.patch({
             Actor: {
                 smooth: {scale: 0.98},
@@ -121,7 +121,7 @@ export default class Actor
         });
     }
 
-    _handleEnter() {
+    override _handleEnter() {
         Router.navigate(`people/${this._item.id}`, true);
     }
 

@@ -5,7 +5,7 @@ import { FlipList } from "../components";
 export default class TvCredits extends Popular {
     private _peopleId = '';
 
-    _active() {
+    override _active() {
         this.widgets.peoplemenu.select("tvcredits", true);
     }
 
@@ -13,12 +13,12 @@ export default class TvCredits extends Popular {
         this._peopleId = v;
     }
 
-    _handleUp() {
+    override _handleUp() {
         this.widgets.peoplemenu.select("moviecredits");
         Router.navigate(`movie_credits/movie/${this._peopleId}`, true);
     }
 
-    _getFocused() {
+    override _getFocused() {
         return this.List.children[this._index] as FlipList;
     }
 }

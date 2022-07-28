@@ -37,7 +37,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
     private _items: ContentItem[] = [];
     private _direction: -1 | 1 = 1;
 
-    static _template(): Lightning.Component.Template<FlipListTemplateSpec> {
+    static override _template(): Lightning.Component.Template<FlipListTemplateSpec> {
         return {
             Items: {
                 alpha: 0, x: 1320, y: 300,
@@ -61,7 +61,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         };
     }
 
-    _construct() {
+    override _construct() {
         this._index = 0;
     }
 
@@ -235,7 +235,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         this.Total.text = ` / ${this.Items.children.length}`;
     }
 
-    _focus() {
+    override _focus() {
         this.Items.patch({
             smooth: {alpha: 1}
         });
@@ -249,11 +249,11 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         this._animateToSelected();
     }
 
-    _unfocus() {
+    override _unfocus() {
         this.stage.gc();
     }
 
-    _handleLeft() {
+    override _handleLeft() {
         if (this._index > 0) {
             this.select({direction:-1});
         } else {
@@ -261,7 +261,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         }
     }
 
-    _handleRight() {
+    override _handleRight() {
         if (this._index < this.Items.children.length - 1) {
             this.select({direction:1});
         } else {
@@ -275,7 +275,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         this._animateToSelected();
     }
 
-    _getFocused(){
+    override _getFocused() {
         return this.activeItem;
     }
 

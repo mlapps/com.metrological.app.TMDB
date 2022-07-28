@@ -37,7 +37,7 @@ export default class Carousel<
     private _container: any;
     private _itemConstruct!: ItemConstructor;
 
-    static _template(): Lightning.Component.Template<CarouselTemplateSpec> {
+    static override _template(): Lightning.Component.Template<CarouselTemplateSpec> {
         return {
             Content: {
                 w: 1920, h: 1080, rtt: true,
@@ -132,29 +132,29 @@ export default class Carousel<
         this.application.emit("setItem", {item, direction});
     }
 
-    _focus() {
+    override _focus() {
         this._animateToSelected(this._index, 0, true);
     }
 
-    _unfocus() {
+    override _unfocus() {
         this.stage.gc();
     }
 
-    _handleLeft() {
+    override _handleLeft() {
         const item = this._items.pop();
         item.__shifted = true;
         this._items.unshift(item);
         this._animateToSelected(this._index, 1);
     }
 
-    _handleRight() {
+    override _handleRight() {
         const item = this._items.shift();
         item.__shifted = true;
         this._items.push(item);
         this._animateToSelected(this._index, -1);
     }
 
-    _handleEnter() {
+    override _handleEnter() {
         const item = this.activeItem.item;
         Router.navigate(`details/${item.type}/${item.id}`, true);
     }
@@ -174,7 +174,7 @@ export default class Carousel<
         this.application.updateFocusPath();
     }
 
-    _getFocused(){
+    override _getFocused() {
         return this.activeItem;
     }
 }

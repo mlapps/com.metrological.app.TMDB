@@ -5,6 +5,7 @@
     "lib": ["ES2015", "DOM"],
     "moduleResolution": "node",
     "strict": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
   }
 }

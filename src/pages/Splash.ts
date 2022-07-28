@@ -6,8 +6,12 @@ export interface SplashTemplateSpec extends Lightning.Component.TemplateSpecStro
     Spinner: {};
 }
 
+export interface SplashTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+}
+
 export default class Splash
-    extends Lightning.Component<SplashTemplateSpec>
+    extends Lightning.Component<SplashTemplateSpec, SplashTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<SplashTemplateSpec> {
 
     Background = this.getByRef('Background')!;
@@ -37,7 +41,7 @@ export default class Splash
             }}
     ]});
 
-    static _template(): Lightning.Component.Template<SplashTemplateSpec> {
+    static override _template(): Lightning.Component.Template<SplashTemplateSpec> {
         return {
             Background: {
                 w: 1920, h: 1080, colorBottom: 0xff000000, scale: 1.2,
@@ -64,7 +68,7 @@ export default class Splash
         };
     }
 
-    _init() {
+    override _init() {
         this.Logo.on("txLoaded", ()=> {
             this.Logo.setSmooth("alpha", 1);
             this.Logo.setSmooth("y", 540);
@@ -86,7 +90,7 @@ export default class Splash
         }, 3000);
     }
 
-    _inactive() {
+    override _inactive() {
         this._spinnerAnimation.stop()
     }
 

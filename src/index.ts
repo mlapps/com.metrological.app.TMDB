@@ -1,7 +1,6 @@
-// @ts-expect-error TODO: Type SDK
-import { Launch } from '@lightningjs/sdk'
+import { Lightning, Launch, PlatformSettings, AppData } from '@lightningjs/sdk'
 import App from './App.js'
 
-export default function(...args: any[]) {
-    return Launch(App, ...args)
+export default function(appSettings: Lightning.Application.Options, platformSettings: PlatformSettings, appData: AppData) {
+    return Launch(App, appSettings, platformSettings, appData);
 }

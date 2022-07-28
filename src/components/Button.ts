@@ -20,7 +20,7 @@ export default class Button
         }
     };
 
-    static _template(): Lightning.Component.Template<ButtonTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ButtonTemplateSpec> {
         return {
             color: 0xff21d07a, rtt: true,
             texture: Lightning.Tools.getRoundRect(180, 60, 30, 0, 0xff21d07a, true, 0xffffffff),
@@ -47,11 +47,11 @@ export default class Button
         this.Label.text = v;
     }
 
-    _active() {
+    override _active() {
         this.application.on('contentHeight', this.listeners['ratingColor']);
     }
 
-    _inactive() {
+    override _inactive() {
         this.application.off('ratingColor', this.listeners['ratingColor']);
     }
 

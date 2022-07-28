@@ -14,8 +14,12 @@ export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpecStro
     }
 }
 
+export interface PeopleTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+}
+
 export default class People
-    extends Lightning.Component<PeopleTemplateSpec>
+    extends Lightning.Component<PeopleTemplateSpec, PeopleTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<PeopleTemplateSpec> {
 
     Item = this.getByRef('Item')!;
@@ -26,7 +30,7 @@ export default class People
 
     private _item!: PeopleModel;
 
-    static _template(): Lightning.Component.Template<PeopleTemplateSpec> {
+    static override _template(): Lightning.Component.Template<PeopleTemplateSpec> {
         return {
             Item: {
                 flex: {direction: "column"},
@@ -61,7 +65,7 @@ export default class People
         };
     };
 
-    _init() {
+    override _init() {
         this.Item.transition("y").on("finish", ()=> {
             this.Holder.y = 30;
             this.Holder.patch({
@@ -72,7 +76,7 @@ export default class People
         });
     }
 
-    _active() {
+    override _active() {
         this.application.emit("contentHeight", 0);
 
         this.patch({
@@ -88,7 +92,7 @@ export default class People
         this.widgets.peoplemenu.select("details", true);
     }
 
-    _inactive() {
+    override _inactive() {
         this.patch({
             Item: {
                 smooth: {y: 514, x: 90, mountY: 0.5}
@@ -114,7 +118,7 @@ export default class People
         this.application.emit("setBackground", {src});
     }
 
-    _handleDown() {
+    override _handleDown() {
         this.widgets.peoplemenu.select("moviecredits");
         Router.navigate(`movie_credits/movie/${this._item.id}`, true);
     }

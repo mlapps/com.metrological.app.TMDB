@@ -49,7 +49,7 @@ export default class Background
     private _item: ContentItem | null = null;
     private _skip: boolean = false;
 
-    static _template(): Lightning.Component.Template<BackgroundTemplateSpec> {
+    static override _template(): Lightning.Component.Template<BackgroundTemplateSpec> {
         return {
             Backgrounds: {
                 w: 1920, h: 1080,
@@ -63,7 +63,7 @@ export default class Background
         };
     };
 
-    _init() {
+    override _init() {
         this.BackgroundA.on("txLoaded", ()=> {
             this.BackgroundA.setSmooth("alpha", 1, {duration: 0.6, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
             this.BackgroundB.setSmooth("alpha", 0, {duration: 0.3, timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)'});
@@ -87,13 +87,13 @@ export default class Background
         });
     }
 
-    _attach() {
+    override _attach() {
         this.application.on('setBackground', this.listeners['setBackground']);
         this.application.on('setItem', this.listeners['setItem']);
         this.application.on('readyForBackground', this.listeners['readyForBackground']);
     }
 
-    _detach() {
+    override _detach() {
         this.application.off('setBackground', this.listeners['setBackground']);
         this.application.off('setItem', this.listeners['setItem']);
         this.application.off('readyForBackground', this.listeners['readyForBackground']);

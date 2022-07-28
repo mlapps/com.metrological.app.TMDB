@@ -5,7 +5,7 @@ import { FlipList } from "../components";
 export default class Similar extends Popular {
     private _detailsType = '';
     private _detailsId = '';
-    _active() {
+    override _active() {
         this.widgets.detailsmenu.select("similar", true);
     }
 
@@ -17,12 +17,12 @@ export default class Similar extends Popular {
         this._detailsId = v;
     }
 
-    _handleUp() {
+    override _handleUp() {
         this.widgets.detailsmenu.select("cast");
         Router.navigate(`cast/${this._detailsType}/${this._detailsId}`, true);
     }
 
-    _getFocused() {
+    override _getFocused() {
         return this.List.children[this._index] as FlipList;
     }
 }

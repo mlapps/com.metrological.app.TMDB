@@ -1,5 +1,5 @@
 import { Lightning, Utils, Router } from '@lightningjs/sdk';
-import routes from "./lib/routes";
+import {routes} from "./lib/routes";
 import {init as initFactory} from "./lib/factory"
 import {Menu} from "./widgets"
 import {Background} from "./components";
@@ -8,7 +8,7 @@ const correction = {
     Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia
 };
 
-interface AppTemplateSpec extends Router.App.TemplateSpecStrong {
+interface AppTemplateSpec extends Router.App.TemplateSpec {
     ColorCorrection: {
         Background: typeof Background,
         Holder: {
@@ -49,12 +49,12 @@ export default class App extends Router.App<AppTemplateSpec> implements Lightnin
 
     // when App instance is initialized we call the routes
     // this will setup all pages and attach them to there route
-    _setup() {
+    override _setup() {
         initFactory(this.stage);
         Router.startRouter(routes, this);
     }
 
-    _init() {
+    override _init() {
         this.stage.on('correctColor', ({ settings: {b,c,s,i} }) => {
             if (s === null) return;
             if(correction[s]){
@@ -95,7 +95,7 @@ export default class App extends Router.App<AppTemplateSpec> implements Lightnin
         refreshLoop();
     }
 
-    static _template(): Lightning.Component.Template<AppTemplateSpec> {
+    static override _template(): Lightning.Component.Template<AppTemplateSpec> {
         return {
             // we MUST spread the base-class template
             // if we want to provide Widgets.
@@ -171,7 +171,7 @@ export default class App extends Router.App<AppTemplateSpec> implements Lightnin
      * Show app close dialogue
      * @private
      */
-    _handleAppClose(){
+    override _handleAppClose() {
         console.log("Close app")
     }
 }

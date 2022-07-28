@@ -6,8 +6,8 @@ import {
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
 import Accessibility from "../pages/Accessibility";
-import { GenresResponse } from "./types";
 import { ContainerData } from "./models/Container";
+import { Router } from "@lightningjs/sdk";
 
 const getPopularContent = async (type: 'movie' | 'tv')=>{
     try {
@@ -18,7 +18,7 @@ const getPopularContent = async (type: 'movie' | 'tv')=>{
     }
 }
 
-export default {
+export const routes: Router.Config = {
     root: "splash",
     routes: [
         {

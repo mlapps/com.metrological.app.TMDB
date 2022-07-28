@@ -24,7 +24,7 @@ export default class MovieInfo
         }
     }
 
-    static _template(): Lightning.Component.Template<MovieIntoTemplateSpec> {
+    static override _template(): Lightning.Component.Template<MovieIntoTemplateSpec> {
         return {
             Date: {
                 y: 8,
@@ -37,7 +37,7 @@ export default class MovieInfo
         };
     };
 
-    _init() {
+    override _init() {
         this.listeners = {
             ratingColor: (color)=> {
                 this.Genres.text!.textColor = color;
@@ -45,11 +45,11 @@ export default class MovieInfo
         }
     }
 
-    _attach() {
+    override _attach() {
         this.application.on('ratingColor', this.listeners['ratingColor']);
     }
 
-    _detach() {
+    override _detach() {
         this.application.on('ratingColor', this.listeners['ratingColor']);
 
     }

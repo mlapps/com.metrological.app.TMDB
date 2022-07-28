@@ -63,7 +63,7 @@ export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultSha
         this.redraw();
     }
 
-    useDefault() {
+    override useDefault() {
         return (this._rx === 0 && this._ry === 0 && this._z === 0);
     }
 }

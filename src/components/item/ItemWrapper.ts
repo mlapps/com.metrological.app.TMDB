@@ -22,7 +22,7 @@ export default class ItemWrapper<ItemConstructor extends Lightning.Component.Con
 
     static FIRST_CREATED = false;
 
-    static _template(): Lightning.Component.Template<ItemWrapperTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ItemWrapperTemplateSpec> {
         return {
             clipbox: true
         };
@@ -76,7 +76,7 @@ export default class ItemWrapper<ItemConstructor extends Lightning.Component.Con
         }
     }
 
-    _firstActive() {
+    override _firstActive() {
         this.create();
 
         if(!ItemWrapper.FIRST_CREATED){
@@ -85,7 +85,7 @@ export default class ItemWrapper<ItemConstructor extends Lightning.Component.Con
         }
     }
 
-    _getFocused() {
+    override _getFocused() {
         // due to lazy creation there is the possibility that
         // an component receives focus before the actual item
         // is created, therefore we set a flag

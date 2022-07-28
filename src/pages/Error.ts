@@ -4,13 +4,17 @@ export interface ErrorTemplateSpec extends Lightning.Component.TemplateSpecStron
     Label: {}
 }
 
+interface ErrorTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+}
+
 export default class Error
-    extends Lightning.Component<ErrorTemplateSpec>
+    extends Lightning.Component<ErrorTemplateSpec, ErrorTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<ErrorTemplateSpec> {
 
     Label = this.getByRef('Label')!;
 
-    static _template(): Lightning.Component.Template<ErrorTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ErrorTemplateSpec> {
         return {
             rect: true, w: 1920, h: 1080,
             color: 0xffb70606,
@@ -23,15 +27,15 @@ export default class Error
         }
     }
 
-    _handleEnter(){
+    override _handleEnter() {
         Router.navigate("main")
     }
 
-    _focus(){
+    override _focus() {
         console.log("focus error page")
     }
 
-    set error(obj: { page: any, error: Error }){
+    set error(obj: { page: any, error: Error }) {
         const {page, error} = obj;
         console.log(page, error);
 

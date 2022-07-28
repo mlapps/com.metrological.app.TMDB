@@ -29,7 +29,7 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
     _itemConstruct!: ItemConstructor;
     _items: any[] = [];
 
-    static _template(): Lightning.Component.Template<ListTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ListTemplateSpec> {
         return {
             h: List.height,
             Items: {
@@ -106,15 +106,15 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
         }
     }
 
-    _focus() {
+    override _focus() {
         this._animateToSelected();
     }
 
-    _unfocus() {
+    override _unfocus() {
         this.stage.gc();
     }
 
-    _handleLeft() {
+    override _handleLeft() {
         if (this._index > 0) {
             this.select({direction:-1});
         } else {
@@ -122,7 +122,7 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
         }
     }
 
-    _handleRight() {
+    override _handleRight() {
         if (this._index < this.Items.children.length - 1) {
             this.select({direction:1});
         } else {
@@ -153,7 +153,7 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
         this.application.updateFocusPath();
     }
 
-    _getFocused(){
+    override _getFocused(){
         return this.activeItem;
     }
 

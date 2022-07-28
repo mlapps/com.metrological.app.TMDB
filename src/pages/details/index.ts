@@ -21,8 +21,12 @@ export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpecStr
     }
 }
 
+interface DetailsTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+}
+
 export default class Details
-    extends Lightning.Component<DetailsTemplateSpec>
+    extends Lightning.Component<DetailsTemplateSpec, DetailsTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<DetailsTemplateSpec> {
 
     Item = this.getByRef('Item')!;
@@ -52,7 +56,7 @@ export default class Details
     private _item!: ContentItem;
     private _detailsType: string = '';
 
-    static _template(): Lightning.Component.Template<DetailsTemplateSpec> {
+    static override _template(): Lightning.Component.Template<DetailsTemplateSpec> {
         return {
             Item: {
                 x: 90,
@@ -95,7 +99,7 @@ export default class Details
         };
     };
 
-    _init() {
+    override _init() {
         this.Item.transition("y").on("finish", ()=> {
             this.Holder.y = this.Holder.y + 30;
             this.Holder.patch({
@@ -115,17 +119,17 @@ export default class Details
         });
     }
 
-    _attach() {
+    override _attach() {
         this.application.on('titleLoaded', this.listeners['titleLoaded']);
         this.application.on('backgroundLoaded', this.listeners['backgroundLoaded']);
     }
 
-    _detach() {
+    override _detach() {
         this.application.off('titleLoaded', this.listeners['titleLoaded']);
         this.application.off('backgroundLoaded', this.listeners['backgroundLoaded']);
     }
 
-    _active() {
+    override _active() {
         this.patch({
             Item: {
                 smooth: {y: 110, x: 110, mountY: 0}
@@ -135,7 +139,7 @@ export default class Details
         this.widgets.detailsmenu.select("details", true);
     }
 
-    _inactive() {
+    override _inactive() {
         this.patch({
             Item: {
                 smooth: {y: 514, x: 90, mountY: 0.5}
@@ -173,7 +177,7 @@ export default class Details
         this._detailsType = v;
     }
 
-    _handleDown() {
+    override _handleDown() {
         this.patch({
             smooth: {alpha: 0}
         });

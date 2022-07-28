@@ -12,11 +12,11 @@ export default class Title
 
     private _skip = false;
 
-    static _template(): Lightning.Component.Template<TitleTemplateSpec> {
+    static override _template(): Lightning.Component.Template<TitleTemplateSpec> {
         return {};
     };
 
-    _init() {
+    override _init() {
         this.on("txLoaded", ()=> {
             if (!this._skip) {
                 this.application.emit("titleLoaded");
@@ -43,5 +43,4 @@ export default class Title
             text: {fontFace: "Black", fontSize, lineHeight, wordWrapWidth: 1000, text: v}
         });
     }
-
 }

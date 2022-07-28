@@ -33,7 +33,7 @@ export default class Item
     private _index: number = 0;
     private _item: ContentItem | undefined;
 
-    static _template(): Lightning.Component.Template<ItemTemplateSpec> {
+    static override _template(): Lightning.Component.Template<ItemTemplateSpec> {
         return {
             w: Item.width, h: Item.height, alpha: 0,
             transitions: {
@@ -76,7 +76,7 @@ export default class Item
         };
     }
 
-    _init() {
+    override _init() {
         this._perspectiveAnimation = this.Blur.content.animation({
             // !!! Timing function not available on animation()
             duration: 0.3, /* timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', */ actions:[
@@ -177,7 +177,7 @@ export default class Item
         this.application.emit("itemAnimationEnded");
     }
 
-    _handleEnter() {
+    override _handleEnter() {
         if (!this._item) return;
         this.fireAncestors("$selectItem", {item: this._item});
     }

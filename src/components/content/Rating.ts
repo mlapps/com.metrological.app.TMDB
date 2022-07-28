@@ -33,7 +33,7 @@ export default class Rating
         ]
     });
 
-    static _template(): Lightning.Component.Template<RatingTemplateSpec> {
+    static override _template(): Lightning.Component.Template<RatingTemplateSpec> {
         return {
             texture: Lightning.Tools.getRoundRect(100, 100, 50, 0, 0x00ffffff, true, 0xff081C22),
             rtt: true,
@@ -56,7 +56,7 @@ export default class Rating
         };
     };
 
-    _init() {
+    override _init() {
         this.Number.on('txLoaded', ()=> {
             this.RatingNumber.w = this.Number.renderWidth;
             this.RatingNumber.h = this.Number.renderHeight;

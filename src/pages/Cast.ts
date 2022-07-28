@@ -7,15 +7,19 @@ export interface CastTemplateSpec extends Lightning.Component.TemplateSpecStrong
     List: {}
 }
 
+interface CastTypeConfig extends Lightning.Component.TypeConfig {
+    IsPage: true;
+}
+
 export default class Cast
-    extends Lightning.Component<CastTemplateSpec>
+    extends Lightning.Component<CastTemplateSpec, CastTypeConfig>
     implements Lightning.Component.ImplementTemplateSpec<CastTemplateSpec> {
 
     List = this.getByRef('List')!;
     private _detailsType: string = '';
     private _detailsId: string = '';
 
-    static  _template(): Lightning.Component.Template<CastTemplateSpec> {
+    static override _template(): Lightning.Component.Template<CastTemplateSpec> {
         return {
             List: {
                 alpha: 0.001,
@@ -28,7 +32,7 @@ export default class Cast
         };
     };
 
-    _active() {
+    override _active() {
         this.widgets.detailsmenu.select("cast", true);
 
         const src = Utils.asset("images/background.png");
@@ -58,17 +62,17 @@ export default class Cast
         this._detailsId = v;
     }
 
-    _handleUp() {
+    override _handleUp() {
         Router.navigate(`details/${this._detailsType}/${this._detailsId}`, true);
         this.widgets.detailsmenu.select("details");
     }
 
-    _handleDown() {
+    override _handleDown() {
         Router.navigate(`similar/${this._detailsType}/${this._detailsId}`, true);
         this.widgets.detailsmenu.select("similar");
     }
 
-    _getFocused() {
+    override _getFocused() {
         return this.List.children[0] as Lightning.Component;
     }
 

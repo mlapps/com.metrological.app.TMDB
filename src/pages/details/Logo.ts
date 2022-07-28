@@ -11,7 +11,7 @@ export default class Logo
 
     Logo = this.getByRef('Logo')!;
 
-    static _template(): Lightning.Component.Template<LogoTemplateSpec> {
+    static override _template(): Lightning.Component.Template<LogoTemplateSpec> {
         return {
             colorTop: 0xffc3c3c3, colorBottom: 0xffffffff,
             texture: Lightning.Tools.getRoundRect(120, 120, 60, 0, 0xffffffff, true, 0xffffffff),

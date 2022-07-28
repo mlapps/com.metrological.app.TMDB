@@ -34,7 +34,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
     _currentIndex: number = 0;
     _lineOffset = 0;
 
-    _init() {
+    override _init() {
         this.application.on("contentHeight", (h: number)=> { // !!! events aren't always the same!
             if (h === 0) {
                 this.Lines_Top.setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
@@ -104,7 +104,7 @@ interface MenuItemTemplateSpec extends Lightning.Component.TemplateSpecStrong, M
 }
 
 class MenuItem extends Lightning.Component<MenuItemTemplateSpec> implements Lightning.Component.ImplementTemplateSpec<MenuItemTemplateSpec> {
-    static _template(): Lightning.Component.Template<MenuItemTemplateSpec> {
+    static override _template(): Lightning.Component.Template<MenuItemTemplateSpec> {
         return {
             Label: {
                 text: {fontSize: 28, fontFace: "Regular"}
