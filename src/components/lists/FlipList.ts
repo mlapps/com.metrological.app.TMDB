@@ -1,19 +1,9 @@
 import { Lightning } from '@lightningjs/sdk';
 import { ItemWrapper } from "..";
-import { ContentItem } from '../../pages/popular/Content';
+import type { FlipListItemConstructorBase, ItemType } from '../item/ItemTypes';
 
-interface ItemConstructorBase {
-    new (...args: any[]): Lightning.Component & {
-        animatePosition(): void;
-        focusedItem: boolean;
-    };
-    get width(): number;
-    get height(): number;
-    get offset(): number;
-}
-
-interface FlipListTemplateSpec<ItemConstructor extends ItemConstructorBase = ItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
-    items: any[],
+interface FlipListTemplateSpec<ItemConstructor extends FlipListItemConstructorBase = FlipListItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
+    items: Array<ItemType<ItemConstructor>>, // Items are just passed through
     itemConstruct: ItemConstructor,
     Items: {},
     Pagination: {
@@ -22,7 +12,7 @@ interface FlipListTemplateSpec<ItemConstructor extends ItemConstructorBase = Ite
     }
 }
 
-export default class FlipList<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
+export default class FlipList<ItemConstructor extends FlipListItemConstructorBase = FlipListItemConstructorBase>
     extends Lightning.Component<FlipListTemplateSpec<ItemConstructor>>
     implements Lightning.Component.ImplementTemplateSpec<FlipListTemplateSpec<ItemConstructor>>
  {
@@ -34,7 +24,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
     private _index = 0;
     private _container: any;
     private _itemConstruct!: ItemConstructor;
-    private _items: ContentItem[] = [];
+    private _items: Array<ItemType<ItemConstructor>> = [];
     private _direction: -1 | 1 = 1;
 
     static override _template(): Lightning.Component.Template<FlipListTemplateSpec> {
@@ -115,7 +105,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         return this._items;
     }
 
-    _createItems({items, construct}: {items: ContentItem[], construct: ItemConstructor}): Lightning.Component.NewPatchTemplate<typeof ItemWrapper>[] {
+    _createItems({items, construct}: {items: Array<InstanceType<ItemConstructor>['item']>, construct: ItemConstructor}): Lightning.Component.NewPatchTemplate<typeof ItemWrapper>[] {
         return items.map((item, idx) => {
             const configIndex = idx > 3 ? 4 : idx+1;
 
@@ -139,34 +129,34 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
             if (idx === this._index-1) {
                 child.visible = true;
                 child.configIndex = 0;
-                if (child.child) {
+                if (child.child?.animatePosition) {
                     child.child.focusedItem = false;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index) {
                 child.visible = true;
                 child.configIndex = 1;
-                if (child.child) {
+                if (child.child?.animatePosition) {
                     child.child.focusedItem = true;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+1) {
                 child.visible = true;
                 child.configIndex = 2;
-                if (child.child) {
+                if (child.child?.animatePosition) {
                     child.child.focusedItem = false;
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+2) {
                 child.visible = true;
                 child.configIndex = 3;
-                if (child.child) {
+                if (child.child?.animatePosition) {
                     child.child.animatePosition();
                 }
             } else if (idx === this._index+3) {
                 child.visible = true;
                 child.configIndex = 4;
-                if (child.child) {
+                if (child.child?.animatePosition) {
                     child.child.animatePosition();
                 }
             }
@@ -179,7 +169,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         const lastItem = children[index-1];
         if (lastItem) {
             lastItem.configIndex = 0;
-            if (lastItem.child) {
+            if (lastItem.child?.animatePosition) {
                 lastItem.child.focusedItem = false;
                 lastItem.child.animatePosition();
             }
@@ -188,7 +178,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         if (curItem) {
             curItem.visible = true;
             curItem.configIndex = 1;
-            if (curItem.child) {
+            if (curItem.child?.animatePosition) {
                 curItem.child.focusedItem = true;
                 curItem.child.animatePosition();
             }
@@ -198,7 +188,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         if (itemPlus1) {
             itemPlus1.visible = true;
             itemPlus1.configIndex = 2;
-            if (itemPlus1.child) {
+            if (itemPlus1.child?.animatePosition) {
                 itemPlus1.child.focusedItem = false;
                 itemPlus1.child.animatePosition();
             }
@@ -208,7 +198,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         if (itemPlus2) {
             itemPlus2.visible = true;
             itemPlus2.configIndex = 3;
-            if (itemPlus2.child) {
+            if (itemPlus2.child?.animatePosition) {
                 itemPlus2.child.animatePosition();
             }
         }
@@ -216,7 +206,7 @@ export default class FlipList<ItemConstructor extends ItemConstructorBase = Item
         const itemPlus3 = children[index+3];
         if (itemPlus3) {
             itemPlus3.configIndex = 4;
-            if (itemPlus3.child) {
+            if (itemPlus3.child?.animatePosition) {
                 itemPlus3.child.animatePosition();
             }
         }

@@ -19,7 +19,7 @@ export default class MovieCredits extends Popular {
     }
 
     override _handleDown() {
-        Router.navigate(`tv_credits/tv/${this._peopleId}`, true);
+        Router.navigate(`tv_credits/${this._peopleId}`, true);
         this.widgets.peoplemenu.select("tvcredits");
     }
     override _getFocused() {

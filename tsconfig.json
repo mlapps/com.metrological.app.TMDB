@@ -6,6 +6,6 @@
     "moduleResolution": "node",
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true
+    "noImplicitOverride": true,
   }
 }

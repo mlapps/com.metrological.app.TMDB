@@ -1,38 +1,40 @@
-export interface PeopleData {
-    adult: any;
-    also_known_as: any;
-    biography: any;
-    birthday: any;
-    deathday: any;
-    gender: any;
-    homepage: any;
-    id: any;
-    imdb_id: any;
-    known_for_department: any;
-    name: any;
-    place_of_birth: any;
-    popularity: any;
-    profile_path: any;
+/**
+ * https://developers.themoviedb.org/3/people/get-person-details
+ */
+export interface PersonData {
+    adult: boolean;
+    also_known_as: string[];
+    biography: string;
+    birthday: string | null;
+    deathday: string | null;
+    gender: 0 | 1 | 2 | 3;
+    homepage: string | null;
+    id: number;
+    imdb_id: string;
+    known_for_department: string;
+    name: string;
+    place_of_birth: string | null;
+    popularity: number;
+    profile_path: string | null;
 }
 
+export default class PersonModel {
+    _adult: PersonData['adult'];
+    _also_known_as: PersonData['also_known_as'];
+    _biography: PersonData['biography'];
+    _birthday: PersonData['birthday'];
+    _deathday: PersonData['deathday'];
+    _gender: PersonData['gender'];
+    _homepage: PersonData['homepage'];
+    _id: PersonData['id'];
+    _imdb_id: PersonData['imdb_id'];
+    _known_for_department: PersonData['known_for_department'];
+    _name: PersonData['name'];
+    _place_of_birth: PersonData['place_of_birth'];
+    _popularity: PersonData['popularity'];
+    _profile_path: PersonData['profile_path'];
 
-export default class People {
-    _adult: any;
-    _also_known_as: any;
-    _biography: any;
-    _birthday: any;
-    _deathday: any;
-    _gender: any;
-    _homepage: any;
-    _id: any;
-    _imdb_id: any;
-    _known_for_department: any;
-    _name: any;
-    _place_of_birth: any;
-    _popularity: any;
-    _profile_path: any;
-
-    constructor(obj: PeopleData){
+    constructor(obj: PersonData){
         this._adult = obj.adult;
         this._also_known_as = obj.also_known_as;
         this._biography = obj.biography;
@@ -41,7 +43,7 @@ export default class People {
         this._gender = obj.gender;
         this._homepage = obj.homepage;
         this._id = obj.id;
-        this._imdb_id = obj.id;
+        this._imdb_id = obj.imdb_id;
         this._known_for_department = obj.known_for_department;
         this._name = obj.name;
         this._place_of_birth = obj.place_of_birth;
@@ -62,6 +64,7 @@ export default class People {
     }
 
     get birthday() {
+        if (!this._birthday) return '';
         const date = new Date(this._birthday);
         return `${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}, ${date.getFullYear()}`;
     }

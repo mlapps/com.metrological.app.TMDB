@@ -1,9 +1,9 @@
 import {Lightning, Router, Utils} from "@lightningjs/sdk";
 
 export interface CastTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    content: any;
-    detailsType: string;
-    detailsId: any;
+    content: Lightning.Component;
+    detailsType: 'tv' | 'movie';
+    detailsId: string;
     List: {}
 }
 
@@ -54,7 +54,7 @@ export default class Cast
         }
     }
 
-    set detailsType(v: string) {
+    set detailsType(v: 'tv' | 'movie') {
         this._detailsType = v;
     }
 

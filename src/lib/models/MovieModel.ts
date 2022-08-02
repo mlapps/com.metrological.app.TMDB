@@ -12,30 +12,29 @@ export interface MovieData {
     poster_path: string;
     release_date: string;
     title: string;
-    // type: string;
-    video: any;
+    video: boolean;
     vote_average: number;
     vote_count: number;
 }
 
 
-export default class Movie {
-    _adult: any;
-    _backdrop_path: any;
+export default class MovieModel {
+    _adult: MovieData['adult'];
+    _backdrop_path: MovieData['backdrop_path'];
     _genres: Genre[];
-    _id: unknown;
-    _original_language: any;
-    _overview: any;
-    _popularity: any;
-    _poster_path: any;
-    _release_date: any;
-    _title: string;
-    _type: string;
-    _video: any;
-    _vote_average: any;
-    _vote_count: any;
+    _id: MovieData['id'];
+    _original_language: MovieData['original_language'];
+    _overview: MovieData['overview'];
+    _popularity: MovieData['popularity'];
+    _poster_path: MovieData['poster_path'];
+    _release_date: MovieData['release_date'];
+    _title: MovieData['title'];
+    _type: 'movie';
+    _video: MovieData['video'];
+    _vote_average: MovieData['vote_average'];
+    _vote_count: MovieData['vote_count'];
 
-    constructor(obj: MovieData,genres: Genre[]){
+    constructor(obj: MovieData, genres: Genre[]){
         this._adult = obj.adult;
         this._backdrop_path = obj.backdrop_path;
         this._genres = obj.genre_ids.map(id => {

@@ -1,20 +1,6 @@
 import {Lightning} from "@lightningjs/sdk";
 import {Button, MovieInfo, Rating, Title} from "../../components";
-
-export interface ContentItem {
-    id: string;
-    voteAverage: number;
-    title: string;
-    formattedReleaseDate:  string;
-    genresAsString: string;
-    background: string;
-    overview: string;
-    productionCompanies: {
-        logo_path: string;
-
-    }[];
-    poster: string;
-}
+import { DetailsModel, MovieModel, TvModel } from "../../lib/models";
 
 interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Title: typeof Title,
@@ -42,8 +28,8 @@ export default class Content
         {t: '', p: 'alpha', rv: 0, v: {0: {v: 0}, 1: {v: 1}}},
         {t: '', p: 'x', rv: 90, v: {0: {v: 130}, 1: {v: 90}}},
     ]});
-    private _item: ContentItem | undefined;
-    private _details: ContentItem | undefined;
+    private _item: DetailsModel | TvModel | MovieModel | undefined;
+    private _details: DetailsModel | TvModel | MovieModel | undefined;
 
     private listeners: Partial<Lightning.Application.EventMap> = {
         titleLoaded: ()=> {
@@ -107,8 +93,8 @@ export default class Content
         });
     }
 
-    _setDetails(item: ContentItem) {
-        if (this._details === item) return;
+    _setDetails(item: DetailsModel | TvModel | MovieModel) {
+        if (!item || this._details === item) return;
         this._details = item;
         this._item =  item;
         this.alpha = 0.001;

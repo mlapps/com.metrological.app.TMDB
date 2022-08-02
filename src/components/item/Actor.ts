@@ -1,8 +1,9 @@
 import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
+import { CastPersonData } from "../../lib/models/CastModel";
 import {getImgUrl} from "../../lib/tools";
 
 interface ActorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    item: any;
+    item: CastPersonData;
     Actor: {
         Image: {}
     },
@@ -21,7 +22,7 @@ export default class Actor
     Image = this.Actor.getByRef('Image')!;
     Name = this.ActorInfo.getByRef('Name')!;
     Character = this.ActorInfo.getByRef('Character')!;
-    private _item: any;
+    private _item: CastPersonData | undefined;
 
     static override _template(): Lightning.Component.Template<ActorTemplateSpec> {
         return {
@@ -59,18 +60,18 @@ export default class Actor
         };
     }
 
-    set item(v: any) {
+    set item(v: CastPersonData) {
         this._item = v;
 
-        if (this._item.profile_path !== null) {
+        if (this._item.profile_path) {
             const image = getImgUrl(this._item.profile_path, 300)
             this.Image.texture = Img(image).landscape(Actor.width);
         } else {
             this.Image.src = Utils.asset("images/placeholder.png");
         }
 
-        this.Name.text = this._item.name;
-        this.Character.text = this._item.character;
+        this.Name.text = this._item.name || 'Unknown';
+        this.Character.text = this._item.character || 'Unknown';
     }
 
     override _focus() {
@@ -78,19 +79,21 @@ export default class Actor
             Actor: {
                 smooth: {scale: 1},
                 Image: {
-                    smooth: {"shader.amount": 0}
+                    smooth: {
+                        ["shader.amount" as any]: 0
+                    }
                 }
             },
             ActorInfo: {
                 smooth: {y: Actor.height + 16},
                 Name: {
                     smooth: {
-                        "text.textColor": 0xffffffff
+                        ["text.textColor" as any]: 0xffffffff
                     }
                 },
                 Character: {
                     smooth: {
-                        "text.textColor": 0xffc3c3c3
+                        ["text.textColor" as any]: 0xffc3c3c3,
                     }
                 }
             }
@@ -102,19 +105,21 @@ export default class Actor
             Actor: {
                 smooth: {scale: 0.98},
                 Image: {
-                    smooth: {"shader.amount": 1}
+                    smooth: {
+                        ["shader.amount" as any]: 1
+                    }
                 }
             },
             ActorInfo: {
                 smooth: {y: Actor.height + 6},
                 Name: {
                     smooth: {
-                        "text.textColor": 0xffc3c3c3
+                        ["text.textColor" as any]: 0xffc3c3c3,
                     }
                 },
                 Character: {
                     smooth: {
-                        "text.textColor": 0xff9f9f9f
+                        ["text.textColor" as any]: 0xff9f9f9f
                     }
                 }
             }
@@ -122,6 +127,7 @@ export default class Actor
     }
 
     override _handleEnter() {
+        if (!this._item) return;
         Router.navigate(`people/${this._item.id}`, true);
     }
 

@@ -6,7 +6,7 @@ import {
 import {details, list, people} from "./factory";
 import TvCredits from "../pages/TvCredits";
 import Accessibility from "../pages/Accessibility";
-import { ContainerData } from "./models/Container";
+import { ContainerData } from "./models/ContainerModel";
 import { Router } from "@lightningjs/sdk";
 
 const getPopularContent = async (type: 'movie' | 'tv')=>{
@@ -63,6 +63,9 @@ export const routes: Router.Config = {
             path: 'cast/:type/:id',
             component: Cast,
             before: async (page: Cast, {type, id}: Record<'type' | 'id', string>) =>{
+                if (type !== 'movie' && type !== 'tv') {
+                    throw new Error('Invalid type');
+                }
                 return getCreditsUrl(type, id).then(function (data) {
                     page.detailsType = type;
                     page.detailsId = id;
@@ -80,7 +83,10 @@ export const routes: Router.Config = {
         {
             path: 'similar/:type/:id',
             component: Similar,
-            before: async (page: Similar, {type, id}: Record<'type' | 'id', string>) =>{
+            before: async (page: Similar, {type, id}: Record<'type' | 'id', string>) => {
+                if (type !== 'movie' && type !== 'tv') {
+                    throw new Error('Invalid type');
+                }
                 return getSimilarUrls(type, id).then(function ([genresRes, similarRes]) {
                         const genres = genresRes.genres;
                         page.detailsType = type;
@@ -109,14 +115,14 @@ export const routes: Router.Config = {
             widgets: ["peoplemenu"]
         },
         {
-            path: 'movie_credits/:type/:id',
+            path: 'movie_credits/:peopleId',
             component: MovieCredits,
-            before: async (page: MovieCredits, {type, id}: Record<'type' | 'id', string>) =>{
-                return getCreditsUrls(type, id).then(function ([genresRes, creditsRes]) {
+            before: async (page: MovieCredits, {peopleId}: Record<'peopleId', string>) =>{
+                return getCreditsUrls('movie', peopleId).then(function ([genresRes, creditsRes]) {
                         const genres = genresRes.genres;
                         const data = {results: creditsRes.cast} as ContainerData;
-                        page.peopleId = id;
-                        const content = list(type, data, genres);
+                        page.peopleId = peopleId;
+                        const content = list('movie', data, genres);
                         if (!content) {
                             throw new Error('Invalid Content');
                         }
@@ -128,15 +134,15 @@ export const routes: Router.Config = {
             widgets: ["peoplemenu"]
         },
         {
-            path: 'tv_credits/:type/:id',
+            path: 'tv_credits/:peopleId',
             component: TvCredits,
-            before: async (page: TvCredits, {type, id}: Record<'type' | 'id', string>) =>{
-                return getCreditsUrls(type, id).then((response)=>{
+            before: async (page: TvCredits, {peopleId}: Record<'peopleId', string>) =>{
+                return getCreditsUrls('tv', peopleId).then((response)=>{
                     return Promise.all(response).then(function ([genresRes, creditsRes]) {
                         const genres = genresRes.genres;
                         const data = {results: creditsRes.cast} as ContainerData;
-                        page.peopleId = id;
-                        const content = list(type, data, genres);
+                        page.peopleId = peopleId;
+                        const content = list('tv', data, genres);
                         if (!content) {
                             throw new Error('Invalid Content');
                         }

@@ -1,6 +1,6 @@
-import { PersonData } from "./models/Cast";
-import { MovieData } from "./models/Movie";
-import { TvData } from "./models/Tv";
+import { CastPersonData } from "./models/CastModel";
+import { MovieData } from "./models/MovieModel";
+import { TvData } from "./models/TvModel";
 
 export interface DiscoverResponse {
 
@@ -19,4 +19,4 @@ export interface Genre {
   name: string;
 }
 
-export type EntityData = TvData | MovieData | PersonData;
+export type EntityData = TvData | MovieData | CastPersonData;

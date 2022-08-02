@@ -1,13 +1,13 @@
 import {Img, Lightning, Utils} from "@lightningjs/sdk";
+import { MovieModel, TvModel } from "../../lib/models";
 import {getImgUrl} from "../../lib/tools";
-import { ContentItem } from "../../pages/popular/Content";
 import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";
 import ItemWrapper from "./ItemWrapper";
 
 interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     focusedItem: boolean;
-    item: ContentItem;
+    item?: MovieModel | TvModel;
     index: number;
     Blur: typeof Lightning.components.FastBlurComponent<Lightning.Element<{
         Perspective: {
@@ -31,7 +31,7 @@ export default class Item
     private _perspectiveAnimation: Lightning.types.Animation | undefined;
     private _focusedItem: boolean = false;
     private _index: number = 0;
-    private _item: ContentItem | undefined;
+    private _item: MovieModel | TvModel | undefined;
 
     static override _template(): Lightning.Component.Template<ItemTemplateSpec> {
         return {
@@ -80,7 +80,7 @@ export default class Item
         this._perspectiveAnimation = this.Blur.content.animation({
             // !!! Timing function not available on animation()
             duration: 0.3, /* timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', */ actions:[
-                {t: 'Perspective', p: 'shader.rx', v: (e)=> {
+                {t: 'Perspective', p: 'shader.rx' as '$$number', v: (e)=> {
                     const {rx} = ITEM_CONFIGS[this.configIndex]!;
                     return e * (rx.e-rx.s)+rx.s;
                 }}
@@ -108,15 +108,19 @@ export default class Item
         this._focusedItem = v;
     }
 
-    set item(v: any) {
+    set item(v: MovieModel | TvModel | undefined) {
         this._item = v;
 
-        if (this._item && this._item.poster !== null) {
+        if (this._item && this._item.poster) {
             const image = getImgUrl(this._item.poster, 500);
             this.Image.texture = Img(image).contain(342, 513);
         } else {
             this.Image.src = Utils.asset("images/placeholder.png");
         }
+    }
+
+    get item(): MovieModel | TvModel | undefined {
+        return this._item;
     }
 
     set index(v: number) {

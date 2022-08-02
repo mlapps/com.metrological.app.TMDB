@@ -1,8 +1,8 @@
-import { CastData } from "./models/Cast";
-import { ContainerData } from "./models/Container";
-import { DetailsData } from "./models/Details";
-import { PeopleData } from "./models/People";
-import { GenresResponse, SimilarResponse } from "./types";
+import { CastData } from "./models/CastModel";
+import { ContainerData } from "./models/ContainerModel";
+import { DetailsData } from "./models/DetailsModel";
+import { PersonData } from "./models/PersonModel";
+import { GenresResponse } from "./types";
 
 const apiKey = '66683917a94e703e14ca150023f4ea7c';
 const base = 'https://api.themoviedb.org/3';
@@ -33,14 +33,14 @@ export const getSimilarUrls = async (type: string, id: string)=> {
     })) as unknown as [GenresResponse, ContainerData];
 };
 
-export const getPeopleUrl = async (id: string): Promise<PeopleData> => {
+export const getPeopleUrl = async (id: string): Promise<PersonData> => {
     return fetch(`${base}/person/${id}?api_key=${apiKey}`).then(r => r.json());
 };
 
-export const getCreditsUrls = async (type: string, id: string) => {
+export const getCreditsUrls = async (type: string, peopleId: string) => {
     return Promise.all([
         `genre/${type}/list`,
-        `person/${id}/${type}_credits`,
+        `person/${peopleId}/${type}_credits`,
     ].map((url)=>{
         return fetch(`${base}/${url}?api_key=${apiKey}`).then(r => r.json())
     })) as unknown as [GenresResponse, CastData];

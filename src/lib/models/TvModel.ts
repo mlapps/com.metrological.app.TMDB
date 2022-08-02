@@ -13,28 +13,27 @@ export interface TvData {
     overview: string;
     popularity: number;
     poster_path: string;
-    // title: string;
     type: string;
     vote_average: number;
     vote_count: number;
 }
 
-export default class Tv {
-    _backdrop_path: any;
-    _first_air_date: any;
+export default class TvModel {
+    _backdrop_path: TvData['backdrop_path'];
+    _first_air_date: TvData['first_air_date'];
     _genres: Genre[];
-    _id: any;
-    _name: string;
-    _origin_country: any;
-    _original_language: any;
-    _original_name: any;
-    _overview: any;
-    _popularity: any;
-    _poster_path: any;
-    _title: string;
-    _type: string;
-    _vote_average: any;
-    _vote_count: any;
+    _id: TvData['id'];
+    _name: TvData['name'];
+    _origin_country: TvData['origin_country'];
+    _original_language: TvData['original_language'];
+    _original_name: TvData['original_name'];
+    _overview: TvData['overview'];
+    _popularity: TvData['popularity'];
+    _poster_path: TvData['poster_path'];
+    _title: TvData['name'];
+    _type: 'tv';
+    _vote_average: TvData['vote_average'];
+    _vote_count: TvData['vote_count'];
 
     constructor(obj: TvData,genres: Genre[]){
         this._backdrop_path = obj.backdrop_path;

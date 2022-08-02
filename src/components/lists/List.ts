@@ -1,25 +1,17 @@
 import { Lightning } from '@lightningjs/sdk';
 import {ItemWrapper} from "../index";
-
-interface ItemConstructorBase {
-    new (...args: any[]): Lightning.Component & {
-
-    };
-    get width(): number;
-    get height(): number;
-    get offset(): number;
-}
+import { ListItemConstructorBase, ItemType } from '../item/ItemTypes';
 
 interface ListTemplateSpec<
-    ItemConstructor extends ItemConstructorBase = ItemConstructorBase
+    ItemConstructor extends ListItemConstructorBase = ListItemConstructorBase
 > extends Lightning.Component.TemplateSpecStrong {
-    items: any[],
+    items: ItemType<ItemConstructor>[],
     itemConstruct: ItemConstructor,
     container: any,
     Items: {}
 }
 
-export default class List<ItemConstructor extends ItemConstructorBase = ItemConstructorBase>
+export default class List<ItemConstructor extends ListItemConstructorBase = ListItemConstructorBase>
     extends Lightning.Component<ListTemplateSpec<ItemConstructor>>
     implements Lightning.Component.ImplementTemplateSpec<ListTemplateSpec<ItemConstructor>> {
 
@@ -27,7 +19,7 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
     _index = 0;
     _container: any
     _itemConstruct!: ItemConstructor;
-    _items: any[] = [];
+    _items: ItemType<ItemConstructor>[] = [];
 
     static override _template(): Lightning.Component.Template<ListTemplateSpec> {
         return {
@@ -84,7 +76,7 @@ export default class List<ItemConstructor extends ItemConstructorBase = ItemCons
         return this._items;
     }
 
-    _createItems({items, construct}: {items: any[], construct: ItemConstructor}) {
+    _createItems({items, construct}: {items: ItemType<ItemConstructor>[], construct: ItemConstructor}) {
         return items.map((item, index) => {
             return {
                 type: ItemWrapper,

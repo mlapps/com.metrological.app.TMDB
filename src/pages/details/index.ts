@@ -1,10 +1,10 @@
 import {Lightning, Router} from "@lightningjs/sdk";
 import {MovieInfo, Rating, Title} from "../../components";
-import { ContentItem } from "../popular/Content";
+import DetailsModel from "../../lib/models/DetailsModel";
 import Logo from "./Logo";
 
 export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    content: any;
+    content: DetailsModel;
     detailsType: string;
     Item: {
         Title: typeof Title,
@@ -53,7 +53,7 @@ export default class Details
             });
         }
     };
-    private _item!: ContentItem;
+    private _item!: DetailsModel;
     private _detailsType: string = '';
 
     static override _template(): Lightning.Component.Template<DetailsTemplateSpec> {
@@ -147,12 +147,12 @@ export default class Details
         });
     }
 
-    set content(v: ContentItem) {
+    set content(v: DetailsModel) {
         this._item = v;
 
         this.Title.label = this._item.title;
         this.MovieInfo.info = {date: this._item.formattedReleaseDate, genres: this._item.genresAsString};
-        this.Overview.text = this._item.overview;
+        this.Overview.text = this._item.overview || '';
         this.Rating.voteAverage = this._item.voteAverage;
 
         let logoIndex = 0;

@@ -1,16 +1,25 @@
-export interface PersonData {
-    adult: boolean;
-    cast_id: number;
-    character: string;
-    credit_id: string;
-    gender: number;
+
+/**
+ * A combination of the properties from the cast + crew of
+ * the following endpoints:
+ * - https://developers.themoviedb.org/3/tv/get-tv-credits
+ * - https://developers.themoviedb.org/3/movies/get-movie-credits
+ * - https://developers.themoviedb.org/3/people/get-person-tv-credits
+ * - https://developers.themoviedb.org/3/people/get-person-movie-credits
+ */
+export interface CastPersonData {
     id: number;
-    known_for_department: string;
-    name: string;
-    order: number;
-    original_name: string;
+    credit_id: string;
     popularity: number;
-    profile_path: string | null;
+    adult?: boolean;
+    cast_id?: number;
+    character?: string;
+    gender?: number;
+    known_for_department?: string;
+    name?: string;
+    order?: number;
+    original_name?: string;
+    profile_path?: string | null;
     department?: string;
     job?: string;
     backdrop_path?: string | null;
@@ -26,15 +35,15 @@ export interface PersonData {
 }
 
 export interface CastData {
-    cast: PersonData[];
-    crew: PersonData[];
+    cast: CastPersonData[];
+    crew: CastPersonData[];
     id: number;
 }
 
-export default class Cast {
-    _cast: PersonData[];
-    _crew: PersonData[];
-    _id: number;
+export default class CastModel {
+    _cast: CastData['cast'];
+    _crew: CastData['crew'];
+    _id: CastData['id'];
     _type: 'cast';
     constructor(obj: CastData, type: 'cast'){
         this._cast = obj.cast;

@@ -1,34 +1,31 @@
-import { Movie, Tv } from ".";
+import { MovieModel, TvModel } from ".";
 import { EntityData, Genre } from "../types";
-import { MovieData } from "./Movie";
-import { TvData } from "./Tv";
+import { MovieData } from "./MovieModel";
+import { TvData } from "./TvModel";
 
 export interface ContainerData {
     page?: number;
     total_results?: number;
     total_pages?: number;
-
-    type?: string;
-    items?: any;
     results: EntityData[];
 }
 
-export default class Container {
-    _page: any;
+export default class ContainerModel {
+    _page: number;
     _total_results: number;
     _type: 'movie' | 'tv';
-    _items: Array<Movie | Tv>;
+    _items: Array<MovieModel | TvModel>;
 
     constructor(obj: ContainerData, type: 'movie' | 'tv', genres: Genre[]) {
-        this._page = obj.page;
-        this._total_results = obj.total_results || 0;
+        this._page = obj.page || 1;
+        this._total_results = obj.total_results || obj.results.length;
         this._type = type;
         this._items = obj.results.map(item => {
             switch (type) {
                 case "movie":
-                    return new Movie(item as MovieData, genres);
+                    return new MovieModel(item as MovieData, genres);
                 case "tv":
-                    return new Tv(item as TvData, genres);
+                    return new TvModel(item as TvData, genres);
             }
         });
     }

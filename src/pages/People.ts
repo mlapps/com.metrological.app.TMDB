@@ -1,10 +1,10 @@
 import {Lightning, Router, Utils} from "@lightningjs/sdk";
 import {Title} from "../components";
-import { People as PeopleModel } from "../lib/models";
+import { PersonModel as PersonModel } from "../lib/models";
 import {getImgUrl} from "../lib/tools";
 
 export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    content: PeopleModel
+    content: PersonModel
     Item: {
         Title: typeof Title,
         Birth: {},
@@ -28,7 +28,7 @@ export default class People
     Holder = this.Item.getByRef('Holder')!;
     Biography = this.Holder.getByRef('Biography')!
 
-    private _item!: PeopleModel;
+    private _item!: PersonModel;
 
     static override _template(): Lightning.Component.Template<PeopleTemplateSpec> {
         return {
@@ -100,7 +100,7 @@ export default class People
         });
     }
 
-    set content(v: PeopleModel) {
+    set content(v: PersonModel) {
         this._item = v;
         this.Title.label = this._item.name;
         this.Birth.text = `${this._item.birthday} | ${this._item.placeOfBirth}`;
@@ -120,7 +120,7 @@ export default class People
 
     override _handleDown() {
         this.widgets.peoplemenu.select("moviecredits");
-        Router.navigate(`movie_credits/movie/${this._item.id}`, true);
+        Router.navigate(`movie_credits/${this._item.id}`, true);
     }
 
     _truncateString(s: string, n: number) {

@@ -1,69 +1,79 @@
 import { Genre } from "../types";
 
 export interface DetailsData {
-    adult: any;
-    backdrop_path: any;
-    belongs_to_collection: any;
-    budget: any;
+    adult: boolean;
+    backdrop_path: string;
+    belongs_to_collection: any; // null or object, apparently
+    budget: number;
     genres: Genre[];
-    homepage: any;
-    id: any;
-    imdb_id: any;
-    original_language: any;
-    original_title: any;
-    overview: any;
-    popularity: any;
-    poster_path: any;
-    production_companies: any;
-    production_countries: any;
-    release_date: any;
-    revenue: any;
-    runtime: any;
-    spoken_languages: any;
-    status: any;
-    tagline: any;
+    homepage: string | null;
+    id: number;
+    imdb_id: string | null;
+    original_language: string;
+    original_title: string;
+    overview: string | null;
+    popularity: number;
+    poster_path: string | null;
+    production_companies: Array<{
+        name: string;
+        id: number;
+        logo_path: string | null;
+        origin_company: string;
+    }>;
+    production_countries: Array<{
+        iso_3166_1: string;
+        name: string;
+    }>;
+    release_date: string;
+    revenue: number;
+    runtime: number | null;
+    spoken_languages: Array<{
+        iso_639_1: string;
+        name: string;
+    }>;
+    status: 'Rumored' | 'Planned' | 'In Production' | 'Post Production' | 'Released' | 'Canceled';
+    tagline: string | null;
     title: string;
-    video: any;
-    vote_average: any;
-    vote_count: any;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
 
-    // Extras
+    // Extras (TV Show Apparently?)
     name: string;
-    first_air_date: any;
-    _video: any;
+    first_air_date: string;
 }
 
-export default class Details {
-    _adult: any;
-    _backdrop_path: any;
-    _belong_to_collection: any;
-    _budget: any;
-    _genres: Genre[];
-    _homepage: any;
-    _id: any;
-    _imdb_id: any;
-    _original_language: any;
-    _original_title: any;
-    _overview: any;
-    _popularity: any;
-    _poster_path: any;
-    _production_companies: any;
-    _production_countries: any;
-    _release_date: any;
-    _revenue: any;
-    _runtime: any;
-    _spoken_languages: any;
-    _status: any;
-    _tagline: any;
-    _title: string;
-    _video: any;
-    _vote_average: any;
-    _vote_count: any;
+export default class DetailsModel {
+    _adult: DetailsData['adult'];
+    _backdrop_path: DetailsData['backdrop_path'];
+    _belongs_to_collection: DetailsData['belongs_to_collection'];
+    _budget: DetailsData['budget'];
+    _genres: DetailsData['genres'];
+    _homepage: DetailsData['homepage'];
+    _id: DetailsData['id'];
+    _imdb_id: DetailsData['imdb_id'];
+    _original_language: DetailsData['original_language'];
+    _original_title: DetailsData['original_title'];
+    _overview: DetailsData['overview'];
+    _popularity: DetailsData['popularity'];
+    _poster_path: DetailsData['poster_path'];
+    _production_companies: DetailsData['production_companies'];
+    _production_countries: DetailsData['production_countries'];
+    _release_date: DetailsData['release_date'];
+    _revenue: DetailsData['revenue'];
+    _runtime: DetailsData['runtime'];
+    _spoken_languages: DetailsData['spoken_languages'];
+    _status: DetailsData['status'];
+    _tagline: DetailsData['tagline'];
+    _title: DetailsData['title'];
+    _video: DetailsData['video'];
+    _vote_average: DetailsData['vote_average'];
+    _vote_count: DetailsData['vote_count'];
 
     constructor(obj: DetailsData){
         this._adult = obj.adult;
         this._backdrop_path = obj.backdrop_path;
-        this._belong_to_collection = obj.belongs_to_collection;
+        this._belongs_to_collection = obj.belongs_to_collection;
         this._budget = obj.budget;
         this._genres = obj.genres;
         this._homepage = obj.homepage;
@@ -83,9 +93,9 @@ export default class Details {
         this._status = obj.status;
         this._tagline = obj.tagline;
         this._title = obj.title || obj.name;
-        this._video = obj._video;
         this._vote_average = obj.vote_average;
         this._vote_count = obj.vote_count;
+        this._video = obj.video;
     }
 
     get adult() {
@@ -97,7 +107,7 @@ export default class Details {
     }
 
     get belongToCollection() {
-        return this._belong_to_collection;
+        return this._belongs_to_collection;
     }
 
     get budget() {
@@ -110,7 +120,7 @@ export default class Details {
 
     get genresAsString(){
         let genres = ``;
-        this._genres.forEach((genre, index) => {
+        (this._genres || []).forEach((genre, index) => {
             if (index > 0) {
                 genres += ` | ${genre.name}`
             } else {

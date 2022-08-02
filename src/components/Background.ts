@@ -1,6 +1,6 @@
 import {Img, Lightning, Utils} from "@lightningjs/sdk";
+import { DetailsModel, MovieModel, TvModel } from "../lib/models";
 import {getImgUrl} from "../lib/tools";
-import { ContentItem } from "../pages/popular/Content";
 
 export interface BackgroundTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Backgrounds: {
@@ -46,7 +46,7 @@ export default class Background
     private _index = 0;
     private _src = '';
     private _lastSrc = '';
-    private _item: ContentItem | null = null;
+    private _item: DetailsModel | TvModel | MovieModel | null = null;
     private _skip: boolean = false;
 
     static override _template(): Lightning.Component.Template<BackgroundTemplateSpec> {

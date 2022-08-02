@@ -35,16 +35,18 @@ export default class Error
         console.log("focus error page")
     }
 
-    set error(obj: { page: any, error: Error }) {
+    set error(obj: { page: Lightning.Component<Lightning.Component.TemplateSpecLoose, { IsPage: true } & Lightning.Component.TypeConfig>, error: Error }) {
         const {page, error} = obj;
         console.log(page, error);
 
+        const hash = page[Router.symbols.hash]!;
+        const route = page[Router.symbols.route]!;
         const errorMessage = `
 error while loading page: ${page.constructor.name}
 press enter to navigate to home
 --
-loaded via hash: ${page[Symbol.for("hash")]}
-resulted in route: ${page[Symbol.for("route")]}
+loaded via hash: ${hash}
+resulted in route: ${route}
 --
 ${error.toString()}`
 

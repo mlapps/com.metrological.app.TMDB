@@ -1,5 +1,7 @@
-import type { ContentItem } from "./pages/popular/Content";
-import type { Menu } from "./widgets";
+import { AppTemplateSpec } from "./App";
+import { DetailsModel, MovieModel, TvModel } from "./lib/models";
+
+type AppWidgets = AppTemplateSpec['ColorCorrection']['Widgets'];
 
 declare module "@lightningjs/sdk" {
     namespace Lightning {
@@ -15,7 +17,7 @@ declare module "@lightningjs/sdk" {
                 backgroundLoaded(): void;
                 readyForBackground(): void;
                 itemAnimationEnded(): void;
-                setItem(evt: { item: ContentItem, direction?: -1 | 0 | 1 }): void;
+                setItem(evt: { item: DetailsModel | TvModel | MovieModel, direction?: -1 | 0 | 1 }): void;
                 contentHidden(): void;
             }
         }
@@ -24,7 +26,7 @@ declare module "@lightningjs/sdk" {
             interface FireAncestorsMap {
                 $itemCreated(): void;
                 $firstItemCreated(): void;
-                $selectItem(arg: {item: ContentItem}): void;
+                $selectItem(arg: {item: TvModel | MovieModel}): void;
             }
         }
     }
@@ -38,10 +40,8 @@ declare module "@lightningjs/sdk" {
         /**
          * Definitions of the app specific widgets
          */
-        interface CustomWidgets {
-            Menu: Menu;
-            DetailsMenu: Menu;
-            PeopleMenu: Menu;
+        interface CustomWidgets extends AppWidgets {
+            // Augmented with the AppTemplateSpec Widgets
         }
     }
 }

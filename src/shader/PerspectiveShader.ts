@@ -1,4 +1,3 @@
-import { CoreQuadOperation } from '@lightningjs/core/src/types/lng.types.helper';
 import { Lightning } from '@lightningjs/sdk';
 
 export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultShader {
@@ -7,7 +6,7 @@ export default class PerspectiveShader extends Lightning.shaders.WebGLDefaultSha
     _ry = 0;
     _z = 1.0;
 
-    override setupUniforms(operation: CoreQuadOperation) {
+    override setupUniforms(operation: Lightning.types.CoreQuadOperation) {
         super.setupUniforms(operation);
 
         const vr = operation.shaderOwner;

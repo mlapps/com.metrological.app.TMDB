@@ -1,7 +1,7 @@
 import { Lightning } from '@lightningjs/sdk';
 
-interface MenuTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    items: MenuItemData[],
+interface MenuTemplateSpec<MenuIds extends string = string> extends Lightning.Component.TemplateSpecStrong {
+    items: MenuItemData<MenuIds>[],
     lineOffset: number,
     Lines: {
         Top: {},
@@ -10,7 +10,7 @@ interface MenuTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Items: {}
 }
 
-export default class Menu extends Lightning.Component<MenuTemplateSpec> implements Lightning.Component.ImplementTemplateSpec<MenuTemplateSpec> {
+export default class Menu<MenuIds extends string = string> extends Lightning.Component<MenuTemplateSpec<MenuIds>> implements Lightning.Component.ImplementTemplateSpec<MenuTemplateSpec<MenuIds>> {
 
     static override _template(): Lightning.Component.Template<MenuTemplateSpec> {
         return {
@@ -35,7 +35,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
     _lineOffset = 0;
 
     override _init() {
-        this.application.on("contentHeight", (h: number)=> { // !!! events aren't always the same!
+        this.application.on("contentHeight", (h: number)=> {
             if (h === 0) {
                 this.Lines_Top.setSmooth("h", 400, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
                 this.Lines_Bottom.setSmooth("h", 390, {duration: 0.3, timingFunction: 'cubic-bezier(.21,.5,.48,.93)'});
@@ -46,7 +46,7 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
         })
     }
 
-    set items(v: MenuItemData[]) {
+    set items(v: MenuItemData<MenuIds>[]) {
         this.Items.children = v.map(({ label, itemId, selected })=>{
             return {
                 type: MenuItem, label, itemId, selected
@@ -54,13 +54,13 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
         });
     }
 
-    select(id: string, fastForward?: boolean) {
+    select(id: MenuIds, fastForward?: boolean) {
         if (id === this._id) return;
 
         this._id = id;
         let y = 0;
 
-        (this.Items.children as MenuItem[]).forEach((item: MenuItem, index) => { // !!! type children
+        (this.Items.children as MenuItem[]).forEach((item: MenuItem, index) => {
             item.setSmooth("y", y, {duration: fastForward?0:0.3});
             if (id === item.itemId) {
                 this._currentIndex = index;
@@ -93,10 +93,10 @@ export default class Menu extends Lightning.Component<MenuTemplateSpec> implemen
 
 }
 
-interface MenuItemData {
+interface MenuItemData<MenuIds extends string = string> {
     label: string,
     selected: boolean,
-    itemId: string,
+    itemId: MenuIds,
 }
 
 interface MenuItemTemplateSpec extends Lightning.Component.TemplateSpecStrong, MenuItemData {

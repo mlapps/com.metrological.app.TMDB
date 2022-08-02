@@ -1,23 +1,23 @@
 import { Lightning } from '@lightningjs/sdk'
-import { ContentItem } from '../../pages/popular/Content';
+import { GenericItemConstructorBase, ItemType } from './ItemTypes';
 
-interface ItemWrapperTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface ItemWrapperTemplateSpec<ItemConstructor extends GenericItemConstructorBase = GenericItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
     index: number;
     construct: Lightning.Component.Constructor;
-    item: ContentItem | undefined;
+    item: ItemType<ItemConstructor> | undefined;
     configIndex: number;
 }
 
-export default class ItemWrapper<ItemConstructor extends Lightning.Component.Constructor>
-    extends Lightning.Component<ItemWrapperTemplateSpec>
-    implements Lightning.Component.ImplementTemplateSpec<ItemWrapperTemplateSpec>
+export default class ItemWrapper<ItemConstructor extends GenericItemConstructorBase>
+    extends Lightning.Component<ItemWrapperTemplateSpec<ItemConstructor>>
+    implements Lightning.Component.ImplementTemplateSpec<ItemWrapperTemplateSpec<ItemConstructor>>
 {
     // !!! Had to rename from `_construct` to `___construct` due to _construct (and __construct) being a
     // reserved word within Lightning.Component
     private ___construct!: ItemConstructor;
     private _index: number = 0;
     private _configIndex: number = 0;
-    private _item: ContentItem | undefined;
+    private _item: ItemType<ItemConstructor> | undefined;
     private _notifyOnItemCreation: boolean = false;
 
     static FIRST_CREATED = false;
@@ -52,11 +52,11 @@ export default class ItemWrapper<ItemConstructor extends Lightning.Component.Con
         return this.___construct;
     }
 
-    set item(obj) {
+    set item(obj: ItemType<ItemConstructor> | undefined) {
         this._item = obj;
     }
 
-    get item() {
+    get item(): ItemType<ItemConstructor> | undefined {
         return this._item;
     }
 

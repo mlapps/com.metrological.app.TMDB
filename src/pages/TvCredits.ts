@@ -15,7 +15,7 @@ export default class TvCredits extends Popular {
 
     override _handleUp() {
         this.widgets.peoplemenu.select("moviecredits");
-        Router.navigate(`movie_credits/movie/${this._peopleId}`, true);
+        Router.navigate(`movie_credits/${this._peopleId}`, true);
     }
 
     override _getFocused() {

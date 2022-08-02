@@ -1,18 +1,9 @@
 import { Lightning, Router } from '@lightningjs/sdk';
 import { ItemWrapper } from "..";
-
-interface ItemConstructorBase {
-    new (...args: any[]): Lightning.Component & {
-        animatePosition(): void;
-        focusedItem: boolean;
-    };
-    get width(): number;
-    get height(): number;
-    get offset(): number;
-}
+import { FlipListItemConstructorBase } from '../item/ItemTypes';
 
 interface CarouselTemplateSpec<
-    ItemConstructor extends ItemConstructorBase = ItemConstructorBase
+    ItemConstructor extends FlipListItemConstructorBase = FlipListItemConstructorBase
 > extends Lightning.Component.TemplateSpecStrong {
     container: any;
     itemConstruct: ItemConstructor;
@@ -23,14 +14,14 @@ interface CarouselTemplateSpec<
 }
 
 export default class Carousel<
-    ItemConstructor extends ItemConstructorBase
+    ItemConstructor extends FlipListItemConstructorBase
 >
     extends Lightning.Component<CarouselTemplateSpec<ItemConstructor>>
     implements Lightning.Component.ImplementTemplateSpec<CarouselTemplateSpec<ItemConstructor>>
     {
 
     Content = this.getByRef('Content')!;
-    Items = this.Content?.getByRef('Items')!;
+    Items = this.Content.getByRef('Items')!;
 
     private _index = 0;
     private _items: any[] = [];

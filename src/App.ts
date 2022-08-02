@@ -8,7 +8,7 @@ const correction = {
     Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia
 };
 
-interface AppTemplateSpec extends Router.App.TemplateSpec {
+export interface AppTemplateSpec extends Router.App.TemplateSpec {
     ColorCorrection: {
         Background: typeof Background,
         Holder: {
@@ -22,9 +22,9 @@ interface AppTemplateSpec extends Router.App.TemplateSpec {
             }
         },
         Widgets: {
-            Menu: typeof Menu,
-            DetailsMenu: typeof Menu,
-            PeopleMenu: typeof Menu,
+            Menu: typeof Menu<'movie' | 'tv' | 'accessibility'>,
+            DetailsMenu: typeof Menu<'details' | 'cast' | 'similar'>,
+            PeopleMenu: typeof Menu<'details' | 'moviecredits' | 'tvcredits'> ,
         },
         Loading: {}
     }
@@ -137,7 +137,7 @@ export default class App extends Router.App<AppTemplateSpec> implements Lightnin
 
                 },
                 Widgets: {
-                    Menu:{
+                    Menu: {
                         type: Menu, x: 90, y: 90, zIndex: 99, visible: false, lineOffset: 24,
                         items: [
                             {label: "Movies", itemId: "movie", selected: true},

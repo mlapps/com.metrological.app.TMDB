@@ -24,10 +24,10 @@ export default class Rating
     // This had already existed before I moved this code
     private _ratingAnimation: Lightning.types.Animation = this.animation({
         duration: 0.6, /* timingFunction: 'cubic-bezier(.94,.42,.49,.99)', */ actions:[
-            {t: 'RatingCircle', p: 'shader.angle', rv: 0.0001, v: (e) => {
+            {t: 'RatingCircle', p: 'shader.angle' as '$$number', rv: 0.0001, v: (e) => {
                 return (this._voteAverage/10) * e;
             }},
-            {t: 'Number', p: 'text.text', rv: 0, v: (e) => {
+            {t: 'Number', p: 'text.text' as '$$string', rv: '0', v: (e) => {
                 return `${Math.floor((this._voteAverage*10) * e)}`;
             }}
         ]

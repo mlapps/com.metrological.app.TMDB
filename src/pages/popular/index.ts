@@ -42,7 +42,7 @@ export default class Popular
         }
     }
 
-    static override _template() {
+    static override _template(): Lightning.Component.Template<PopularTemplateSpec> {
         return {
             Content: {
                 mountY: 0.5, y: 540, x: 90,
