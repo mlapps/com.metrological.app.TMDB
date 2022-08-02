@@ -1,5 +1,5 @@
 {
-  "name": "com.metrological.app.Tmdb",
+  "name": "com.metrological.app.tmdb",
   "description": "TMDB Showcase",
   "scripts": {
     "build": "tsc"
