@@ -78,8 +78,7 @@ export default class Item
 
     override _init() {
         this._perspectiveAnimation = this.Blur.content.animation({
-            // !!! Timing function not available on animation()
-            duration: 0.3, /* timingFunction: 'cubic-bezier(0.20, 1.00, 0.80, 1.00)', */ actions:[
+            duration: 0.3, actions:[
                 {t: 'Perspective', p: 'shader.rx' as '$$number', v: (e)=> {
                     const {rx} = ITEM_CONFIGS[this.configIndex]!;
                     return e * (rx.e-rx.s)+rx.s;

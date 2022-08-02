@@ -12,8 +12,6 @@ export default class ItemWrapper<ItemConstructor extends GenericItemConstructorB
     extends Lightning.Component<ItemWrapperTemplateSpec<ItemConstructor>>
     implements Lightning.Component.ImplementTemplateSpec<ItemWrapperTemplateSpec<ItemConstructor>>
 {
-    // !!! Had to rename from `_construct` to `___construct` due to _construct (and __construct) being a
-    // reserved word within Lightning.Component
     private ___construct!: ItemConstructor;
     private _index: number = 0;
     private _configIndex: number = 0;

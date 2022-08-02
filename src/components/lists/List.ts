@@ -7,7 +7,6 @@ interface ListTemplateSpec<
 > extends Lightning.Component.TemplateSpecStrong {
     items: ItemType<ItemConstructor>[],
     itemConstruct: ItemConstructor,
-    container: any,
     Items: {}
 }
 
@@ -36,14 +35,6 @@ export default class List<ItemConstructor extends ListItemConstructorBase = List
 
     get activeItem(): ItemWrapper<ItemConstructor> {
         return this.Items.children[this._index] as ItemWrapper<ItemConstructor>;
-    }
-
-    set container(v){
-        this._container = v;
-    }
-
-    get container(){
-        return this._container;
     }
 
     set itemConstruct(v: ItemConstructor) {

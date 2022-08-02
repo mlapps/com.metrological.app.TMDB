@@ -18,8 +18,7 @@ export default class Splash
     Logo = this.getByRef('Logo')!;
     Spinner = this.getByRef('Spinner')!;
     private _spinnerAnimation = this.animation({duration: 1, repeat: -1, actions: [
-        // !!! `sm` is not available at the AnimationActionSettings level
-        {t: 'Spinner', p: "rotation", /*sm: 0,*/ v: function (t) {
+        {t: 'Spinner', p: "rotation", v: function (t) {
                 if (t < .125) {
                     return 45 * (Math.PI/180);
                 } else if (t < .250) {
@@ -79,11 +78,6 @@ export default class Splash
             this.Spinner.setSmooth("alpha", 1);
             this._spinnerAnimation.start();
         });
-
-        // !!! This event it never emitted
-        // this.application.on("booted", ()=> {
-        //      Router.navigate("movies", false)
-        // });
 
         setTimeout(()=> {
             Router.navigate("movie", false);

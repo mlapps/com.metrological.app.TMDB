@@ -67,14 +67,6 @@ export default class FlipList<ItemConstructor extends FlipListItemConstructorBas
         this._index = v;
     }
 
-    set container(v){
-        this._container = v;
-    }
-
-    get container(){
-        return this._container;
-    }
-
     set itemConstruct(v: ItemConstructor) {
         this._itemConstruct = v;
     }

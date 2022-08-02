@@ -20,10 +20,8 @@ export default class Rating
     Percentage = this.RatingNumber.getByRef('Percentage')!;
 
     private _voteAverage = 0;
-    // !!! Below `timingFunction` is not supported by Animations, if I understand everything correctly
-    // This had already existed before I moved this code
     private _ratingAnimation: Lightning.types.Animation = this.animation({
-        duration: 0.6, /* timingFunction: 'cubic-bezier(.94,.42,.49,.99)', */ actions:[
+        duration: 0.6, actions:[
             {t: 'RatingCircle', p: 'shader.angle' as '$$number', rv: 0.0001, v: (e) => {
                 return (this._voteAverage/10) * e;
             }},

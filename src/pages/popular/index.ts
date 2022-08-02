@@ -54,14 +54,10 @@ export default class Popular
 
     override _attach() {
         this.application.on('contentHidden', this.listeners['contentHidden']);
-        // !!! Bug caught by typing, readyForNavigate is not an emitted event
-        // this.application.on('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
     override _detach() {
         this.application.off('contentHidden', this.listeners['contentHidden']);
-        // !!! Bug caught by typing, readyForNavigate is not an emitted event
-        // this.application.off('readyForNavigate', this.listeners['readyForNavigate']);
     }
 
     override _active() {
