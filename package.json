@@ -1,7 +1,13 @@
 {
-  "name": "com.metrological.app.Tmdb",
+  "name": "com.metrological.app.tmdb",
   "description": "TMDB Showcase",
+  "scripts": {
+    "tsc": "tsc"
+  },
   "dependencies": {
     "@lightningjs/sdk": "^4.8.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
   }
 }
