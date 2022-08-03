@@ -1,7 +1,7 @@
 import { Lightning } from '@lightningjs/sdk'
 import { GenericItemConstructorBase, ItemType } from './ItemTypes';
 
-interface ItemWrapperTemplateSpec<ItemConstructor extends GenericItemConstructorBase = GenericItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
+interface ItemWrapperTemplateSpec<ItemConstructor extends GenericItemConstructorBase = GenericItemConstructorBase> extends Lightning.Component.TemplateSpec {
     index: number;
     construct: Lightning.Component.Constructor;
     item: ItemType<ItemConstructor> | undefined;

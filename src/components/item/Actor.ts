@@ -2,7 +2,7 @@ import {Img, Lightning, Router, Utils} from "@lightningjs/sdk";
 import { CastPersonData } from "../../lib/models/CastModel";
 import {getImgUrl} from "../../lib/tools";
 
-interface ActorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface ActorTemplateSpec extends Lightning.Component.TemplateSpec {
     item: CastPersonData;
     Actor: {
         Image: object

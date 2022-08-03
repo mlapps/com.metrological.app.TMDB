@@ -2,7 +2,7 @@ import {Lightning} from "@lightningjs/sdk";
 import {Button, MovieInfo, Rating, Title} from "../../components";
 import { DetailsModel, MovieModel, TvModel } from "../../lib/models";
 
-interface ContentTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface ContentTemplateSpec extends Lightning.Component.TemplateSpec {
     Title: typeof Title,
     Details: {
         Rating: typeof Rating,

@@ -3,7 +3,7 @@ import {MovieInfo, Rating, Title} from "../../components";
 import DetailsModel from "../../lib/models/DetailsModel";
 import Logo from "./Logo";
 
-export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpec {
     content: DetailsModel;
     detailsType: string;
     Item: {

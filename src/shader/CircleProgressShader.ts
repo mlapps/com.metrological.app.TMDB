@@ -1,4 +1,3 @@
-import { CoreQuadOperation } from "@lightningjs/core/src/types/lng.types.helper";
 import { Lightning } from "@lightningjs/sdk"
 
 export default class CircleProgressShader extends Lightning.shaders.WebGLDefaultShader {
@@ -46,7 +45,7 @@ export default class CircleProgressShader extends Lightning.shaders.WebGLDefault
         this.redraw();
     }
 
-    override setupUniforms(operation: CoreQuadOperation) {
+    override setupUniforms(operation: Lightning.types.CoreQuadOperation) {
         super.setupUniforms(operation);
         const owner = operation.shaderOwner
 

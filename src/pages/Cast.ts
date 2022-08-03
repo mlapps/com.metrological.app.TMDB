@@ -1,6 +1,6 @@
 import {Lightning, Router, Utils} from "@lightningjs/sdk";
 
-export interface CastTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+export interface CastTemplateSpec extends Lightning.Component.TemplateSpec {
     content: Lightning.Component;
     detailsType: 'tv' | 'movie';
     detailsId: string;

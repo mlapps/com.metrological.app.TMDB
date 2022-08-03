@@ -1,7 +1,7 @@
 import {Lightning} from "@lightningjs/sdk";
 import CircleProgressShader from "../../shader/CircleProgressShader";
 
-interface RatingTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface RatingTemplateSpec extends Lightning.Component.TemplateSpec {
     voteAverage: number;
     RatingNumber: {
         Number: object;

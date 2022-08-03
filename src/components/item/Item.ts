@@ -5,7 +5,7 @@ import PerspectiveShader from "../../shader/PerspectiveShader";
 import {ITEM_CONFIGS} from "./ItemConfigs";
 import ItemWrapper from "./ItemWrapper";
 
-interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface ItemTemplateSpec extends Lightning.Component.TemplateSpec {
     focusedItem: boolean;
     item?: MovieModel | TvModel;
     index: number;
@@ -16,7 +16,7 @@ interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
                 Border: object
             }
         }
-    } & Lightning.Element.TemplateSpecStrong>>
+    } & Lightning.Element.TemplateSpec>>
 }
 
 export default class Item

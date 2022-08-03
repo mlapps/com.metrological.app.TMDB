@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-import { CoreQuadOperation } from "@lightningjs/core/src/types/lng.types.helper";
 import { Lightning } from "@lightningjs/sdk";
 
 export default class ColorShift extends Lightning.shaders.WebGLDefaultShader {
@@ -35,7 +34,7 @@ export default class ColorShift extends Lightning.shaders.WebGLDefaultShader {
         this.redraw();
     }
 
-    override setupUniforms(operation: CoreQuadOperation){
+    override setupUniforms(operation: Lightning.types.CoreQuadOperation){
         const gl = this.gl;
 
         super.setupUniforms(operation);

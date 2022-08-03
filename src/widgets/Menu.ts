@@ -1,6 +1,6 @@
 import { Lightning } from '@lightningjs/sdk';
 
-interface MenuTemplateSpec<MenuIds extends string = string> extends Lightning.Component.TemplateSpecStrong {
+interface MenuTemplateSpec<MenuIds extends string = string> extends Lightning.Component.TemplateSpec {
     items: MenuItemData<MenuIds>[],
     lineOffset: number,
     Lines: {
@@ -99,7 +99,7 @@ interface MenuItemData<MenuIds extends string = string> {
     itemId: MenuIds,
 }
 
-interface MenuItemTemplateSpec extends Lightning.Component.TemplateSpecStrong, MenuItemData {
+interface MenuItemTemplateSpec extends Lightning.Component.TemplateSpec, MenuItemData {
     Label: object,
 }
 

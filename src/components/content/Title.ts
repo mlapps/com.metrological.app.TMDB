@@ -1,7 +1,7 @@
 import lng from "@lightningjs/core";
 import {Lightning} from "@lightningjs/sdk";
 
-interface TitleTemplateSpec extends lng.Component.TemplateSpecStrong {
+interface TitleTemplateSpec extends lng.Component.TemplateSpec {
     skip: boolean;
     label: string;
 }

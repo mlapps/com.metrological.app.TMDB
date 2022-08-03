@@ -2,7 +2,7 @@ import {Img, Lightning, Utils} from "@lightningjs/sdk";
 import { DetailsModel, MovieModel, TvModel } from "../lib/models";
 import {getImgUrl} from "../lib/tools";
 
-export interface BackgroundTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+export interface BackgroundTemplateSpec extends Lightning.Component.TemplateSpec {
     Backgrounds: {
         BackgroundA: object,
         BackgroundB: object

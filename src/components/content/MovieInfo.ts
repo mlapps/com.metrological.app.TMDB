@@ -6,7 +6,7 @@ export interface MovieInfoInfo {
     genres: string;
 }
 
-interface MovieIntoTemplateSpec extends lightning.Component.TemplateSpecStrong {
+interface MovieIntoTemplateSpec extends lightning.Component.TemplateSpec {
     info: MovieInfoInfo;
     Date: object;
     Genres: object;

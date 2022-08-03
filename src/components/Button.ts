@@ -1,6 +1,6 @@
 import {Lightning} from "@lightningjs/sdk";
 
-interface ButtonTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface ButtonTemplateSpec extends Lightning.Component.TemplateSpec {
     label: string,
     Button: {
         Ok: object

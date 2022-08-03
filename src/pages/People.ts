@@ -3,7 +3,7 @@ import {Title} from "../components";
 import { PersonModel as PersonModel } from "../lib/models";
 import {getImgUrl} from "../lib/tools";
 
-export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpec {
     content: PersonModel
     Item: {
         Title: typeof Title,

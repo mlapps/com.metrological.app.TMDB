@@ -4,7 +4,7 @@ import { ListItemConstructorBase, ItemType } from '../item/ItemTypes';
 
 interface ListTemplateSpec<
     ItemConstructor extends ListItemConstructorBase = ListItemConstructorBase
-> extends Lightning.Component.TemplateSpecStrong {
+> extends Lightning.Component.TemplateSpec {
     items: ItemType<ItemConstructor>[],
     itemConstruct: ItemConstructor,
     Items: object

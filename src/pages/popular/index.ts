@@ -14,7 +14,7 @@ interface PopularItem {
     id: string
 }
 
-interface PopularTemplateSpec extends Lightning.Component.TemplateSpecStrong {
+interface PopularTemplateSpec extends Lightning.Component.TemplateSpec {
     Content: typeof Content;
     List: object
 }
