@@ -5,11 +5,11 @@ import {getImgUrl} from "../../lib/tools";
 interface ActorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     item: CastPersonData;
     Actor: {
-        Image: {}
+        Image: object
     },
     ActorInfo: {
-        Name: {},
-        Character: {}
+        Name: object,
+        Character: object
     }
 }
 

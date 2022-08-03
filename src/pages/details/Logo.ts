@@ -2,7 +2,7 @@ import {Img, Lightning} from "@lightningjs/sdk";
 
 interface LogoTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     logo: string;
-    Logo: {}
+    Logo: object
 }
 
 export default class Logo

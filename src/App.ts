@@ -13,12 +13,12 @@ export interface AppTemplateSpec extends Router.App.TemplateSpec {
         Background: typeof Background,
         Holder: {
             Fps: {
-                Amount: {},
-                Unit: {}
+                Amount: object,
+                Unit: object
             },
             Average: {
-                Amount: {},
-                Unit: {}
+                Amount: object,
+                Unit: object
             }
         },
         Widgets: {
@@ -26,7 +26,7 @@ export interface AppTemplateSpec extends Router.App.TemplateSpec {
             DetailsMenu: typeof Menu<'details' | 'cast' | 'similar'>,
             PeopleMenu: typeof Menu<'details' | 'moviecredits' | 'tvcredits'> ,
         },
-        Loading: {}
+        Loading: object
     }
 }
 

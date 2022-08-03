@@ -12,8 +12,8 @@ interface ItemTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Blur: typeof Lightning.components.FastBlurComponent<Lightning.Element<{
         Perspective: {
             Poster: {
-                Image: {},
-                Border: {}
+                Image: object,
+                Border: object
             }
         }
     } & Lightning.Element.TemplateSpecStrong>>

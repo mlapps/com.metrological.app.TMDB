@@ -1,9 +1,9 @@
 import {Lightning, Utils, Router} from "@lightningjs/sdk";
 
 export interface SplashTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    Background: {};
-    Logo: {};
-    Spinner: {};
+    Background: object;
+    Logo: object;
+    Spinner: object;
 }
 
 export interface SplashTypeConfig extends Lightning.Component.TypeConfig {

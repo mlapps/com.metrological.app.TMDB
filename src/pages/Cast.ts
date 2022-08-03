@@ -4,7 +4,7 @@ export interface CastTemplateSpec extends Lightning.Component.TemplateSpecStrong
     content: Lightning.Component;
     detailsType: 'tv' | 'movie';
     detailsId: string;
-    List: {}
+    List: object
 }
 
 interface CastTypeConfig extends Lightning.Component.TypeConfig {

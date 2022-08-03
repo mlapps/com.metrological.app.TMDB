@@ -1,7 +1,7 @@
 import {Lightning, Router} from "@lightningjs/sdk";
 
 export interface ErrorTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    Label: {}
+    Label: object
 }
 
 interface ErrorTypeConfig extends Lightning.Component.TypeConfig {

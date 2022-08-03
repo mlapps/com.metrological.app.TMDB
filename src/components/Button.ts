@@ -3,9 +3,9 @@ import {Lightning} from "@lightningjs/sdk";
 interface ButtonTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     label: string,
     Button: {
-        Ok: {}
+        Ok: object
     },
-    Label: {}
+    Label: object
 }
 
 export default class Button

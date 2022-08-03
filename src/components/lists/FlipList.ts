@@ -5,10 +5,10 @@ import type { FlipListItemConstructorBase, ItemType } from '../item/ItemTypes';
 interface FlipListTemplateSpec<ItemConstructor extends FlipListItemConstructorBase = FlipListItemConstructorBase> extends Lightning.Component.TemplateSpecStrong {
     items: Array<ItemType<ItemConstructor>>, // Items are just passed through
     itemConstruct: ItemConstructor,
-    Items: {},
+    Items: object,
     Pagination: {
-        Current: {},
-        Total: {}
+        Current: object,
+        Total: object
     }
 }
 

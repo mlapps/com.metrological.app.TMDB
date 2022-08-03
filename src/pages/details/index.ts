@@ -13,11 +13,11 @@ export interface DetailsTemplateSpec extends Lightning.Component.TemplateSpecStr
             MovieInfo: typeof MovieInfo
         },
         Holder: {
-            Overview: {}
+            Overview: object
         }
     },
     LogosHolder: {
-        Logos: {}
+        Logos: object
     }
 }
 

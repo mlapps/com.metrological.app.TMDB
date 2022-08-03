@@ -4,10 +4,10 @@ import CircleProgressShader from "../../shader/CircleProgressShader";
 interface RatingTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     voteAverage: number;
     RatingNumber: {
-        Number: {};
-        Percentage: {};
+        Number: object;
+        Percentage: object;
     };
-    RatingCircle: {}
+    RatingCircle: object
 }
 
 export default class Rating

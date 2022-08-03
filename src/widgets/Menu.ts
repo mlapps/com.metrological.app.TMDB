@@ -4,10 +4,10 @@ interface MenuTemplateSpec<MenuIds extends string = string> extends Lightning.Co
     items: MenuItemData<MenuIds>[],
     lineOffset: number,
     Lines: {
-        Top: {},
-        Bottom: {}
+        Top: object,
+        Bottom: object
     },
-    Items: {}
+    Items: object
 }
 
 export default class Menu<MenuIds extends string = string> extends Lightning.Component<MenuTemplateSpec<MenuIds>> implements Lightning.Component.ImplementTemplateSpec<MenuTemplateSpec<MenuIds>> {
@@ -100,7 +100,7 @@ interface MenuItemData<MenuIds extends string = string> {
 }
 
 interface MenuItemTemplateSpec extends Lightning.Component.TemplateSpecStrong, MenuItemData {
-    Label: {},
+    Label: object,
 }
 
 class MenuItem extends Lightning.Component<MenuItemTemplateSpec> implements Lightning.Component.ImplementTemplateSpec<MenuItemTemplateSpec> {

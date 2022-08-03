@@ -16,7 +16,7 @@ interface PopularItem {
 
 interface PopularTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Content: typeof Content;
-    List: {}
+    List: object
 }
 interface PopularTypeConfig extends Lightning.Component.TypeConfig {
     IsPage: true;

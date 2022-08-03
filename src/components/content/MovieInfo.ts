@@ -8,8 +8,8 @@ export interface MovieInfoInfo {
 
 interface MovieIntoTemplateSpec extends lightning.Component.TemplateSpecStrong {
     info: MovieInfoInfo;
-    Date: {};
-    Genres: {};
+    Date: object;
+    Genres: object;
 }
 
 export default class MovieInfo

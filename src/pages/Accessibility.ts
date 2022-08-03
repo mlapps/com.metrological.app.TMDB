@@ -27,7 +27,7 @@ declare module "@lightningjs/sdk" {
 }
 
 interface AccessibilityTemplateSpec extends Lightning.Component.TemplateSpecStrong {
-    Example: {},
+    Example: object,
     Options: {
         Filter: typeof OptionItem
     }
@@ -130,11 +130,11 @@ interface OptionItemTemplateSpec extends Lightning.Component.TemplateSpecStrong 
     label: string,
     options: string[],
     onChange: OptionItemOnChange,
-    Label: {},
+    Label: object,
     SelectedOption: {
-        Left: {},
-        Option: {},
-        Right: {}
+        Left: object,
+        Option: object,
+        Right: object
     }
 }
 

@@ -4,8 +4,8 @@ import {getImgUrl} from "../lib/tools";
 
 export interface BackgroundTemplateSpec extends Lightning.Component.TemplateSpecStrong {
     Backgrounds: {
-        BackgroundA: {},
-        BackgroundB: {}
+        BackgroundA: object,
+        BackgroundB: object
     }
 }
 

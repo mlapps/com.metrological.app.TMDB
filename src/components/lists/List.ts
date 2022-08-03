@@ -7,7 +7,7 @@ interface ListTemplateSpec<
 > extends Lightning.Component.TemplateSpecStrong {
     items: ItemType<ItemConstructor>[],
     itemConstruct: ItemConstructor,
-    Items: {}
+    Items: object
 }
 
 export default class List<ItemConstructor extends ListItemConstructorBase = ListItemConstructorBase>

@@ -7,9 +7,9 @@ export interface PeopleTemplateSpec extends Lightning.Component.TemplateSpecStro
     content: PersonModel
     Item: {
         Title: typeof Title,
-        Birth: {},
+        Birth: object,
         Holder: {
-            Biography: {}
+            Biography: object
         }
     }
 }
