@@ -1,3 +1,6 @@
+# data
+static/data/*
+
 # Logs
 logs
 *.log

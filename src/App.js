@@ -1,7 +1,8 @@
 import { Utils, Router } from '@lightningjs/sdk';
 import routes from "./lib/routes";
-import {init as initFactory} from "./lib/factory"
-import {Menu} from "./widgets"
+import {init as initFactory} from "./lib/factory";
+import {init as initEndpoints} from "./lib/endpoints";
+import {Menu} from "./widgets";
 import {Background} from "./components";
 import {Protanopia, Deuteranopia, Tritanopia, ColorShift, Achromatopsia} from "./shader";
 const correction = {
@@ -23,7 +24,10 @@ export default class App extends Router.App {
     // this will setup all pages and attach them to there route
     _setup() {
         initFactory(this.stage);
+        initEndpoints(this.stage.application.config);
         Router.startRouter(routes, this);
+
+        console.log('WVB:', this.stage.application.config.local);
     }
 
     _init() {
