@@ -2,6 +2,9 @@
   "name": "com.metrological.app.Tmdb",
   "description": "TMDB Showcase",
   "dependencies": {
-    "@lightningjs/sdk": "^4.8.1"
+    "@lightningjs/sdk": "^4.8.1",
+    "esm": "^3.2.25",
+    "fs-extra": "^10.1.0",
+    "node-fetch": "^2.6.7"
   }
 }
